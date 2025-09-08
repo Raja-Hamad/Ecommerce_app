@@ -3,6 +3,7 @@ import 'package:ecommerce_app_my/models/user_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
 import 'package:ecommerce_app_my/views/add_product.dart';
+import 'package:ecommerce_app_my/views/bottom_nav_bar.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -88,7 +89,7 @@ class AuthServices {
       //   // ignore: use_build_context_synchronously
       //   // Get.offAll(BottomNavBarView());
       // }
-      Get.to(AddProduct());
+      Get.to(BottomNavBarView());
       // Store user data locally
       await storeUserDataLocally(loggedInUser);
 

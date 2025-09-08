@@ -1,9 +1,14 @@
+import 'package:ecommerce_app_my/controllers/add_to_cart_or_wishlist_controller.dart';
+import 'package:ecommerce_app_my/models/cart_model.dart';
 import 'package:ecommerce_app_my/models/wishlist_model.dart';
+import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 class WishListView extends StatefulWidget {
   const WishListView({super.key});
@@ -13,6 +18,9 @@ class WishListView extends StatefulWidget {
 }
 
 class _WishListViewState extends State<WishListView> {
+  final AddToCartOrWishlistController _cartOrWishlistController = Get.put(
+    AddToCartOrWishlistController(),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,20 +66,24 @@ class _WishListViewState extends State<WishListView> {
                           .map((json) => WishlistModel.fromJson(json.data()))
                           .toList();
 
-                              if(wishList.isEmpty){
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Your wishlist is empty",
-                                  style: GoogleFonts.dmSans(color: Colors.black,
+                      if (wishList.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Your wishlist is empty",
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold),),
-                                ],
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            );
-                          }
+                            ],
+                          ),
+                        );
+                      }
 
                       return ListView.builder(
                         itemCount: wishList.length,
@@ -122,7 +134,9 @@ class _WishListViewState extends State<WishListView> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              whishListProduct.productModel.title,
+                                              whishListProduct
+                                                  .productModel
+                                                  .title,
                                               style: GoogleFonts.dmSans(
                                                 color: Colors.black,
                                                 fontSize: 16,
@@ -130,7 +144,9 @@ class _WishListViewState extends State<WishListView> {
                                               ),
                                             ),
                                             Text(
-                                              whishListProduct.productModel.subtitle,
+                                              whishListProduct
+                                                  .productModel
+                                                  .subtitle,
                                               style: GoogleFonts.dmSans(
                                                 color: Colors.black,
                                                 fontSize: 14,
@@ -139,7 +155,9 @@ class _WishListViewState extends State<WishListView> {
                                             ),
                                             const SizedBox(height: 10),
                                             Text(
-                                              whishListProduct.productModel.price,
+                                              whishListProduct
+                                                  .productModel
+                                                  .price,
                                               style: GoogleFonts.dmSans(
                                                 color: Colors.black,
                                                 fontSize: 14,
@@ -150,21 +168,107 @@ class _WishListViewState extends State<WishListView> {
                                         ),
                                       ],
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ), // chhoti padding
-                                      decoration: BoxDecoration(
-                                        color:  Colors.black,
-                                        borderRadius: BorderRadius.circular(
-                                          12,
-                                        ), // halka curve
-                                      ),
-                                      child:Text("Add to cart",
-                                      style: GoogleFonts.dmSans(color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),),
+
+                                    StreamBuilder(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(
+                                            FirebaseAuth
+                                                .instance
+                                                .currentUser!
+                                                .uid,
+                                          )
+                                          .collection("cart")
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData ||
+                                            snapshot.data == null) {
+                                          return SizedBox();
+                                        } else if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const SizedBox();
+                                        } else {
+                                          final cartList = snapshot.data!.docs
+                                              .map(
+                                                (json) => CartModel.fromJson(
+                                                  json.data(),
+                                                ),
+                                              )
+                                              .toList();
+
+                                          bool isPresent = cartList.any(
+                                            (product) =>
+                                                product.productModel.id ==
+                                                whishListProduct
+                                                    .productModel
+                                                    .id,
+                                          );
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (isPresent) {
+                                                FlushBarMessages.successMessageFlushBar(
+                                                  "This product is already in Cart",
+                                                  context,
+                                                );
+                                              } else {
+                                                CartModel cartModel = CartModel(
+                                                  id: Uuid().v4(),
+                                                  productModel: whishListProduct
+                                                      .productModel,
+                                                );
+
+                                                _cartOrWishlistController
+                                                    .addToCartOrWishList(
+                                                      context,
+                                                      cartModel,
+                                                      "cart",
+                                                    )
+                                                    .then((value) {
+                                                      FlushBarMessages.successMessageFlushBar(
+                                                        "Product Added to cart successfully",
+                                                        // ignore: use_build_context_synchronously
+                                                        context,
+                                                      );
+                                                    })
+                                                    .onError((
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      FlushBarMessages.errorMessageFlushBar(
+                                                        "Error while adding the product to cart ${error.toString()}",
+                                                        // ignore: use_build_context_synchronously
+                                                        context,
+                                                      );
+                                                    });
+                                              }
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5,
+                                                  ), // chhoti padding
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      12,
+                                                    ), // halka curve
+                                              ),
+                                              child: Text(
+                                                isPresent
+                                                    ? "Added to cart"
+                                                    : "Add to cart",
+                                                style: GoogleFonts.dmSans(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ],
                                 ),
