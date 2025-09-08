@@ -24,6 +24,8 @@ class _WishListViewState extends State<WishListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            backgroundColor: Colors.white,
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),

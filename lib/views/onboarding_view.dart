@@ -36,6 +36,8 @@ class _OnboardingViewState extends State<OnboardingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            backgroundColor: Colors.white,
+
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,

@@ -32,6 +32,8 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            backgroundColor: Colors.white,
+
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Obx(() {

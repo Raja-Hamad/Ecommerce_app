@@ -18,6 +18,8 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            backgroundColor: Colors.white,
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25),
