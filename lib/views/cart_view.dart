@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app_my/controllers/add_to_cart_or_wishlist_controller.dart';
 import 'package:ecommerce_app_my/models/cart_model.dart';
+import 'package:ecommerce_app_my/services/firestore_services.dart';
+import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CartView extends StatefulWidget {
@@ -13,10 +17,43 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
+  final AddToCartOrWishlistController _addToCartOrWishlistController = Get.put(
+    AddToCartOrWishlistController(),
+  );
+  final FirestoreServices _firestoreServices = FirestoreServices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: GestureDetector(
+          onTap: () async {
+            _firestoreServices.checkUserAddressAndNavigate(
+              context,
+              FirebaseAuth.instance.currentUser!.uid,
+            );
+          },
+          child: Container(
+            height: 40,
+            width: 300,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Text(
+                "Proceed To Checkout",
+                style: GoogleFonts.openSans(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
 
       body: SafeArea(
         child: Padding(
@@ -60,21 +97,25 @@ class _CartViewState extends State<CartView> {
                           .map((json) => CartModel.fromJson(json.data()))
                           .toList();
 
-                          if(cartList.isEmpty){
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Your cart is empty",
-                                  style: GoogleFonts.dmSans(color: Colors.black,
+                      if (cartList.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Your cart is empty",
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold),),
-                                ],
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            );
-                          }
-            
+                            ],
+                          ),
+                        );
+                      }
+
                       return ListView.builder(
                         itemCount: cartList.length,
                         shrinkWrap: true,
@@ -82,107 +123,157 @@ class _CartViewState extends State<CartView> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
                           final cartProduct = cartList[index];
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: ClipRRect(
-                                            child: Image.network(
-                                              cartProduct
-                                                  .productModel
-                                                  .imageUrls
-                                                  .first,
-                                            ),
+                          final docId =
+                              snapshot.data!.docs[index].id; // Firestore doc ID
+
+                          return Dismissible(
+                            key: Key(docId),
+                            direction: DismissDirection
+                                .endToStart, // right-to-left swipe
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              color: Colors.red,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: const [
+                                  Icon(Icons.delete, color: Colors.white),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onDismissed: (direction) async {
+                              await FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection("cart")
+                                  .doc(docId)
+                                  .delete();
+
+                              FlushBarMessages.successMessageFlushBar(
+                                "${cartProduct.productModel.title} removed from cart",
+                                // ignore: use_build_context_synchronously
+                                context,
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
                                           ),
                                         ),
-                                        const SizedBox(width: 5,),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(cartProduct.productModel.title,
-                                            style: GoogleFonts.dmSans(color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),),
-                                               Text(cartProduct.productModel.subtitle,
-                                            style: GoogleFonts.dmSans(color: Colors.black,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: Image.network(
+                                            cartProduct
+                                                .productModel
+                                                .imageUrls
+                                                .first,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartProduct.productModel.title,
+                                            style: GoogleFonts.dmSans(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            cartProduct.productModel.subtitle,
+                                            style: GoogleFonts.dmSans(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            cartProduct.productModel.price,
+                                            style: GoogleFonts.dmSans(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffEEEEEE),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            // minus action
+                                          },
+                                          child: const Icon(
+                                            Icons.remove,
+                                            size: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          cartProduct.quantity.toString(),
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.black,
                                             fontSize: 14,
-                                            fontWeight: FontWeight.w400),),
-                                            const SizedBox(height: 10,),
-                                               Text(cartProduct.productModel.price,
-                                            style: GoogleFonts.dmSans(color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),),
-                                          ],
-                                        )
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        GestureDetector(
+                                          onTap: () {
+                                            // plus action
+                                          },
+                                          child: const Icon(
+                                            Icons.add,
+                                            size: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                    Container(
-  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), // chhoti padding
-  decoration: BoxDecoration(
-    color: const Color(0xffEEEEEE),
-    borderRadius: BorderRadius.circular(12), // halka curve
-  ),
-  child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      GestureDetector(
-        onTap: () {
-          // minus action
-        },
-        child: const Icon(
-          Icons.remove,
-          size: 16, // chhoti icon size
-          color: Colors.black,
-        ),
-      ),
-      const SizedBox(width: 6),
-      Text(
-        cartProduct.quantity.toString(),
-        style: GoogleFonts.dmSans(
-          color: Colors.black,
-          fontSize: 14, // readable but chhota
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      const SizedBox(width: 6),
-      GestureDetector(
-        onTap: () {
-          // plus action
-        },
-        child: const Icon(
-          Icons.add,
-          size: 16, // chhoti icon size
-          color: Colors.black,
-        ),
-      ),
-    ],
-  ),
-)
-
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

@@ -6,11 +6,28 @@ import 'package:get/get.dart';
 
 class AddToCartOrWishlistController extends GetxController {
   final FirestoreServices _firestoreServices = FirestoreServices();
+  var zipCodeController = TextEditingController().obs;
+  var countryCodeController = TextEditingController().obs;
+  var countryController = TextEditingController().obs;
+  var cityController = TextEditingController().obs;
+  var stateController = TextEditingController().obs;
+  var nameController = TextEditingController().obs;
+  var phoneController = TextEditingController().obs;
+  var fullAddressController = TextEditingController().obs;
+  var callingCodeController = TextEditingController().obs;
   var isLoading = false.obs;
-  Future<void> addToCartOrWishList(BuildContext context, var  model, String collectionName)async {
+  Future<void> addToCartOrWishList(
+    BuildContext context,
+    var model,
+    String collectionName,
+  ) async {
     try {
       isLoading.value = true;
-      await _firestoreServices.addToCartOrWishList(context, model,collectionName);
+      await _firestoreServices.addToCartOrWishList(
+        context,
+        model,
+        collectionName,
+      );
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;

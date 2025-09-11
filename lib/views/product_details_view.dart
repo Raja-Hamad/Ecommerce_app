@@ -251,7 +251,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   widget.model.title,
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black,
-                                    fontSize: 25,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -259,7 +259,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   widget.model.subtitle,
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -337,7 +337,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           "Description",
                           style: GoogleFonts.dmSans(
                             color: Colors.black,
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -424,7 +424,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   widget.model.price,
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black,
-                                    fontSize: 30,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

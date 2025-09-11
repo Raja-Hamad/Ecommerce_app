@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_my/models/cart_model.dart';
 import 'package:ecommerce_app_my/models/product_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
+import 'package:ecommerce_app_my/views/add_delievery_address_view.dart';
+import 'package:ecommerce_app_my/views/place_order_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +96,11 @@ class FirestoreServices {
     }
   }
 
-  Future<void> addToCartOrWishList(BuildContext context, var model, String collectionName) async {
+  Future<void> addToCartOrWishList(
+    BuildContext context,
+    var model,
+    String collectionName,
+  ) async {
     try {
       await _firebaseFirestore
           .collection("users")
@@ -106,6 +112,46 @@ class FirestoreServices {
       if (kDebugMode) {
         print("Error while adding product to cart is ${e.toString()}");
       }
+    }
+  }
+
+  Future<void> checkUserAddressAndNavigate(
+    BuildContext context,
+    String userId,
+  ) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("delievery_address")
+          .limit(1) // sirf 1 record fetch kar k check karna fast hoga
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Agar address already exist karta hai
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => PlaceOrderView()),
+        );
+      } else {
+        // Agar koi address nahi hai
+        Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => AddDelieveryAddressView()),
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error checking address: $e");
+      }
+      // optional: agar error aaye to AddDelieveryAddress pe bhej do
+      Navigator.push(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => AddDelieveryAddressView()),
+      );
     }
   }
 }
