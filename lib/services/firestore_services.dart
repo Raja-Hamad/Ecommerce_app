@@ -114,6 +114,22 @@ class FirestoreServices {
       }
     }
   }
+   Future<void> addFaqs(
+    BuildContext context,
+    var model,
+    String collectionName,
+  ) async {
+    try {
+      await _firebaseFirestore
+          .collection(collectionName)
+          .doc(model.id)
+          .set(model.toJson());
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error while adding product to cart is ${e.toString()}");
+      }
+    }
+  }
 
   Future<void> checkUserAddressAndNavigate(
     BuildContext context,

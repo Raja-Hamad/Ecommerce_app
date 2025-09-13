@@ -1,22 +1,12 @@
-import 'package:ecommerce_app_my/models/cart_model.dart';
 import 'package:ecommerce_app_my/services/firestore_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddToCartOrWishlistController extends GetxController {
-  final FirestoreServices _firestoreServices = FirestoreServices();
-  var zipCodeController = TextEditingController().obs;
-  var countryCodeController = TextEditingController().obs;
-  var countryController = TextEditingController().obs;
-  var cityController = TextEditingController().obs;
-  var stateController = TextEditingController().obs;
-  var nameController = TextEditingController().obs;
-  var phoneController = TextEditingController().obs;
-  var fullAddressController = TextEditingController().obs;
-  var callingCodeController = TextEditingController().obs;
+class FaqsController extends GetxController{
     var answerController = TextEditingController().obs;
   var questionController = TextEditingController().obs;
+  final FirestoreServices _firestoreServices=FirestoreServices();
   RxString selectedType = ''.obs;
   var isLoading = false.obs;
   Future<void> addToCartOrWishList(
@@ -26,7 +16,7 @@ class AddToCartOrWishlistController extends GetxController {
   ) async {
     try {
       isLoading.value = true;
-      await _firestoreServices.addToCartOrWishList(
+      await _firestoreServices.addFaqs(
         context,
         model,
         collectionName,
