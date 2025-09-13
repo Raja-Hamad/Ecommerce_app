@@ -1,4 +1,6 @@
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
+import 'package:ecommerce_app_my/views/admin_all_faqs_view.dart';
+import 'package:ecommerce_app_my/views/all_faqs_view.dart';
 import 'package:ecommerce_app_my/views/my_orders_view.dart';
 import 'package:ecommerce_app_my/views/my_shipping_address_view.dart';
 import 'package:ecommerce_app_my/views/personal_details_view.dart';
@@ -173,7 +175,6 @@ class _ProfileViewState extends State<ProfileView> {
                           title: "Shipping Address",
                           icon: Icons.local_shipping,
                         ),
-                     
                       ],
                     ),
                   ),
@@ -190,6 +191,23 @@ class _ProfileViewState extends State<ProfileView> {
                     child: Column(
                       children: [
                         reusableWidget(
+                          onPress: () {
+                            if (emailAddress! == "kayanihamad0316@gmail.com") {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AdminAllFaqsView(),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AllFaqsView(),
+                                ),
+                              );
+                            }
+                          },
                           title: "FAQs",
                           icon: Icons.question_answer,
                         ),

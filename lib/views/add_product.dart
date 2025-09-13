@@ -1,6 +1,6 @@
 import 'package:ecommerce_app_my/controllers/product_controller.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
-import 'package:ecommerce_app_my/views/bottom_nav_bar.dart';
+import 'package:ecommerce_app_my/views/admin_bottom_nav_bar.dart';
 import 'package:ecommerce_app_my/views/widgets/dropdown_field_widget.dart';
 import 'package:ecommerce_app_my/views/widgets/text_field_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -96,7 +96,7 @@ class _AddProductState extends State<AddProduct> {
                         // ignore: use_build_context_synchronously
                         context,
                       );
-                      Get.to(BottomNavBarView());
+                      Get.to(AdminBottomNavBar());
                     })
                     .onError((error, stackTrace) {
                       FlushBarMessages.errorMessageFlushBar(

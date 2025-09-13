@@ -428,7 +428,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   ),
                                 ),
                                 Text(
-                                  widget.model.price,
+                                  "\$${widget.model.price.toString()}",
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black,
                                     fontSize: 20,

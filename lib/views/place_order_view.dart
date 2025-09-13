@@ -454,9 +454,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Text(
-                                                    cartProduct
+                                                  "\$${  cartProduct
                                                         .productModel
-                                                        .price,
+                                                        .price.toString()}",
                                                     style: GoogleFonts.dmSans(
                                                       color: Colors.black,
                                                       fontSize: 12,

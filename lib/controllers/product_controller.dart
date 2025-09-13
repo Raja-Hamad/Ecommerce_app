@@ -56,7 +56,7 @@ class ProductController extends GetxController {
         description: description,
         id: Uuid().v4(),
         imageUrls: uploadedUrls,
-        price: price,
+        price: int.parse(price),
         sizes: productSizes,
         stock: totalStock,
         subtitle: subtitle,

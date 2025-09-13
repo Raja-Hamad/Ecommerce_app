@@ -157,9 +157,9 @@ class _WishListViewState extends State<WishListView> {
                                             ),
                                             const SizedBox(height: 10),
                                             Text(
-                                              whishListProduct
+                                            '\$${  whishListProduct
                                                   .productModel
-                                                  .price,
+                                                  .price.toString()}',
                                               style: GoogleFonts.dmSans(
                                                 color: Colors.black,
                                                 fontSize: 14,
@@ -214,7 +214,7 @@ class _WishListViewState extends State<WishListView> {
                                                 );
                                               } else {
                                                 CartModel cartModel = CartModel(
-                                                  
+
                                                   id: Uuid().v4(),
                                                   productModel: whishListProduct
                                                       .productModel,

@@ -216,7 +216,7 @@ class _CartViewState extends State<CartView> {
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
-                                            cartProduct.productModel.price,
+                                            "\$${cartProduct.productModel.price.toString()}",
                                             style: GoogleFonts.dmSans(
                                               color: Colors.black,
                                               fontSize: 14,

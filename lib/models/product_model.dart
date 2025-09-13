@@ -3,7 +3,7 @@ class ProductModel {
   final String title;
   final String subtitle;
   final String description;
-  final String price;
+  final int price;
   final String sizes;
   final String stock;
   final String adminId;
@@ -29,7 +29,7 @@ final String category;
       description: json['description'] ?? "",
       id: json['id'] ?? "",
       imageUrls: List<String>.from(json['imageUrls'] ?? []),
-      price: json['price'] ?? "",
+      price: json['price'] ?? 0,
       sizes: json['sizes'] ?? "",
       stock: json['stock'] ?? "",
       subtitle: json['subtitle'] ?? "",
