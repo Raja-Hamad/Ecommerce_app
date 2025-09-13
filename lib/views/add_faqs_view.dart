@@ -1,7 +1,6 @@
 import 'package:ecommerce_app_my/controllers/faqs_controller.dart';
 import 'package:ecommerce_app_my/models/faq_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
-import 'package:ecommerce_app_my/views/admin_all_faqs_view.dart';
 import 'package:ecommerce_app_my/views/widgets/dropdown_field_widget.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_button.dart';
 import 'package:ecommerce_app_my/views/widgets/text_field_widget.dart';
@@ -99,7 +98,7 @@ class _AddFaqsViewState extends State<AddFaqsView> {
                             );
                             // Delay navigation so flushbar visible ho
                             Future.delayed(const Duration(seconds: 1), () {
-                              Get.offAll(AdminAllFaqsView());
+                              Get.back();
                             });
                             _controller.answerController.value.clear();
                             _controller.questionController.value.clear();
