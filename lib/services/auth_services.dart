@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_my/models/user_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
-import 'package:ecommerce_app_my/views/add_product.dart';
+import 'package:ecommerce_app_my/views/admin_bottom_nav_bar.dart';
 import 'package:ecommerce_app_my/views/bottom_nav_bar.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -89,7 +89,11 @@ class AuthServices {
       //   // ignore: use_build_context_synchronously
       //   // Get.offAll(BottomNavBarView());
       // }
-Get.offAll(() => BottomNavBarView());
+      if (userDoc['email'] == "kayanihamad0316@gmail.com") {
+        Get.offAll(() => AdminBottomNavBar());
+      } else {
+        Get.offAll(() => BottomNavBarView());
+      }
       // Store user data locally
       await storeUserDataLocally(loggedInUser);
 

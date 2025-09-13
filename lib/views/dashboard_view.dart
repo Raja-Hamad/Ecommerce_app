@@ -3,7 +3,6 @@ import 'package:ecommerce_app_my/models/product_model.dart';
 import 'package:ecommerce_app_my/views/product_list_view.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -18,7 +17,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       body: SafeArea(
         child: Padding(
@@ -28,17 +27,20 @@ class _DashboardViewState extends State<DashboardView> {
                 .collection("products")
                 .snapshots(),
             builder: (context, snapshots) {
-              if (!snapshots.hasData || snapshots.data == null) {
-                return SizedBox();
-              } else if (snapshots.connectionState == ConnectionState.waiting) {
+              if (snapshots.connectionState == ConnectionState.waiting) {
+                // Show shimmer
                 return ListView.builder(
                   itemCount: 6,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return ReusableShimmerWidget();
+                    return const ReusableShimmerWidget();
                   },
                 );
+              }
+
+              if (!snapshots.hasData || snapshots.data == null) {
+                return Center(child: Text("No products found"));
               } else {
                 List<ProductModel> shoesList = snapshots.data!.docs
                     .where((doc) => doc['category'] == "Shoes")
@@ -80,7 +82,7 @@ class _DashboardViewState extends State<DashboardView> {
                     const SizedBox(height: 30),
                     reusabelContainer(
                       onPress: () {
-                      Navigator.of(context).push(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => ProductListView(
                               title: 'New Arrivals',
@@ -128,7 +130,7 @@ class _DashboardViewState extends State<DashboardView> {
                     const SizedBox(height: 15),
                     reusabelContainer(
                       onPress: () {
-                       Navigator.of(context).push(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => ProductListView(
                               title: 'Clothes',

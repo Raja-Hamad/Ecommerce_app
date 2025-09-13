@@ -52,19 +52,13 @@ class _PersonalDetailsViewState extends State<PersonalDetailsView> {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
-                    child: imageUrl != null && imageUrl!.isNotEmpty
-                        ? Image.network(
+                    child:  Image.network(
                             imageUrl!,
                             height: 80,
                             width: 80,
                             fit: BoxFit.cover,
                           )
-                        : Image.asset(
-                            'assets/images/dummy_doctor.jpeg', // Use a local placeholder image
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.cover,
-                          ),
+                       
                   ),
                 ),
 

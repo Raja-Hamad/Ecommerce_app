@@ -2,6 +2,7 @@ import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
 import 'package:ecommerce_app_my/views/my_orders_view.dart';
 import 'package:ecommerce_app_my/views/my_shipping_address_view.dart';
 import 'package:ecommerce_app_my/views/personal_details_view.dart';
+import 'package:ecommerce_app_my/views/wishlist_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,11 +19,15 @@ class _ProfileViewState extends State<ProfileView> {
   String? name;
   String? imageUrl;
   String? emailAddress;
+  bool isLoading = true;
+
   void getValues() async {
     name = await _localStorage.getValue("userName");
     emailAddress = await _localStorage.getValue("email");
     imageUrl = await _localStorage.getValue("imageUrl");
-    setState(() {});
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -33,6 +38,11 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Colors.black)),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -68,7 +78,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                imageUrl ??'',
+                                imageUrl ?? '',
                                 height: 80,
                                 width: 80,
                                 fit: BoxFit.cover,
@@ -140,6 +150,14 @@ class _ProfileViewState extends State<ProfileView> {
                           icon: FontAwesomeIcons.bagShopping,
                         ),
                         reusableWidget(
+                          onPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WishListView(),
+                              ),
+                            );
+                          },
                           title: "My Favorite",
                           icon: Icons.favorite,
                         ),
@@ -155,8 +173,7 @@ class _ProfileViewState extends State<ProfileView> {
                           title: "Shipping Address",
                           icon: Icons.local_shipping,
                         ),
-                        reusableWidget(title: "My Card", icon: Icons.payment),
-                        reusableWidget(title: "Settings", icon: Icons.settings),
+                     
                       ],
                     ),
                   ),
@@ -198,11 +215,11 @@ class _ProfileViewState extends State<ProfileView> {
     required IconData icon,
     VoidCallback? onPress,
   }) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: onPress,
-          child: Row(
+    return GestureDetector(
+      onTap: onPress,
+      child: Column(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -233,9 +250,9 @@ class _ProfileViewState extends State<ProfileView> {
               Icon(Icons.arrow_forward_ios, color: Colors.black),
             ],
           ),
-        ),
-        const SizedBox(height: 10),
-      ],
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
