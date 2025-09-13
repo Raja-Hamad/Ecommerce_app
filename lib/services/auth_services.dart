@@ -89,7 +89,7 @@ class AuthServices {
       //   // ignore: use_build_context_synchronously
       //   // Get.offAll(BottomNavBarView());
       // }
-      Get.to(BottomNavBarView());
+Get.offAll(() => BottomNavBarView());
       // Store user data locally
       await storeUserDataLocally(loggedInUser);
 

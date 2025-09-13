@@ -38,6 +38,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   }
 
   int selectedSize = 0;
+  String selectedSizeValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -374,6 +375,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                 onTap: () {
                                   setState(() {
                                     selectedSize = index;
+                                    selectedSizeValue = size;
                                   });
                                 },
                                 child: Container(
@@ -382,6 +384,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   ),
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
+                                    color: selectedSize == index
+                                        ? Colors.black
+                                        : Colors.transparent,
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: Colors.black,
@@ -392,7 +397,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                     child: Text(
                                       size,
                                       style: GoogleFonts.dmSans(
-                                        color: Colors.black,
+                                        color: selectedSize == index
+                                            ? Colors.white
+                                            : Colors.black,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -465,6 +472,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                         );
                                       } else {
                                         CartModel cartModel = CartModel(
+                                          productSize: selectedSizeValue,
                                           id: Uuid().v4(),
                                           productModel: widget.model,
                                           quantity: productCout,
@@ -502,25 +510,26 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                           vertical: 10,
                                           horizontal: 10,
                                         ),
-                                        child:  Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.shopping_bag_outlined,
-                                                    color: Colors.white,
-                                                    size: 30,
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Text(
-                                                    isPresent?"Added to cart":"Add to cart",
-                                                    style: GoogleFonts.dmSans(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_bag_outlined,
+                                              color: Colors.white,
+                                              size: 30,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              isPresent
+                                                  ? "Added to cart"
+                                                  : "Add to cart",
+                                              style: GoogleFonts.dmSans(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
                                               ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );

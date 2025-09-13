@@ -1,4 +1,7 @@
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
+import 'package:ecommerce_app_my/views/my_orders_view.dart';
+import 'package:ecommerce_app_my/views/my_shipping_address_view.dart';
+import 'package:ecommerce_app_my/views/personal_details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +68,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                imageUrl!,
+                                imageUrl ??'',
                                 height: 80,
                                 width: 80,
                                 fit: BoxFit.cover,
@@ -77,7 +80,7 @@ class _ProfileViewState extends State<ProfileView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  name!,
+                                  name ?? "",
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black,
                                     fontSize: 18,
@@ -85,7 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                 ),
                                 Text(
-                                  emailAddress!,
+                                  emailAddress ?? "",
                                   style: GoogleFonts.dmSans(
                                     color: Colors.black54,
                                     fontSize: 14,
@@ -112,11 +115,27 @@ class _ProfileViewState extends State<ProfileView> {
                     child: Column(
                       children: [
                         reusableWidget(
+                          onPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PersonalDetailsView(),
+                              ),
+                            );
+                          },
                           title: "Personal Details",
                           icon: FontAwesomeIcons.person,
                         ),
-                      
+
                         reusableWidget(
+                          onPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyOrdersView(),
+                              ),
+                            );
+                          },
                           title: "My Order",
                           icon: FontAwesomeIcons.bagShopping,
                         ),
@@ -125,22 +144,24 @@ class _ProfileViewState extends State<ProfileView> {
                           icon: Icons.favorite,
                         ),
                         reusableWidget(
+                          onPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyShippingAddressView(),
+                              ),
+                            );
+                          },
                           title: "Shipping Address",
                           icon: Icons.local_shipping,
                         ),
-                        reusableWidget(
-                          title: "My Card",
-                          icon: Icons.payment,
-                        ),
-                        reusableWidget(
-                          title: "Settings",
-                          icon:Icons.settings,
-                        ),
+                        reusableWidget(title: "My Card", icon: Icons.payment),
+                        reusableWidget(title: "Settings", icon: Icons.settings),
                       ],
                     ),
                   ),
                 ),
-                              const SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -155,12 +176,11 @@ class _ProfileViewState extends State<ProfileView> {
                           title: "FAQs",
                           icon: Icons.question_answer,
                         ),
-                      
+
                         reusableWidget(
                           title: "Privacy Policy",
                           icon: Icons.security,
                         ),
-                    
                       ],
                     ),
                   ),
@@ -173,41 +193,48 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget reusableWidget({required String title, required IconData icon}) {
+  Widget reusableWidget({
+    required String title,
+    required IconData icon,
+    VoidCallback? onPress,
+  }) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xffEEEEEE),
-                    borderRadius: BorderRadius.circular(12),
+        GestureDetector(
+          onTap: onPress,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Color(0xffEEEEEE),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(child: Icon(icon, size: 20)),
                   ),
-                  child: Center(child: Icon(icon, size: 20)),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: GoogleFonts.dmSans(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(width: 10),
+                  Text(
+                    title,
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Icon(Icons.arrow_forward_ios, color: Colors.black),
-          ],
+                ],
+              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.black),
+            ],
+          ),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(height: 10),
       ],
     );
   }

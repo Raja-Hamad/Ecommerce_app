@@ -1,4 +1,5 @@
 import 'package:ecommerce_app_my/controllers/login_controller.dart';
+import 'package:ecommerce_app_my/views/sign_up_view.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_button.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_login_buttons.dart';
 import 'package:ecommerce_app_my/views/widgets/text_field_widget.dart';
@@ -15,16 +16,17 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-   void disposeValues(){
+  void disposeValues() {
     _controller.emailController.value.clear();
     _controller.passwordController.value.clear();
   }
+
   var isObsecure = false;
   final LoginController _controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -86,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                   isObsecure: isObsecure,
                   onPress: () {
                     setState(() {
-                      isObsecure =! isObsecure;
+                      isObsecure = !isObsecure;
                     });
                   },
                   controller: _controller.passwordController.value,
@@ -99,21 +101,27 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(height: 60),
                 ReusableButton(
                   isLoading: _controller.isLoading.value,
-                  title: "Login", onPress: () {
-                     FocusScope.of(context).unfocus();
+                  title: "Login",
+                  onPress: () {
+                    FocusScope.of(context).unfocus();
 
-                    _controller.loginAdmin(
-                      email: _controller.emailController.value.text.trim(),
-                      password: _controller.passwordController.value.text.trim(),
-                      context: context,
-                    ).then((value){
-                      disposeValues();
-                    }).onError((error,stackTrace){
-                      if(kDebugMode){
-                        print("Error is $error");
-                      }
-                    });
-                }),
+                    _controller
+                        .loginAdmin(
+                          email: _controller.emailController.value.text.trim(),
+                          password: _controller.passwordController.value.text
+                              .trim(),
+                          context: context,
+                        )
+                        .then((value) {
+                          disposeValues();
+                        })
+                        .onError((error, stackTrace) {
+                          if (kDebugMode) {
+                            print("Error is $error");
+                          }
+                        });
+                  },
+                ),
                 const SizedBox(height: 20),
                 ReusableLoginButtons(
                   borderColor: Colors.blueAccent,
@@ -137,6 +145,39 @@ class _LoginViewState extends State<LoginView> {
                   buttonText: "Continue with Apple",
                   textColor: Colors.black,
                   leadingIcon: "assets/images/iphone_logo.png",
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpView()),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Don't have an account? ",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Sign Up",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
               ],

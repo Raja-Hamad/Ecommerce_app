@@ -214,6 +214,7 @@ class _WishListViewState extends State<WishListView> {
                                                 );
                                               } else {
                                                 CartModel cartModel = CartModel(
+                                                  
                                                   id: Uuid().v4(),
                                                   productModel: whishListProduct
                                                       .productModel,
