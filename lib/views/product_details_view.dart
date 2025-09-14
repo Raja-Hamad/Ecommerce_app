@@ -266,71 +266,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                 ),
                               ],
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffEEEEEE),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 2,
-                                      horizontal: 10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            if (productCout > 1) {
-                                              setState(() {
-                                                productCout--;
-                                              });
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.remove,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          productCout.toString(),
-                                          style: GoogleFonts.dmSans(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              productCout++;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  "Available in Stock",
-                                  style: GoogleFonts.dmSans(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -475,7 +411,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                           productSize: selectedSizeValue,
                                           id: Uuid().v4(),
                                           productModel: widget.model,
-                                          quantity: productCout,
+                                          quantity: 1,
                                         );
 
                                         _cartController

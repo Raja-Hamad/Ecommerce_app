@@ -9,7 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class AddDelieveryAddressView extends StatefulWidget {
-  const AddDelieveryAddressView({super.key});
+  int totalAmount;
+   AddDelieveryAddressView({super.key,
+  required this.totalAmount});
 
   @override
   State<AddDelieveryAddressView> createState() =>
@@ -74,7 +76,9 @@ class _AddDelieveryAddressViewState extends State<AddDelieveryAddressView> {
           Navigator.push(
             // ignore: use_build_context_synchronously
             context,
-            MaterialPageRoute(builder: (context) => PlaceOrderView()),
+            MaterialPageRoute(builder: (context) => PlaceOrderView(
+              totalAmount: widget.totalAmount,
+            )),
           );
 
           // ✅ Success Message

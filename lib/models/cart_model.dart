@@ -2,7 +2,7 @@ import 'package:ecommerce_app_my/models/product_model.dart';
 
 class CartModel {
   final String id;
-  final int ? quantity;
+   int ? quantity;
 final String? productSize;
   ProductModel productModel;
 

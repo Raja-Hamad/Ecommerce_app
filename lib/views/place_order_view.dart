@@ -11,7 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class PlaceOrderView extends StatefulWidget {
-  const PlaceOrderView({super.key});
+  int totalAmount;
+  PlaceOrderView({super.key, required this.totalAmount});
 
   @override
   State<PlaceOrderView> createState() => _PlaceOrderViewState();
@@ -39,7 +40,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
               paymentMethod: "Cash On Delievery(COD)",
               paymentStatus: "Unpaid",
               status: 'Pending',
-              totalAmount: 456666,
+              totalAmount: widget.totalAmount,
               userId: FirebaseAuth.instance.currentUser!.uid,
             );
             _addToCartOrWishlistController
@@ -56,7 +57,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
             height: 40,
             width: 300,
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
@@ -69,13 +70,55 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                         strokeWidth: 2,
                       ),
                     )
-                  : Text(
-                      "Place Order",
-                      style: GoogleFonts.openSans(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Total Price",
+                              style: GoogleFonts.dmSans(
+                                color: Color(0xffD5D5D5),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              "\$${widget.totalAmount.toString()}",
+                              style: GoogleFonts.dmSans(
+                                color: Color(0xff000000),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 20,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Place Order",
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
             ),
           ),
@@ -454,9 +497,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Text(
-                                                  "\$${  cartProduct
-                                                        .productModel
-                                                        .price.toString()}",
+                                                    "\$${cartProduct.productModel.price.toString()}",
                                                     style: GoogleFonts.dmSans(
                                                       color: Colors.black,
                                                       fontSize: 12,

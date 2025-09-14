@@ -21,17 +21,16 @@ class _WishListViewState extends State<WishListView> {
   final AddToCartOrWishlistController _cartOrWishlistController = Get.put(
     AddToCartOrWishlistController(),
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
-
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 30),
@@ -52,16 +51,14 @@ class _WishListViewState extends State<WishListView> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) {
-                      return SizedBox();
+                      return const SizedBox();
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return ListView.builder(
-                        itemCount: 6,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return ReusableShimmerWidget();
-                        },
+                      return Column(
+                        children: List.generate(
+                          6,
+                          (index) => ReusableShimmerWidget(),
+                        ),
                       );
                     } else {
                       final wishList = snapshot.data!.docs
@@ -70,215 +67,182 @@ class _WishListViewState extends State<WishListView> {
 
                       if (wishList.isEmpty) {
                         return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Your wishlist is empty",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 50),
+                            child: Text(
+                              "Your wishlist is empty",
+                              style: GoogleFonts.dmSans(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
+                            ),
                           ),
                         );
                       }
 
-                      return ListView.builder(
-                        itemCount: wishList.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          final whishListProduct = wishList[index];
+                      return Column(
+                        children: wishList.map((whishListProduct) {
                           return Padding(
-                            padding: EdgeInsets.only(bottom: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: ClipRRect(
-                                            child: Image.network(
-                                              whishListProduct
-                                                  .productModel
-                                                  .imageUrls
-                                                  .first,
-                                            ),
-                                          ),
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.network(
+                                          whishListProduct
+                                              .productModel.imageUrls.first,
+                                          fit: BoxFit.cover,
                                         ),
-                                        const SizedBox(width: 5),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              whishListProduct
-                                                  .productModel
-                                                  .title,
-                                              style: GoogleFonts.dmSans(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              whishListProduct
-                                                  .productModel
-                                                  .subtitle,
-                                              style: GoogleFonts.dmSans(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                            '\$${  whishListProduct
-                                                  .productModel
-                                                  .price.toString()}',
-                                              style: GoogleFonts.dmSans(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                      ),
                                     ),
-
-                                    StreamBuilder(
-                                      stream: FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(
-                                            FirebaseAuth
-                                                .instance
-                                                .currentUser!
-                                                .uid,
-                                          )
-                                          .collection("cart")
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData ||
-                                            snapshot.data == null) {
-                                          return SizedBox();
-                                        } else if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const SizedBox();
+                                    const SizedBox(width: 5),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          whishListProduct
+                                              .productModel.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          whishListProduct
+                                              .productModel.subtitle,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          '\$${whishListProduct.productModel.price.toString()}',
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                          StreamBuilder(
+                                                                      stream: FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(FirebaseAuth
+                                        .instance.currentUser!.uid)
+                                    .collection("cart")
+                                    .snapshots(),
+                                                                      builder: (context, snapshot) {
+                                                                        if (!snapshot.hasData ||
+                                      snapshot.data == null) {
+                                    return const SizedBox();
+                                                                        } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const SizedBox();
+                                                                        } else {
+                                    final cartList = snapshot.data!.docs
+                                        .map(
+                                          (json) => CartModel.fromJson(
+                                            json.data(),
+                                          ),
+                                        )
+                                        .toList();
+                                    
+                                    bool isPresent = cartList.any(
+                                      (product) =>
+                                          product.productModel.id ==
+                                          whishListProduct.productModel.id,
+                                    );
+                                    
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (isPresent) {
+                                          FlushBarMessages
+                                              .successMessageFlushBar(
+                                            "This product is already in Cart",
+                                            context,
+                                          );
                                         } else {
-                                          final cartList = snapshot.data!.docs
-                                              .map(
-                                                (json) => CartModel.fromJson(
-                                                  json.data(),
-                                                ),
-                                              )
-                                              .toList();
-
-                                          bool isPresent = cartList.any(
-                                            (product) =>
-                                                product.productModel.id ==
-                                                whishListProduct
-                                                    .productModel
-                                                    .id,
+                                          CartModel cartModel = CartModel(
+                                            quantity: 1,
+                                            id: const Uuid().v4(),
+                                            productModel:
+                                                whishListProduct.productModel,
                                           );
-                                          return GestureDetector(
-                                            onTap: () {
-                                              if (isPresent) {
-                                                FlushBarMessages.successMessageFlushBar(
-                                                  "This product is already in Cart",
-                                                  context,
-                                                );
-                                              } else {
-                                                CartModel cartModel = CartModel(
-
-                                                  id: Uuid().v4(),
-                                                  productModel: whishListProduct
-                                                      .productModel,
-                                                );
-
-                                                _cartOrWishlistController
-                                                    .addToCartOrWishList(
-                                                      context,
-                                                      cartModel,
-                                                      "cart",
-                                                    )
-                                                    .then((value) {
-                                                      FlushBarMessages.successMessageFlushBar(
-                                                        "Product Added to cart successfully",
-                                                        // ignore: use_build_context_synchronously
-                                                        context,
-                                                      );
-                                                    })
-                                                    .onError((
-                                                      error,
-                                                      stackTrace,
-                                                    ) {
-                                                      FlushBarMessages.errorMessageFlushBar(
-                                                        "Error while adding the product to cart ${error.toString()}",
-                                                        // ignore: use_build_context_synchronously
-                                                        context,
-                                                      );
-                                                    });
-                                              }
-                                            },
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 5,
-                                                  ), // chhoti padding
-                                              decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      12,
-                                                    ), // halka curve
-                                              ),
-                                              child: Text(
-                                                isPresent
-                                                    ? "Added to cart"
-                                                    : "Add to cart",
-                                                style: GoogleFonts.dmSans(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          );
+                                    
+                                          _cartOrWishlistController
+                                              .addToCartOrWishList(
+                                            context,
+                                            cartModel,
+                                            "cart",
+                                          )
+                                              .then((value) {
+                                            FlushBarMessages
+                                                .successMessageFlushBar(
+                                              "Product Added to cart successfully",
+                                              context,
+                                            );
+                                          }).onError((error, stackTrace) {
+                                            FlushBarMessages
+                                                .errorMessageFlushBar(
+                                              "Error while adding the product to cart ${error.toString()}",
+                                              context,
+                                            );
+                                          });
                                         }
                                       },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          isPresent
+                                              ? "Added to cart"
+                                              : "Add to cart",
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                                                        }
+                                                                      },
+                                                                    ),
+                                      ],
                                     ),
                                   ],
                                 ),
+                              
                               ],
                             ),
                           );
-                        },
+                        }).toList(),
                       );
                     }
                   },

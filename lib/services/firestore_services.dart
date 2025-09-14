@@ -134,6 +134,7 @@ class FirestoreServices {
   Future<void> checkUserAddressAndNavigate(
     BuildContext context,
     String userId,
+    int totalAmount
   ) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -148,14 +149,18 @@ class FirestoreServices {
         Navigator.push(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => PlaceOrderView()),
+          MaterialPageRoute(builder: (context) => PlaceOrderView(
+            totalAmount: totalAmount,
+          )),
         );
       } else {
         // Agar koi address nahi hai
         Navigator.push(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => AddDelieveryAddressView()),
+          MaterialPageRoute(builder: (context) => AddDelieveryAddressView(
+            totalAmount: totalAmount,
+          )),
         );
       }
     } catch (e) {
@@ -166,7 +171,9 @@ class FirestoreServices {
       Navigator.push(
         // ignore: use_build_context_synchronously
         context,
-        MaterialPageRoute(builder: (context) => AddDelieveryAddressView()),
+        MaterialPageRoute(builder: (context) => AddDelieveryAddressView(
+          totalAmount: totalAmount,
+        )),
       );
     }
   }
