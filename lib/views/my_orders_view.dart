@@ -118,6 +118,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 30),
                 isOnGoingSelected
                     ? StreamBuilder(
@@ -140,26 +141,27 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                             );
                           } else if (snapshots.data!.docs.isEmpty) {
                             // Agar koi address add nahi hai
-                            return  Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 100),
-                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
-                          const SizedBox(height: 30),
-                          Text(
-                            'You did not place any order yet',
-                            style: GoogleFonts.dmSans(
-                              color: Color(0xff000000),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                         
-                        ],
-                      ),
-                    );
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 100),
+                                  SvgPicture.asset(
+                                    "assets/svgs/nothing_found.svg",
+                                  ),
+                                  const SizedBox(height: 30),
+                                  Text(
+                                    'You did not place any order yet',
+                                    style: GoogleFonts.dmSans(
+                                      color: Color(0xff000000),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           } else {
                             List<OrderModel> allOrders = snapshots.data!.docs
                                 .map(
@@ -209,6 +211,169 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                           style: GoogleFonts.dmSans(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(
+                                                  0.2,
+                                                ),
+                                                spreadRadius: 2,
+                                                blurRadius: 6,
+                                                offset: const Offset(
+                                                  0,
+                                                  3,
+                                                ), // shadow ka position
+                                              ),
+                                            ],
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .start, // 👈 column start
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start, // 👈 column start
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .start, // 👈 row start
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Name: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(order.addressModel.name),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Calling Code: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order
+                                                        .addressModel
+                                                        .callingCode,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Phone: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.phone,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Address: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      order
+                                                          .addressModel
+                                                          .fullAddress,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "State: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.state,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Country: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "${order.addressModel.country} (${order.addressModel.countryCode})",
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Zip Code: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.zipCode,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         const SizedBox(height: 10),
@@ -373,26 +538,27 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                             );
                           } else if (snapshots.data!.docs.isEmpty) {
                             // Agar koi address add nahi hai
-                            return  Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 100),
-                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
-                          const SizedBox(height: 30),
-                          Text(
-                            'Not any order completed yet.',
-                            style: GoogleFonts.dmSans(
-                              color: Color(0xff000000),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                         
-                        ],
-                      ),
-                    );
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const SizedBox(height: 100),
+                                  SvgPicture.asset(
+                                    "assets/svgs/nothing_found.svg",
+                                  ),
+                                  const SizedBox(height: 30),
+                                  Text(
+                                    'Not any order completed yet.',
+                                    style: GoogleFonts.dmSans(
+                                      color: Color(0xff000000),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           } else {
                             List<OrderModel> allOrders = snapshots.data!.docs
                                 .map(
@@ -433,6 +599,169 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                           style: GoogleFonts.dmSans(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(
+                                                  0.2,
+                                                ),
+                                                spreadRadius: 2,
+                                                blurRadius: 6,
+                                                offset: const Offset(
+                                                  0,
+                                                  3,
+                                                ), // shadow ka position
+                                              ),
+                                            ],
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .start, // 👈 column start
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start, // 👈 column start
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .start, // 👈 row start
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Name: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(order.addressModel.name),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Calling Code: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order
+                                                        .addressModel
+                                                        .callingCode,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Phone: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.phone,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Address: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      order
+                                                          .addressModel
+                                                          .fullAddress,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "State: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.state,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Country: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "${order.addressModel.country} (${order.addressModel.countryCode})",
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Zip Code: ",
+                                                    style: GoogleFonts.dmSans(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    order.addressModel.zipCode,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         const SizedBox(height: 10),
