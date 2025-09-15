@@ -6,6 +6,7 @@ import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
@@ -392,22 +393,34 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 .toList();
 
                             if (cartList.isEmpty) {
-                              return Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Your cart is empty",
-                                      style: GoogleFonts.dmSans(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
+                              return  Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 100),
+                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                          const SizedBox(height: 30),
+                          Text(
+                            'No Cart Item found.',
+                            style: GoogleFonts.dmSans(
+                              color: Color(0xff000000),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Start adding items to the cart',
+                            style: GoogleFonts.openSans(
+                              color: Color(0xff000000),
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                             }
 
                             return ListView.builder(

@@ -4,6 +4,7 @@ import 'package:ecommerce_app_my/views/product_details_view.dart';
 import 'package:ecommerce_app_my/views/widgets/products_list_textfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -61,7 +62,34 @@ class _ProductListViewState extends State<ProductListView> {
                 leadingIcon: Icons.search,
               ),
               const SizedBox(height: 20),
-
+widget.listOfProduct.isEmpty?  Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 100),
+                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                          const SizedBox(height: 30),
+                          Text(
+                            'No Product found',
+                            style: GoogleFonts.dmSans(
+                              color: Color(0xff000000),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'We will notify you when any product available,',
+                            style: GoogleFonts.openSans(
+                              color: Color(0xff000000),
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ):
               /// GridView for Products
               Expanded(
                 child: GridView.builder(
@@ -75,8 +103,9 @@ class _ProductListViewState extends State<ProductListView> {
                   itemBuilder: (context, index) {
                     final product = widget.listOfProduct[index];
                     final imageUrl = product.imageUrls.first;
+                  
 
-                    return GestureDetector(
+                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -142,7 +171,8 @@ class _ProductListViewState extends State<ProductListView> {
                         ],
                       ),
                     );
-                  },
+                   }
+                  
                 ),
               ),
             ],

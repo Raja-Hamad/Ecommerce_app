@@ -3,6 +3,7 @@ import 'package:ecommerce_app_my/models/order_model.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyOrdersView extends StatefulWidget {
@@ -139,15 +140,26 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                             );
                           } else if (snapshots.data!.docs.isEmpty) {
                             // Agar koi address add nahi hai
-                            return Center(
-                              child: Text(
-                                "You did not place any order yet.",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
+                            return  Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 100),
+                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                          const SizedBox(height: 30),
+                          Text(
+                            'You did not place any order yet',
+                            style: GoogleFonts.dmSans(
+                              color: Color(0xff000000),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                         
+                        ],
+                      ),
+                    );
                           } else {
                             List<OrderModel> allOrders = snapshots.data!.docs
                                 .map(
@@ -343,10 +355,8 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                       )
                     : StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection("orders")
-                            .where("status", isNotEqualTo: "Pending")
+                            .where("status", isEqualTo: "Delievered")
                             .snapshots(),
                         builder: (context, snapshots) {
                           if (!snapshots.hasData || snapshots.data == null) {
@@ -363,15 +373,26 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                             );
                           } else if (snapshots.data!.docs.isEmpty) {
                             // Agar koi address add nahi hai
-                            return Center(
-                              child: Text(
-                                "Not any order completed yet.",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            );
+                            return  Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 100),
+                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                          const SizedBox(height: 30),
+                          Text(
+                            'Not any order completed yet.',
+                            style: GoogleFonts.dmSans(
+                              color: Color(0xff000000),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                         
+                        ],
+                      ),
+                    );
                           } else {
                             List<OrderModel> allOrders = snapshots.data!.docs
                                 .map(
