@@ -18,7 +18,7 @@ class AddFaqsView extends StatefulWidget {
 }
 
 class _AddFaqsViewState extends State<AddFaqsView> {
-  final FaqsController _controller = Get.put(FaqsController());
+  final FaqsOrOrdersController _controller = Get.put(FaqsOrOrdersController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +89,7 @@ class _AddFaqsViewState extends State<AddFaqsView> {
                         type: _controller.selectedType.value.trim().toString(),
                       );
                       _controller
-                          .addToCartOrWishList(context, model, "faqs")
+                          .addFaqOrOrders(context, model, "faqs")
                           .then((value) {
                             FlushBarMessages.successMessageFlushBar(
                               "Successfully added faq",

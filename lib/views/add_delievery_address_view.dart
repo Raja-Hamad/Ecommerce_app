@@ -9,8 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class AddDelieveryAddressView extends StatefulWidget {
+  String adminId;
   int totalAmount;
    AddDelieveryAddressView({super.key,
+   required this.adminId,
   required this.totalAmount});
 
   @override
@@ -77,6 +79,7 @@ class _AddDelieveryAddressViewState extends State<AddDelieveryAddressView> {
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(builder: (context) => PlaceOrderView(
+              adminId:widget.adminId,
               totalAmount: widget.totalAmount,
             )),
           );

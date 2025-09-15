@@ -20,8 +20,14 @@ class _CartViewState extends State<CartView> {
   final AddToCartOrWishlistController _addToCartOrWishlistController = Get.put(
     AddToCartOrWishlistController(),
   );
-  int total = 0;
   final FirestoreServices _firestoreServices = FirestoreServices();
+
+  final cartStream = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("cart")
+      .snapshots();
+
   void updateQuantity(String docId, int newQuantity) async {
     if (newQuantity > 0) {
       await FirebaseFirestore.instance
@@ -37,301 +43,317 @@ class _CartViewState extends State<CartView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: GestureDetector(
-          onTap: () async {
-            _firestoreServices.checkUserAddressAndNavigate(
-              context,
-              FirebaseAuth.instance.currentUser!.uid,
-              total,
-            );
+
+      /// ✅ Body ke liye alag StreamBuilder
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: cartStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return ListView.builder(
+                itemCount: 6,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => const ReusableShimmerWidget(),
+              );
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text(
+                  "Your cart is empty",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            }
+
+            final cartList = snapshot.data!.docs
+                .map((json) => CartModel.fromJson(json.data()))
+                .toList();
+
+            return buildCartBody(cartList, snapshot);
           },
-          child: Container(
-            height: 40,
-            width: 300,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+
+      /// ✅ Bottom bar ke liye alag StreamBuilder
+      bottomNavigationBar: StreamBuilder(
+        stream: cartStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            // ✅ Jab cart empty hai → nav bar hi hide kar do
+            return const SizedBox.shrink();
+          }
+
+          final cartList = snapshot.data!.docs
+              .map((json) => CartModel.fromJson(json.data()))
+              .toList();
+
+          int total = cartList.fold(
+            0,
+            (sum, item) => sum + (item.productModel.price * item.quantity!),
+          );
+
+          return buildBottomBar(total,
+          cartList.first.productModel.adminId);
+        },
+      ),
+    );
+  }
+
+  /// 🔹 Helper: Bottom bar widget
+  Widget buildBottomBar(int total, String adminId) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: GestureDetector(
+        onTap: () async {
+          _firestoreServices.checkUserAddressAndNavigate(
+            context,
+            FirebaseAuth.instance.currentUser!.uid,
+            total,
+            adminId
+          );
+        },
+        child: Container(
+          height: 40,
+          width: 300,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Total Price",
+                    style: GoogleFonts.dmSans(
+                      color: const Color(0xffD5D5D5),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    "\$$total",
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                  child: Text(
+                    "Proceed to Payment",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 🔹 Helper: Cart body widget
+  Widget buildCartBody(
+    List<CartModel> cartList,
+    AsyncSnapshot<QuerySnapshot> snapshot,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 30),
+            Text(
+              "My Cart",
+              style: GoogleFonts.dmSans(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Center(
-              child: _addToCartOrWishlistController.isLoading.value
-                  ? const SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+            const SizedBox(height: 30),
+
+            /// 🔹 List of products
+            Column(
+              children: cartList.map((cartProduct) {
+                final docId =
+                    snapshot.data!.docs[cartList.indexOf(cartProduct)].id;
+
+                return Dismissible(
+                  key: Key(docId),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    color: Colors.red,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Total Price",
-                              style: GoogleFonts.dmSans(
-                                color: Color(0xffD5D5D5),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            Text(
-                              "\$${total.toString()}",
-                              style: GoogleFonts.dmSans(
-                                color: Color(0xff000000),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 5,
-                              horizontal: 20,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Proceed to Payment",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                        Icon(Icons.delete, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          "Delete",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-            ),
-          ),
-        ),
-      ),
-
-      body: SafeArea(
-  child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 30),
-          Text(
-            "My Cart",
-            style: GoogleFonts.dmSans(
-              color: Colors.black,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 30),
-
-          /// ✅ StreamBuilder directly yahan lagao
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("users")
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .collection("cart")
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const SizedBox();
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Column(
-                  children: List.generate(
-                    6,
-                    (index) => ReusableShimmerWidget(),
                   ),
-                );
-              } else {
-                final cartList = snapshot.data!.docs
-                    .map((json) => CartModel.fromJson(json.data()))
-                    .toList();
+                  onDismissed: (direction) async {
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .collection("cart")
+                        .doc(docId)
+                        .delete();
 
-                total = 0;
-                for (var product in cartList) {
-                  total += product.productModel.price * product.quantity!;
-                }
-
-                if (cartList.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: Text(
-                        "Your cart is empty",
-                        style: GoogleFonts.dmSans(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  );
-                }
-
-                return Column(
-                  children: cartList.map((cartProduct) {
-                    final docId = snapshot.data!.docs[cartList.indexOf(cartProduct)].id;
-
-                    return Dismissible(
-                      key: Key(docId),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Icon(Icons.delete, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text(
-                              "Delete",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      onDismissed: (direction) async {
-                        await FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("cart")
-                            .doc(docId)
-                            .delete();
-
-                        FlushBarMessages.successMessageFlushBar(
-                          "${cartProduct.productModel.title} removed from cart",
-                          context,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    FlushBarMessages.successMessageFlushBar(
+                      "${cartProduct.productModel.title} removed from cart",
+                      context,
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      cartProduct.productModel.imageUrls.first,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.35,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        cartProduct.productModel.title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.dmSans(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        cartProduct.productModel.subtitle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.dmSans(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "\$${(cartProduct.productModel.price * cartProduct.quantity!).toString()}",
-                                        style: GoogleFonts.dmSans(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              height: 100,
+                              width: 100,
                               decoration: BoxDecoration(
-                                color: const Color(0xffEEEEEE),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Row(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  cartProduct.productModel.imageUrls.first,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      int currentQuantity = cartProduct.quantity!;
-                                      if (currentQuantity > 1) {
-                                        updateQuantity(docId, currentQuantity - 1);
-                                      }
-                                    },
-                                    child: const Icon(Icons.remove, size: 16, color: Colors.black),
-                                  ),
-                                  const SizedBox(width: 6),
                                   Text(
-                                    cartProduct.quantity.toString(),
+                                    cartProduct.productModel.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.dmSans(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    cartProduct.productModel.subtitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.dmSans(
                                       color: Colors.black,
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  const SizedBox(width: 6),
-                                  GestureDetector(
-                                    onTap: () {
-                                      int currentQuantity = cartProduct.quantity!;
-                                      updateQuantity(docId, currentQuantity + 1);
-                                    },
-                                    child: const Icon(Icons.add, size: 16, color: Colors.black),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "\$${(cartProduct.productModel.price * cartProduct.quantity!).toString()}",
+                                    style: GoogleFonts.dmSans(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  }).toList(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xffEEEEEE),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  int currentQuantity = cartProduct.quantity!;
+                                  if (currentQuantity > 1) {
+                                    updateQuantity(docId, currentQuantity - 1);
+                                  }
+                                },
+                                child: const Icon(
+                                  Icons.remove,
+                                  size: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                cartProduct.quantity.toString(),
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              GestureDetector(
+                                onTap: () {
+                                  int currentQuantity = cartProduct.quantity!;
+                                  updateQuantity(docId, currentQuantity + 1);
+                                },
+                                child: const Icon(
+                                  Icons.add,
+                                  size: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
-              }
-            },
-          ),
-        ],
+              }).toList(),
+            ),
+          ],
+        ),
       ),
-    ),
-  ),
-),
-
     );
   }
 }

@@ -121,8 +121,6 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                 isOnGoingSelected
                     ? StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection("orders")
                             .where("status", isEqualTo: "Pending")
                             .snapshots(),
@@ -156,13 +154,22 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                   (order) => OrderModel.fromJson(order.data()),
                                 )
                                 .toList();
+
+                            List<OrderModel> filteredOrdersList = allOrders
+                                .where(
+                                  (order) =>
+                                      order.userId ==
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                )
+                                .toList();
+
                             return ListView.builder(
-                              itemCount: allOrders.length,
+                              itemCount: filteredOrdersList.length,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                final order = allOrders[index];
+                                final order = filteredOrdersList[index];
 
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
@@ -291,7 +298,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                                               ),
                                                         ),
                                                         Text(
-                                                          "Price: ${cartItem.productModel.price}",
+                                                          "\$${(cartItem.productModel.price * cartItem.quantity!).toString()}",
                                                           style:
                                                               GoogleFonts.dmSans(
                                                                 fontSize: 12,
@@ -312,7 +319,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                         const Divider(),
                                         // Order Footer (status, total, etc.)
                                         Text(
-                                          "Total: ${order.totalAmount}",
+                                          "Total: \$${order.totalAmount}",
                                           style: GoogleFonts.dmSans(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,

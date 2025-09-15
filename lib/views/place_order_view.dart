@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecommerce_app_my/controllers/add_to_cart_or_wishlist_controller.dart';
+import 'package:ecommerce_app_my/controllers/faqs_controller.dart';
 import 'package:ecommerce_app_my/models/cart_model.dart';
 import 'package:ecommerce_app_my/models/order_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
@@ -11,118 +11,162 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 class PlaceOrderView extends StatefulWidget {
+  String adminId;
   int totalAmount;
-  PlaceOrderView({super.key, required this.totalAmount});
+  PlaceOrderView({super.key, required this.totalAmount,
+  required this.adminId});
 
   @override
   State<PlaceOrderView> createState() => _PlaceOrderViewState();
 }
 
 class _PlaceOrderViewState extends State<PlaceOrderView> {
+  Future<void> clearUserCart(String userId) async {
+    final cartRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('cart');
+
+    final cartSnapshot = await cartRef.get();
+
+    for (var doc in cartSnapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
+
   AddressModel? selectedAddress;
   List<CartModel> cartList = [];
 
-  final AddToCartOrWishlistController _addToCartOrWishlistController = Get.put(
-    AddToCartOrWishlistController(),
+  final FaqsOrOrdersController _faqsOrOrdersController = Get.put(
+    FaqsOrOrdersController(),
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: GestureDetector(
-          onTap: () async {
-            OrderModel orderModel = OrderModel(
-              addressModel: selectedAddress!,
-              cartModel: cartList,
-              id: Uuid().v4(),
-              paymentMethod: "Cash On Delievery(COD)",
-              paymentStatus: "Unpaid",
-              status: 'Pending',
-              totalAmount: widget.totalAmount,
-              userId: FirebaseAuth.instance.currentUser!.uid,
-            );
-            _addToCartOrWishlistController
-                .addToCartOrWishList(context, orderModel, "orders")
-                .then((value) {
-                  FlushBarMessages.successMessageFlushBar(
-                    "Your oder is processed successfully",
-                    // ignore: use_build_context_synchronously
-                    context,
+      bottomNavigationBar: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("cart")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const SizedBox();
+          }
+
+          final cartList = snapshot.data!.docs
+              .map((json) => CartModel.fromJson(json.data()))
+              .toList();
+
+          int total = 0;
+          for (var product in cartList) {
+            total += product.productModel.price * product.quantity!;
+          }
+          if (cartList.isNotEmpty) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: GestureDetector(
+                onTap: () async {
+                  OrderModel orderModel = OrderModel(
+                    adminId:widget.adminId,
+                    addressModel: selectedAddress!,
+                    cartModel: cartList,
+                    id: Uuid().v4(),
+                    paymentMethod: "Cash On Delievery(COD)",
+                    paymentStatus: "Unpaid",
+                    status: 'Pending',
+                    totalAmount: widget.totalAmount,
+                    userId: FirebaseAuth.instance.currentUser!.uid,
                   );
-                });
-          },
-          child: Container(
-            height: 40,
-            width: 300,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: _addToCartOrWishlistController.isLoading.value
-                  ? const SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Total Price",
-                              style: GoogleFonts.dmSans(
-                                color: Color(0xffD5D5D5),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                  _faqsOrOrdersController
+                      .addFaqOrOrders(context, orderModel, "orders")
+                      .then((value) async {
+                        await clearUserCart(
+                          FirebaseAuth.instance.currentUser!.uid,
+                        );
+                        FlushBarMessages.successMessageFlushBar(
+                          "Your oder is processed successfully",
+                          // ignore: use_build_context_synchronously
+                          context,
+                        );
+                      });
+                },
+                child: Container(
+                  height: 40,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: _faqsOrOrdersController.isLoading.value
+                        ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Total Price",
+                                    style: GoogleFonts.dmSans(
+                                      color: Color(0xffD5D5D5),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  Text(
+                                    "\$${widget.totalAmount.toString()}",
+                                    style: GoogleFonts.dmSans(
+                                      color: Color(0xff000000),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              "\$${widget.totalAmount.toString()}",
-                              style: GoogleFonts.dmSans(
-                                color: Color(0xff000000),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 5,
-                              horizontal: 20,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Place Order",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 20,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Place Order",
+                                      style: GoogleFonts.dmSans(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-            ),
-          ),
-        ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return SizedBox();
+          }
+        },
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -477,6 +521,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     cartProduct
                                                         .productModel
                                                         .title,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: GoogleFonts.dmSans(
                                                       color: Colors.black,
                                                       fontSize: 14,
@@ -488,6 +535,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     cartProduct
                                                         .productModel
                                                         .subtitle,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: GoogleFonts.dmSans(
                                                       color: Colors.black,
                                                       fontSize: 12,
@@ -508,53 +558,6 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 ],
                                               ),
                                             ],
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 6,
-                                              vertical: 2,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xffEEEEEE),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // minus action
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.remove,
-                                                    size: 16,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 6),
-                                                Text(
-                                                  cartProduct.quantity
-                                                      .toString(),
-                                                  style: GoogleFonts.dmSans(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 6),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // plus action
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.add,
-                                                    size: 16,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
                                           ),
                                         ],
                                       ),

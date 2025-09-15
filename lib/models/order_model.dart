@@ -3,6 +3,7 @@ import 'package:ecommerce_app_my/models/cart_model.dart';
 class OrderModel {
   String id;
   String userId;
+  String adminId;
   List<CartModel> cartModel;
   int totalAmount;
   String paymentStatus;
@@ -17,12 +18,14 @@ class OrderModel {
     required this.paymentMethod,
     required this.paymentStatus,
     required this.status,
+    required this.adminId,
     required this.totalAmount,
     required this.userId,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
+      adminId: json['adminId'] ?? '',
       addressModel: AddressModel.fromJson(json['addressModel']),
       cartModel: (json['cartModel'] as List<dynamic>?)
               ?.map((e) => CartModel.fromJson(e))
@@ -46,6 +49,7 @@ class OrderModel {
       "paymentStatus": paymentStatus,
       "paymentMethod": paymentMethod,
       "addressModel": addressModel.toJson(),
+      "adminId":adminId,
       "status": status,
     };
   }
@@ -61,6 +65,7 @@ class OrderModel {
         'paymentMethod: $paymentMethod, '
         'addressModel: $addressModel, '
         'status: $status'
+        'adminId: $adminId, '
         ')';
   }
 }

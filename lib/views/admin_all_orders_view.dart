@@ -13,20 +13,21 @@ class AdminAllOrdersView extends StatefulWidget {
 }
 
 class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
-    bool isOnGoingSelected = true;
+  bool isOnGoingSelected = true;
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: SafeArea(child: Padding(padding: EdgeInsets.symmetric(
-        horizontal: 20
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        const SizedBox(height: 30,),
-          Row(
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -117,12 +118,10 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                     ),
                   ],
                 ),
-         const SizedBox(height: 30),
+                const SizedBox(height: 30),
                 isOnGoingSelected
                     ? StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection("orders")
                             .where("status", isEqualTo: "Pending")
                             .snapshots(),
@@ -156,13 +155,20 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                   (order) => OrderModel.fromJson(order.data()),
                                 )
                                 .toList();
+                                 List<OrderModel> filteredOrdersList = allOrders
+                                .where(
+                                  (order) =>
+                                      order.adminId ==
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                )
+                                .toList();
                             return ListView.builder(
-                              itemCount: allOrders.length,
+                              itemCount: filteredOrdersList.length,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                final order = allOrders[index];
+                                final order = filteredOrdersList[index];
 
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
@@ -549,8 +555,11 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                           }
                         },
                       ),
-        ],
-      ),)),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

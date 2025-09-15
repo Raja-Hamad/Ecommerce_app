@@ -114,7 +114,7 @@ class FirestoreServices {
       }
     }
   }
-   Future<void> addFaqs(
+   Future<void> addFaqsOrOrders(
     BuildContext context,
     var model,
     String collectionName,
@@ -134,7 +134,9 @@ class FirestoreServices {
   Future<void> checkUserAddressAndNavigate(
     BuildContext context,
     String userId,
-    int totalAmount
+    int totalAmount,
+        String adminId
+
   ) async {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -150,6 +152,7 @@ class FirestoreServices {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => PlaceOrderView(
+            adminId: adminId,
             totalAmount: totalAmount,
           )),
         );
@@ -159,6 +162,7 @@ class FirestoreServices {
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => AddDelieveryAddressView(
+            adminId: adminId,
             totalAmount: totalAmount,
           )),
         );
@@ -172,6 +176,7 @@ class FirestoreServices {
         // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => AddDelieveryAddressView(
+          adminId: adminId,
           totalAmount: totalAmount,
         )),
       );
