@@ -549,7 +549,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                   ),
                                   const SizedBox(height: 30),
                                   Text(
-                                    'Not any order completed yet.',
+                                    'You did not place any order yet',
                                     style: GoogleFonts.dmSans(
                                       color: Color(0xff000000),
                                       fontSize: 16,
@@ -565,13 +565,20 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                   (order) => OrderModel.fromJson(order.data()),
                                 )
                                 .toList();
+                                   List<OrderModel> filteredOrdersList = allOrders
+                                .where(
+                                  (order) =>
+                                      order.userId ==
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                )
+                                .toList();
                             return ListView.builder(
-                              itemCount: allOrders.length,
+                              itemCount: filteredOrdersList.length,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                final order = allOrders[index];
+                                final order = filteredOrdersList[index];
 
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
