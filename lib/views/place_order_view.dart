@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_my/controllers/faqs_controller.dart';
 import 'package:ecommerce_app_my/models/cart_model.dart';
 import 'package:ecommerce_app_my/models/order_model.dart';
+import 'package:ecommerce_app_my/models/user_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
+import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +16,7 @@ import 'package:uuid/uuid.dart';
 class PlaceOrderView extends StatefulWidget {
   String adminId;
   int totalAmount;
-  PlaceOrderView({super.key, required this.totalAmount,
-  required this.adminId});
+  PlaceOrderView({super.key, required this.totalAmount, required this.adminId});
 
   @override
   State<PlaceOrderView> createState() => _PlaceOrderViewState();
@@ -41,6 +42,28 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
   final FaqsOrOrdersController _faqsOrOrdersController = Get.put(
     FaqsOrOrdersController(),
   );
+  final LocalStorage _localStorage = LocalStorage();
+  String? name;
+  String? imageUrl;
+  String? emailAddress;
+  String? userDeviceToken;
+  bool isLoading = true;
+
+  void getValues() async {
+    name = await _localStorage.getValue("userName");
+    emailAddress = await _localStorage.getValue("email");
+    imageUrl = await _localStorage.getValue("imageUrl");
+    userDeviceToken = await _localStorage.getValue("userDeviceToken");
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getValues();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +92,16 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: GestureDetector(
                 onTap: () async {
+                  UserModel userModel = UserModel(
+                    email: emailAddress ?? "",
+                    imageUrl: imageUrl ?? "",
+                    userDeviceToken: userDeviceToken ?? "",
+                    userName: name ?? "",
+                    id: FirebaseAuth.instance.currentUser!.uid,
+                  );
                   OrderModel orderModel = OrderModel(
-                    adminId:widget.adminId,
+                    userModel: userModel,
+                    adminId: widget.adminId,
                     addressModel: selectedAddress!,
                     cartModel: cartList,
                     id: Uuid().v4(),
@@ -393,34 +424,36 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 .toList();
 
                             if (cartList.isEmpty) {
-                              return  Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 100),
-                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
-                          const SizedBox(height: 30),
-                          Text(
-                            'No Cart Item found.',
-                            style: GoogleFonts.dmSans(
-                              color: Color(0xff000000),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Start adding items to the cart',
-                            style: GoogleFonts.openSans(
-                              color: Color(0xff000000),
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 100),
+                                    SvgPicture.asset(
+                                      "assets/svgs/nothing_found.svg",
+                                    ),
+                                    const SizedBox(height: 30),
+                                    Text(
+                                      'No Cart Item found.',
+                                      style: GoogleFonts.dmSans(
+                                        color: Color(0xff000000),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Start adding items to the cart',
+                                      style: GoogleFonts.openSans(
+                                        color: Color(0xff000000),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
                             }
 
                             return ListView.builder(

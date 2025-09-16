@@ -1,12 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app_my/controllers/notification_controller.dart';
+import 'package:ecommerce_app_my/models/notification_model.dart';
 import 'package:ecommerce_app_my/models/order_model.dart';
 import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
+import 'package:ecommerce_app_my/utils/extensions/notification_center.dart';
 import 'package:ecommerce_app_my/views/widgets/order_processing_statuses_drop_down_widget.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 class AdminAllOrdersView extends StatefulWidget {
   const AdminAllOrdersView({super.key});
@@ -17,6 +22,8 @@ class AdminAllOrdersView extends StatefulWidget {
 
 class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
   bool isOnGoingSelected = true;
+
+  final NotificationController _controller = Get.put(NotificationController());
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +133,7 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                     ? StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("orders")
-                            .where("status", isEqualTo: "Pending")
+                            .where("status", isNotEqualTo: "Delievered")
                             .snapshots(),
                         builder: (context, snapshots) {
                           if (!snapshots.hasData || snapshots.data == null) {
@@ -213,7 +220,7 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                           const SizedBox(height: 10),
+                                        const SizedBox(height: 10),
                                         Container(
                                           padding: const EdgeInsets.all(12),
                                           decoration: BoxDecoration(
@@ -563,6 +570,71 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                                         // ignore: use_build_context_synchronously
                                                         context,
                                                       );
+                                                      NotificationCenter.submitMessageNotification(
+                                                        order
+                                                            .userModel
+                                                            .userDeviceToken,
+                                                        "Order Status",
+                                                        "Your order status for the product ${order.cartModel.first.productModel.title}",
+                                                        order
+                                                            .cartModel
+                                                            .first
+                                                            .productModel
+                                                            .imageUrls
+                                                            .first,
+                                                        "orders",
+                                                      );
+                                                      NotificationModel
+                                                      model = NotificationModel(
+                                                        id: Uuid().v4(),
+                                                        orderId: order.id,
+                                                        userId:
+                                                            order.userModel.id,
+                                                        adminId: FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                        cancelledBy:
+                                                            order.status ==
+                                                                "Cancelled"
+                                                            ? "Admin"
+                                                            : "",
+                                                        orderStatus:
+                                                            order.status,
+                                                        productId: order
+                                                            .cartModel
+                                                            .first
+                                                            .productModel
+                                                            .id,
+                                                        productName: order
+                                                            .cartModel
+                                                            .first
+                                                            .productModel
+                                                            .title,
+                                                        productImage: order
+                                                            .cartModel
+                                                            .first
+                                                            .productModel
+                                                            .imageUrls
+                                                            .first,
+                                                        notificationTitle:
+                                                            "Order Status",
+                                                        notificationBody:
+                                                            "Your order status for the product ${order.cartModel.first.productModel.title}",
+                                                        notificationReadStatus:
+                                                            "unread",
+                                                      );
+                                                      final createdAt = model
+                                                          .toJson();
+                                                      createdAt['createdAt'] =
+                                                          FieldValue.serverTimestamp(); // Add timestamp manually
+
+                                                      _controller
+                                                          .addFaqOrOrders(
+                                                            context,
+                                                            model,
+                                                            "notifications",
+                                                          );
                                                     });
                                               },
                                               child: Container(
