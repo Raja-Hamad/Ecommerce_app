@@ -8,7 +8,7 @@ class ProductModel {
   final String stock;
   final String adminId;
   final List<String> imageUrls;
-final String category;
+  final String category;
   ProductModel({
     required this.adminId,
     required this.description,
@@ -19,7 +19,7 @@ final String category;
     required this.stock,
     required this.subtitle,
     required this.title,
-    required this.category
+    required this.category,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -40,7 +40,7 @@ final String category;
   Map<String, dynamic> toJson() {
     return {
       "adminId": adminId,
-      "category":category,
+      "category": category,
       "description": description,
       "id": id,
       "imageUrls": imageUrls,
@@ -55,7 +55,7 @@ final String category;
   @override
   String toString() {
     return 'ProductModel(id: $id, title: $title, subtitle: $subtitle, '
-    'category: $category, '
+        'category: $category, '
         'description: $description, price: $price, sizes: $sizes, '
         'stock: $stock, adminId: $adminId, imageUrl: $imageUrls)';
   }

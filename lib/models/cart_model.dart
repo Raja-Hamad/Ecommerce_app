@@ -2,15 +2,15 @@ import 'package:ecommerce_app_my/models/product_model.dart';
 
 class CartModel {
   final String id;
-   int ? quantity;
-final String? productSize;
+  int? quantity;
+  final String? productSize;
   ProductModel productModel;
 
   CartModel({
     required this.id,
     required this.productModel,
-     this.productSize,
-     this.quantity,
+    this.productSize,
+    this.quantity,
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,7 @@ final String? productSize;
       "id": id,
       "productModel": productModel.toJson(),
       "quantity": quantity,
-      "productSize":productSize
+      "productSize": productSize,
     };
   }
 

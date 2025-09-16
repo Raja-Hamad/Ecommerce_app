@@ -67,34 +67,34 @@ class _WishListViewState extends State<WishListView> {
                           .toList();
 
                       if (wishList.isEmpty) {
-                return      Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 100),
-                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
-                          const SizedBox(height: 30),
-                          Text(
-                            'N wish list item found.',
-                            style: GoogleFonts.dmSans(
-                              color: Color(0xff000000),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 100),
+                              SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                              const SizedBox(height: 30),
+                              Text(
+                                'N wish list item found.',
+                                style: GoogleFonts.dmSans(
+                                  color: Color(0xff000000),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Start adding products to the wish list',
+                                style: GoogleFonts.openSans(
+                                  color: Color(0xff000000),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Start adding products to the wish list',
-                            style: GoogleFonts.openSans(
-                              color: Color(0xff000000),
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                        );
                       }
 
                       return Column(

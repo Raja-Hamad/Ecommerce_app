@@ -52,13 +52,12 @@ class _PersonalDetailsViewState extends State<PersonalDetailsView> {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
-                    child:  Image.network(
-                            imageUrl!,
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.cover,
-                          )
-                       
+                    child: Image.network(
+                      imageUrl!,
+                      height: 80,
+                      width: 80,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
 

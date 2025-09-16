@@ -23,18 +23,19 @@ class OrderModel {
     required this.adminId,
     required this.totalAmount,
     required this.userId,
-    required this.userModel
+    required this.userModel,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
       adminId: json['adminId'] ?? '',
       addressModel: AddressModel.fromJson(json['addressModel']),
-      cartModel: (json['cartModel'] as List<dynamic>?)
+      cartModel:
+          (json['cartModel'] as List<dynamic>?)
               ?.map((e) => CartModel.fromJson(e))
               .toList() ??
           [],
-          userModel: UserModel.fromJson(json['userModel']),
+      userModel: UserModel.fromJson(json['userModel']),
       id: json['id'],
       paymentMethod: json['paymentMethod'],
       paymentStatus: json['paymentStatus'],
@@ -53,8 +54,8 @@ class OrderModel {
       "paymentStatus": paymentStatus,
       "paymentMethod": paymentMethod,
       "addressModel": addressModel.toJson(),
-      "adminId":adminId,
-      'userModel':userModel.toMap(),
+      "adminId": adminId,
+      'userModel': userModel.toMap(),
       "status": status,
     };
   }
@@ -97,8 +98,7 @@ class AddressModel {
     required this.state,
     required this.zipCode,
     required this.countryCode,
-    required this.id
-
+    required this.id,
   });
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
@@ -107,12 +107,12 @@ class AddressModel {
       fullAddress: json['fullAddress'],
       name: json['name'] ?? "",
       phone: json['phone'],
-      callingCode: json['callingCode'] ??'',
+      callingCode: json['callingCode'] ?? '',
       country: json['country'] ?? '',
-      zipCode: json['zipCode'] ??'',
-      state: json['state'] ??'',
-      countryCode:json['countryCode'] ?? '',
-      id: json['id'] ?? ''
+      zipCode: json['zipCode'] ?? '',
+      state: json['state'] ?? '',
+      countryCode: json['countryCode'] ?? '',
+      id: json['id'] ?? '',
     );
   }
 
@@ -122,12 +122,12 @@ class AddressModel {
       "phone": phone,
       "fullAddress": fullAddress,
       "city": city,
-      "zipCode":zipCode,
-      'country':country,
-      "state":state,
-      'callingCode':callingCode,
-      'countryCode':countryCode,
-      'id':id
+      "zipCode": zipCode,
+      'country': country,
+      "state": state,
+      'callingCode': callingCode,
+      'countryCode': countryCode,
+      'id': id,
     };
   }
 

@@ -5,12 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 class ReusableButton extends StatefulWidget {
   String title;
   VoidCallback onPress;
-    bool isLoading;
+  bool isLoading;
 
-   ReusableButton({super.key,
-  required this.onPress,
-this.isLoading=false,
-  required this.title});
+  ReusableButton({
+    super.key,
+    required this.onPress,
+    this.isLoading = false,
+    required this.title,
+  });
 
   @override
   State<ReusableButton> createState() => _ReusableButtonState();

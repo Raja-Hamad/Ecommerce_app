@@ -27,8 +27,8 @@ class UpdateProfileController extends GetxController {
   Future<void> updateProfile(
     String newEmail,
     String newName,
-  
-  String imageUrl,
+
+    String imageUrl,
     BuildContext context,
   ) async {
     try {
@@ -47,7 +47,6 @@ class UpdateProfileController extends GetxController {
       if (currentUser.email != newEmail) {
         await currentUser.verifyBeforeUpdateEmail(newEmail);
       }
-    
 
       // ✅ Step 2: Update Firestore user info
       await FirebaseFirestore.instance
@@ -56,11 +55,9 @@ class UpdateProfileController extends GetxController {
           .update({
             'email': newEmail,
             'userName': newName,
-          
+
             'imageUrl': imageUrl,
           });
-
-    
     } catch (e) {
       Get.snackbar("Error", e.toString());
     } finally {

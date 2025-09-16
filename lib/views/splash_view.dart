@@ -15,7 +15,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       body: Stack(
         children: [
@@ -38,48 +38,51 @@ class _SplashViewState extends State<SplashView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Get.to(const LoginView());
                   },
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Colors.white
+                      color: Colors.white,
                     ),
-                    child: Padding(padding: EdgeInsets.symmetric(
-                      vertical: 10
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Center(
+                        child: Text(
+                          "Login",
+                          style: GoogleFonts.dmSans(color: Colors.black),
+                        ),
+                      ),
                     ),
-                    child: Center(
-                      child: Text("Login",
-                      style: GoogleFonts.dmSans(color: Colors.black),),
-                    ),),
                   ),
                 ),
-                const SizedBox(height: 20,),
-                  GestureDetector(
-                    onTap: (){
-                      Get.to(SignUpView());
-                    },
-                    child: Container(
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Get.to(SignUpView());
+                  },
+                  child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      border: Border.all(width: 1,
-                      color: Colors.white),
+                      border: Border.all(width: 1, color: Colors.white),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Padding(padding: EdgeInsets.symmetric(
-                      vertical: 10
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Center(
+                        child: Text(
+                          "Sign Up",
+                          style: GoogleFonts.dmSans(color: Colors.white),
+                        ),
+                      ),
                     ),
-                    child: Center(
-                      child: Text("Sign Up",
-                      style: GoogleFonts.dmSans(color: Colors.white),),
-                    ),),
-                                    ),
-                  )
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

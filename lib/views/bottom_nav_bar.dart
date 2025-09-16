@@ -4,7 +4,6 @@ import 'package:ecommerce_app_my/views/wishlist_view.dart';
 import 'package:ecommerce_app_my/views/profile_view.dart';
 import 'package:flutter/material.dart';
 
-
 class BottomNavBarView extends StatefulWidget {
   const BottomNavBarView({super.key});
 
@@ -25,9 +24,7 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   void _onTap(int index) {
     if (_currentIndex == index) {
       // agar same tab dobara select kare to popUntil
-      _navigatorKeys[index]
-          .currentState!
-          .popUntil((route) => route.isFirst);
+      _navigatorKeys[index].currentState!.popUntil((route) => route.isFirst);
     } else {
       setState(() {
         _currentIndex = index;
@@ -39,9 +36,7 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return !await _navigatorKeys[_currentIndex]
-            .currentState!
-            .maybePop();
+        return !await _navigatorKeys[_currentIndex].currentState!.maybePop();
       },
       child: Scaffold(
         body: IndexedStack(
@@ -64,8 +59,14 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
           onTap: _onTap,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'WishList'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'WishList',
+            ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
         ),
@@ -77,11 +78,8 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
     return Navigator(
       key: _navigatorKeys[index],
       onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (_) => child,
-        );
+        return MaterialPageRoute(builder: (_) => child);
       },
     );
   }
 }
-

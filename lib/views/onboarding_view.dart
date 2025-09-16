@@ -4,7 +4,6 @@ import 'package:ecommerce_app_my/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
 
@@ -21,10 +20,9 @@ class _OnboardingViewState extends State<OnboardingView> {
     _checkLogin();
   }
 
-
   Future<void> _checkLogin() async {
     await Future.delayed(const Duration(seconds: 3)); // optional splash delay
-   Get.offAll(SplashView());
+    Get.offAll(SplashView());
   }
 
   @override
@@ -36,15 +34,17 @@ class _OnboardingViewState extends State<OnboardingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: Image.asset("assets/images/ecommerce_splash_logo.png",
-        height: double.infinity,
-        width: double.infinity,
-        fit: BoxFit.cover,),
+        child: Image.asset(
+          "assets/images/ecommerce_splash_logo.png",
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

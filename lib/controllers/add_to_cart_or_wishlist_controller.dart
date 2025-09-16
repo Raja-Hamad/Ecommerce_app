@@ -15,7 +15,7 @@ class AddToCartOrWishlistController extends GetxController {
   var phoneController = TextEditingController().obs;
   var fullAddressController = TextEditingController().obs;
   var callingCodeController = TextEditingController().obs;
-    var answerController = TextEditingController().obs;
+  var answerController = TextEditingController().obs;
   var questionController = TextEditingController().obs;
   RxString selectedType = ''.obs;
   var isLoading = false.obs;

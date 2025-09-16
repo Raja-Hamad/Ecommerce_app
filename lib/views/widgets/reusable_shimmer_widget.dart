@@ -11,7 +11,7 @@ class ReusableShimmerWidget extends StatefulWidget {
 class _ReusableShimmerWidgetState extends State<ReusableShimmerWidget> {
   @override
   Widget build(BuildContext context) {
-    return   Shimmer.fromColors(
+    return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       child: Container(

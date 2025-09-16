@@ -3,8 +3,6 @@ import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-
 class LoginController extends GetxController {
   final AuthServices _authServices = AuthServices();
   List<String> adminEmails = [
@@ -17,8 +15,8 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   RxString errorMessage = ''.obs;
 
-  var emailController=TextEditingController().obs;
-  var passwordController=TextEditingController().obs;
+  var emailController = TextEditingController().obs;
+  var passwordController = TextEditingController().obs;
 
   Future<void> loginAdmin({
     required String email,
@@ -48,16 +46,13 @@ class LoginController extends GetxController {
 
     isLoading.value = true;
 
- 
-
     // 🧑 Regular user login
-    final error = await _authServices.loginUser(email, password,context);
+    final error = await _authServices.loginUser(email, password, context);
     isLoading.value = false;
 
     if (error == null) {
       // ignore: use_build_context_synchronously
       FlushBarMessages.successMessageFlushBar("Login Successfully", context);
-     
     } else {
       errorMessage.value = error;
 

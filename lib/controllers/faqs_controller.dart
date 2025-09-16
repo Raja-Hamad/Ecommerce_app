@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class FaqsOrOrdersController extends GetxController{
-    var answerController = TextEditingController().obs;
+class FaqsOrOrdersController extends GetxController {
+  var answerController = TextEditingController().obs;
   var questionController = TextEditingController().obs;
-  final FirestoreServices _firestoreServices=FirestoreServices();
+  final FirestoreServices _firestoreServices = FirestoreServices();
   RxString selectedType = ''.obs;
   var isLoading = false.obs;
   Future<void> addFaqOrOrders(
@@ -16,11 +16,7 @@ class FaqsOrOrdersController extends GetxController{
   ) async {
     try {
       isLoading.value = true;
-      await _firestoreServices.addFaqsOrOrders(
-        context,
-        model,
-        collectionName,
-      );
+      await _firestoreServices.addFaqsOrOrders(context, model, collectionName);
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;

@@ -48,10 +48,7 @@ class _OrderProcessingStatusesDropDownWidgetState
         fontWeight: FontWeight.w600,
       ),
       items: widget.items.map((String category) {
-        return DropdownMenuItem<String>(
-          value: category,
-          child: Text(category),
-        );
+        return DropdownMenuItem<String>(value: category, child: Text(category));
       }).toList(),
       onChanged: (value) {
         setState(() {

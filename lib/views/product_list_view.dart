@@ -37,7 +37,7 @@ class _ProductListViewState extends State<ProductListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       body: SafeArea(
         child: Padding(
@@ -62,7 +62,8 @@ class _ProductListViewState extends State<ProductListView> {
                 leadingIcon: Icons.search,
               ),
               const SizedBox(height: 20),
-widget.listOfProduct.isEmpty?  Center(
+              widget.listOfProduct.isEmpty
+                  ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,92 +90,93 @@ widget.listOfProduct.isEmpty?  Center(
                           ),
                         ],
                       ),
-                    ):
-              /// GridView for Products
-              Expanded(
-                child: GridView.builder(
-                  itemCount: widget.listOfProduct.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.9, // adjust as per your design
-                  ),
-                  itemBuilder: (context, index) {
-                    final product = widget.listOfProduct[index];
-                    final imageUrl = product.imageUrls.first;
-                  
+                    )
+                  :
+                    /// GridView for Products
+                    Expanded(
+                      child: GridView.builder(
+                        itemCount: widget.listOfProduct.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 10,
+                              childAspectRatio:
+                                  0.9, // adjust as per your design
+                            ),
+                        itemBuilder: (context, index) {
+                          final product = widget.listOfProduct[index];
+                          final imageUrl = product.imageUrls.first;
 
-                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetailsView(model: product),
-                          ),
-                        );
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Sirf image wala container
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: const Color(0xffF2F2F2),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  blurRadius: 4,
-                                  spreadRadius: 1,
-                                  offset: const Offset(2, 2),
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDetailsView(model: product),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Sirf image wala container
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: const Color(0xffF2F2F2),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        blurRadius: 4,
+                                        spreadRadius: 1,
+                                        offset: const Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      imageUrl,
+                                      height: 120,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+
+                                // Title text
+                                Text(
+                                  product.title,
+                                  style: GoogleFonts.dmSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+
+                                const SizedBox(height: 4),
+
+                                // Subtitle text
+                                Text(
+                                  product.subtitle,
+                                  style: GoogleFonts.dmSans(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                imageUrl,
-                                height: 120,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-
-                          // Title text
-                          Text(
-                            product.title,
-                            style: GoogleFonts.dmSans(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-
-                          const SizedBox(height: 4),
-
-                          // Subtitle text
-                          Text(
-                            product.subtitle,
-                            style: GoogleFonts.dmSans(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                   }
-                  
-                ),
-              ),
+                    ),
             ],
           ),
         ),

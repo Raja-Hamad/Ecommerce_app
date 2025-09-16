@@ -47,14 +47,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-  apiKey: "AIzaSyAlwQZCbNifBnVgO04CS2KDX0GeG6DhnzU",
-  authDomain: "ecommerce-app-1b4de.firebaseapp.com",
-  projectId: "ecommerce-app-1b4de",
-  storageBucket: "ecommerce-app-1b4de.firebasestorage.app",
-  messagingSenderId: "929135264798",
-  appId: "1:929135264798:web:0292b1ca9df7cc97985a0f",
-  measurementId: "G-XP8LEFZBHD"
-      );
+    apiKey: "AIzaSyAlwQZCbNifBnVgO04CS2KDX0GeG6DhnzU",
+    authDomain: "ecommerce-app-1b4de.firebaseapp.com",
+    projectId: "ecommerce-app-1b4de",
+    storageBucket: "ecommerce-app-1b4de.firebasestorage.app",
+    messagingSenderId: "929135264798",
+    appId: "1:929135264798:web:0292b1ca9df7cc97985a0f",
+    measurementId: "G-XP8LEFZBHD",
+  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAlwQZCbNifBnVgO04CS2KDX0GeG6DhnzU',
@@ -79,8 +79,3 @@ class DefaultFirebaseOptions {
 //banner ad-> ca-app-pub-5403313078782320/3352968710
 
 //Interstitial ad-> ca-app-pub-5403313078782320/2039887047
-
-
-
-
- 

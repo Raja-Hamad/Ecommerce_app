@@ -15,7 +15,6 @@ class _AllFaqsViewState extends State<AllFaqsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -41,40 +40,41 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                         },
                       );
                     }
-            
+
                     if (!snapshots.hasData || snapshots.data == null) {
                       return Center(child: Text("No products found"));
                     } else {
                       List<FaqModel> generalFaqsList = snapshots.data!.docs
-                          .where((generalFaq) => generalFaq['type'] == "General")
+                          .where(
+                            (generalFaq) => generalFaq['type'] == "General",
+                          )
                           .map((json) => FaqModel.fromJson(json.data()))
                           .toList();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Text(
-                                  "General asked questions",
-                                  style: GoogleFonts.dmSans(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10,),
+                          Text(
+                            "General asked questions",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ListView.builder(
                             itemCount: generalFaqsList.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final generalFaq=generalFaqsList[index];
+                              final generalFaq = generalFaqsList[index];
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
@@ -93,8 +93,10 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                         ],
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           RichText(
                                             text: TextSpan(
@@ -118,8 +120,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10,),
-                                            RichText(
+                                          const SizedBox(height: 10),
+                                          RichText(
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
@@ -154,7 +156,7 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                     }
                   },
                 ),
-                 const SizedBox(height: 30),
+                const SizedBox(height: 30),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("faqs")
@@ -171,40 +173,43 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                         },
                       );
                     }
-            
+
                     if (!snapshots.hasData || snapshots.data == null) {
                       return Center(child: Text("No products found"));
                     } else {
                       List<FaqModel> accountRelatedList = snapshots.data!.docs
-                          .where((generalFaq) => generalFaq['type'] == "Account related")
+                          .where(
+                            (generalFaq) =>
+                                generalFaq['type'] == "Account related",
+                          )
                           .map((json) => FaqModel.fromJson(json.data()))
                           .toList();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Text(
-                                  "Account related asked questions",
-                                  style: GoogleFonts.dmSans(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10,),
+                          Text(
+                            "Account related asked questions",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ListView.builder(
                             itemCount: accountRelatedList.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final accountRelatedFaq=accountRelatedList[index];
+                              final accountRelatedFaq =
+                                  accountRelatedList[index];
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
@@ -223,8 +228,10 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                         ],
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           RichText(
                                             text: TextSpan(
@@ -238,7 +245,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: accountRelatedFaq.question,
+                                                  text: accountRelatedFaq
+                                                      .question,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -248,8 +256,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10,),
-                                            RichText(
+                                          const SizedBox(height: 10),
+                                          RichText(
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
@@ -261,7 +269,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: accountRelatedFaq.answer,
+                                                  text:
+                                                      accountRelatedFaq.answer,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -284,7 +293,7 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                     }
                   },
                 ),
-                 const SizedBox(height: 30),
+                const SizedBox(height: 30),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("faqs")
@@ -301,40 +310,45 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                         },
                       );
                     }
-            
+
                     if (!snapshots.hasData || snapshots.data == null) {
                       return Center(child: Text("No products found"));
                     } else {
-                      List<FaqModel> paymentAndRefundFaqList = snapshots.data!.docs
-                          .where((generalFaq) => generalFaq['type'] == "Payment and Refund")
+                      List<FaqModel> paymentAndRefundFaqList = snapshots
+                          .data!
+                          .docs
+                          .where(
+                            (generalFaq) =>
+                                generalFaq['type'] == "Payment and Refund",
+                          )
                           .map((json) => FaqModel.fromJson(json.data()))
                           .toList();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Text(
-                                  "Payment and refund related asked questions",
-                                  style: GoogleFonts.dmSans(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10,),
+                          Text(
+                            "Payment and refund related asked questions",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ListView.builder(
                             itemCount: paymentAndRefundFaqList.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final paymentAndRefundFaq=paymentAndRefundFaqList[index];
+                              final paymentAndRefundFaq =
+                                  paymentAndRefundFaqList[index];
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
@@ -353,8 +367,10 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                         ],
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           RichText(
                                             text: TextSpan(
@@ -368,7 +384,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: paymentAndRefundFaq.question,
+                                                  text: paymentAndRefundFaq
+                                                      .question,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -378,8 +395,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10,),
-                                            RichText(
+                                          const SizedBox(height: 10),
+                                          RichText(
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
@@ -391,7 +408,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: paymentAndRefundFaq.answer,
+                                                  text: paymentAndRefundFaq
+                                                      .answer,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -414,7 +432,7 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                     }
                   },
                 ),
-                 const SizedBox(height: 30),
+                const SizedBox(height: 30),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("faqs")
@@ -431,40 +449,45 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                         },
                       );
                     }
-            
+
                     if (!snapshots.hasData || snapshots.data == null) {
                       return Center(child: Text("No products found"));
                     } else {
-                      List<FaqModel> productAndDelieveryFaqList = snapshots.data!.docs
-                          .where((generalFaq) => generalFaq['type'] == "Product and delievery")
+                      List<FaqModel> productAndDelieveryFaqList = snapshots
+                          .data!
+                          .docs
+                          .where(
+                            (generalFaq) =>
+                                generalFaq['type'] == "Product and delievery",
+                          )
                           .map((json) => FaqModel.fromJson(json.data()))
                           .toList();
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Text(
-                                  "Product and delievery related asked questions",
-                                  style: GoogleFonts.dmSans(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 10,),
+                          Text(
+                            "Product and delievery related asked questions",
+                            style: GoogleFonts.dmSans(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ListView.builder(
                             itemCount: productAndDelieveryFaqList.length,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final productAndDelieveryFaq=productAndDelieveryFaqList[index];
+                              final productAndDelieveryFaq =
+                                  productAndDelieveryFaqList[index];
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 10),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  
                                     Container(
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
@@ -483,8 +506,10 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                         ],
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           RichText(
                                             text: TextSpan(
@@ -498,7 +523,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: productAndDelieveryFaq.question,
+                                                  text: productAndDelieveryFaq
+                                                      .question,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -508,8 +534,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10,),
-                                            RichText(
+                                          const SizedBox(height: 10),
+                                          RichText(
                                             text: TextSpan(
                                               children: [
                                                 TextSpan(
@@ -521,7 +547,8 @@ class _AllFaqsViewState extends State<AllFaqsView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: productAndDelieveryFaq.answer,
+                                                  text: productAndDelieveryFaq
+                                                      .answer,
                                                   style: GoogleFonts.dmSans(
                                                     color: Colors.black,
                                                     fontSize: 14,

@@ -14,7 +14,7 @@ class _SuccessfullySignupViewState extends State<SuccessfullySignupView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),
@@ -25,9 +25,7 @@ class _SuccessfullySignupViewState extends State<SuccessfullySignupView> {
           child: Container(
             height: 40,
             width: 300,
-            decoration: BoxDecoration(
-              color: Colors.black,
-            ),
+            decoration: BoxDecoration(color: Colors.black),
             child: Center(
               child: Text(
                 "Start Shopping Now",
@@ -54,30 +52,37 @@ class _SuccessfullySignupViewState extends State<SuccessfullySignupView> {
                   width: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                    color: Colors.green,
-                  width: 8
-                  )
+                    border: Border.all(color: Colors.green, width: 8),
                   ),
                   child: Center(
-                    child: Icon(Icons.done,
-                    size: 30,
-                    color: Colors.green,),
+                    child: Icon(Icons.done, size: 30, color: Colors.green),
                   ),
                 ),
-                const SizedBox(height: 30,),
-                Text("Successful",
-                style: GoogleFonts.dmSans(color: Colors.black,
-                fontSize: 25,
-                fontWeight: FontWeight.bold),),
-                 Text("You have successfully registered in",
-                style: GoogleFonts.dmSans(color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400),),
-                   Text("our app and start working on it",
-                style: GoogleFonts.dmSans(color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400),)
+                const SizedBox(height: 30),
+                Text(
+                  "Successful",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "You have successfully registered in",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Text(
+                  "our app and start working on it",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ],
             ),
           ),

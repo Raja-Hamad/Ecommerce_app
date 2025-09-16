@@ -26,19 +26,22 @@ class _ReusableLoginButtonsState extends State<ReusableLoginButtons> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(color: widget.buttonColor,
-      border: Border.all(width: 0.1,
-      color: widget.borderColor)),
+      decoration: BoxDecoration(
+        color: widget.buttonColor,
+        border: Border.all(width: 0.1, color: widget.borderColor),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(widget.leadingIcon,
-            height: 20,
-            width: 20,
-            fit: BoxFit.cover,),
+            Image.asset(
+              widget.leadingIcon,
+              height: 20,
+              width: 20,
+              fit: BoxFit.cover,
+            ),
             const SizedBox(width: 20),
             Text(
               widget.buttonText,

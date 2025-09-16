@@ -3,9 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NotificationController extends GetxController{
-
-  final FirestoreServices _firestoreServices=FirestoreServices();
+class NotificationController extends GetxController {
+  final FirestoreServices _firestoreServices = FirestoreServices();
   var isLoading = false.obs;
   Future<void> addFaqOrOrders(
     BuildContext context,
@@ -14,11 +13,7 @@ class NotificationController extends GetxController{
   ) async {
     try {
       isLoading.value = true;
-      await _firestoreServices.addFaqsOrOrders(
-        context,
-        model,
-        collectionName,
-      );
+      await _firestoreServices.addFaqsOrOrders(context, model, collectionName);
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;

@@ -18,18 +18,16 @@ class SignupController extends GetxController {
   var nameController = TextEditingController().obs;
   var emailController = TextEditingController().obs;
   var passwordController = TextEditingController().obs;
-  var confirmPasswordController=TextEditingController().obs;
+  var confirmPasswordController = TextEditingController().obs;
 
   var profileImagePath = "".obs;
   void disposeValues() {
-   
     nameController.value.clear();
     emailController.value.clear();
     passwordController.value.clear();
-   
+
     profileImagePath.value = '';
   }
-
 
   var selectedImage = Rxn<File>();
 
@@ -69,10 +67,7 @@ class SignupController extends GetxController {
       return;
     }
 
-    if (password.isEmpty ||
-        email.isEmpty ||
-        name.isEmpty ||
-        image == null) {
+    if (password.isEmpty || email.isEmpty || name.isEmpty || image == null) {
       FlushBarMessages.errorMessageFlushBar(
         "Please fill all the fields",
         context,
@@ -108,9 +103,8 @@ class SignupController extends GetxController {
       name,
       email,
       password,
-    
-      imageUrl ?? ""
-    
+
+      imageUrl ?? "",
     );
 
     isLoading.value = false;

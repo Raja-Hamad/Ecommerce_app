@@ -46,14 +46,12 @@ class NotificationCenter {
     return credentials.accessToken.data;
   }
 
-
-
   static Future<void> sendMessageNotificationToClient(
     String notificationBody,
     String notificationTitle,
     String deviceToken,
     String productImage,
-    String screen
+    String screen,
     // String jobId,
   ) async {
     final String serverKey = await getAccessToken();
@@ -101,7 +99,7 @@ class NotificationCenter {
     String notificationTitle,
     String notificationBody,
     String productImage,
-    String screen
+    String screen,
     // String messageId,
   ) async {
     try {
@@ -116,7 +114,7 @@ class NotificationCenter {
           notificationTitle,
           deviceToken,
           productImage,
-          screen
+          screen,
           // messageId,
         );
       } else {

@@ -21,7 +21,7 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
 
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -202,7 +202,7 @@ class _SignUpViewState extends State<SignUpView> {
                       image: _controller.selectedImage.value != null
                           ? File(_controller.selectedImage.value!.path)
                           : null,
-                    
+
                       name: _controller.nameController.value.text
                           .trim()
                           .toString(),

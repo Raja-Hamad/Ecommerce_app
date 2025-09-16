@@ -565,7 +565,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                   (order) => OrderModel.fromJson(order.data()),
                                 )
                                 .toList();
-                                   List<OrderModel> filteredOrdersList = allOrders
+                            List<OrderModel> filteredOrdersList = allOrders
                                 .where(
                                   (order) =>
                                       order.userId ==

@@ -59,34 +59,34 @@ class _CartViewState extends State<CartView> {
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return  Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 100),
-                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
-                          const SizedBox(height: 30),
-                          Text(
-                            'No Cart Item found.',
-                            style: GoogleFonts.dmSans(
-                              color: Color(0xff000000),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Start Adding the products to the cart.',
-                            style: GoogleFonts.openSans(
-                              color: Color(0xff000000),
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 100),
+                    SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                    const SizedBox(height: 30),
+                    Text(
+                      'No Cart Item found.',
+                      style: GoogleFonts.dmSans(
+                        color: Color(0xff000000),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Start Adding the products to the cart.',
+                      style: GoogleFonts.openSans(
+                        color: Color(0xff000000),
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             final cartList = snapshot.data!.docs
@@ -116,8 +116,7 @@ class _CartViewState extends State<CartView> {
             (sum, item) => sum + (item.productModel.price * item.quantity!),
           );
 
-          return buildBottomBar(total,
-          cartList.first.productModel.adminId);
+          return buildBottomBar(total, cartList.first.productModel.adminId);
         },
       ),
     );
@@ -133,7 +132,7 @@ class _CartViewState extends State<CartView> {
             context,
             FirebaseAuth.instance.currentUser!.uid,
             total,
-            adminId
+            adminId,
           );
         },
         child: Container(

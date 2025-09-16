@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserModel {
   final String userName;
   final String email;
- 
+
   final String imageUrl;
 
   final Timestamp? createdAt;
@@ -11,7 +11,6 @@ class UserModel {
   final String userDeviceToken;
 
   UserModel({
- 
     required this.email,
     required this.imageUrl,
     required this.userDeviceToken,
@@ -25,7 +24,7 @@ class UserModel {
     return UserModel(
       userDeviceToken: json['userDeviceToken'],
       id: json['id'],
-    
+
       email: json['email'],
       imageUrl: json['imageUrl'],
       createdAt: createdAt1 is Timestamp ? json['createdAt'] : null,
@@ -38,7 +37,7 @@ class UserModel {
       "id": id,
       "userDeviceToken": userDeviceToken,
       "userName": userName,
-    
+
       'email': email,
       "imageUrl": imageUrl,
       "createdAt": FieldValue.serverTimestamp(),
@@ -51,7 +50,6 @@ class UserModel {
         'userDeviceToken:$userDeviceToken, '
         'id:$id, '
         'userName:$userName, '
-       
         'email:$email, '
         'createdAt:$createdAt, '
         'imageUrl:$imageUrl,'

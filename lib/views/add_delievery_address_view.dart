@@ -11,9 +11,11 @@ import 'package:uuid/uuid.dart';
 class AddDelieveryAddressView extends StatefulWidget {
   String adminId;
   int totalAmount;
-   AddDelieveryAddressView({super.key,
-   required this.adminId,
-  required this.totalAmount});
+  AddDelieveryAddressView({
+    super.key,
+    required this.adminId,
+    required this.totalAmount,
+  });
 
   @override
   State<AddDelieveryAddressView> createState() =>
@@ -29,106 +31,170 @@ class _AddDelieveryAddressViewState extends State<AddDelieveryAddressView> {
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-  child: Obx((){
-    return GestureDetector(
-    onTap: () async {
-      if (_addToCartOrWishlistController.callingCodeController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.cityController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.countryCodeController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.countryController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.fullAddressController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.nameController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.phoneController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.stateController.value.text.isNotEmpty &&
-          _addToCartOrWishlistController.zipCodeController.value.text.isNotEmpty) {
-        
-        AddressModel addressModel = AddressModel(
-          city: _addToCartOrWishlistController.cityController.value.text,
-          fullAddress: _addToCartOrWishlistController.fullAddressController.value.text,
-          name: _addToCartOrWishlistController.nameController.value.text,
-          phone: _addToCartOrWishlistController.phoneController.value.text,
-          callingCode: _addToCartOrWishlistController.callingCodeController.value.text,
-          country: _addToCartOrWishlistController.countryController.value.text,
-          state: _addToCartOrWishlistController.stateController.value.text,
-          zipCode: _addToCartOrWishlistController.zipCodeController.value.text,
-          countryCode: _addToCartOrWishlistController.countryCodeController.value.text,
-          id: Uuid().v4()
-        );
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Obx(() {
+          return GestureDetector(
+            onTap: () async {
+              if (_addToCartOrWishlistController
+                      .callingCodeController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .cityController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .countryCodeController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .countryController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .fullAddressController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .nameController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .phoneController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .stateController
+                      .value
+                      .text
+                      .isNotEmpty &&
+                  _addToCartOrWishlistController
+                      .zipCodeController
+                      .value
+                      .text
+                      .isNotEmpty) {
+                AddressModel addressModel = AddressModel(
+                  city:
+                      _addToCartOrWishlistController.cityController.value.text,
+                  fullAddress: _addToCartOrWishlistController
+                      .fullAddressController
+                      .value
+                      .text,
+                  name:
+                      _addToCartOrWishlistController.nameController.value.text,
+                  phone:
+                      _addToCartOrWishlistController.phoneController.value.text,
+                  callingCode: _addToCartOrWishlistController
+                      .callingCodeController
+                      .value
+                      .text,
+                  country: _addToCartOrWishlistController
+                      .countryController
+                      .value
+                      .text,
+                  state:
+                      _addToCartOrWishlistController.stateController.value.text,
+                  zipCode: _addToCartOrWishlistController
+                      .zipCodeController
+                      .value
+                      .text,
+                  countryCode: _addToCartOrWishlistController
+                      .countryCodeController
+                      .value
+                      .text,
+                  id: Uuid().v4(),
+                );
 
-        _addToCartOrWishlistController
-            .addToCartOrWishList(
-              context,
-              addressModel,
-              "delievery_address",
-            )
-            .then((value) {
-          // ✅ Clear all controllers after success
-          _addToCartOrWishlistController.callingCodeController.value.clear();
-          _addToCartOrWishlistController.cityController.value.clear();
-          _addToCartOrWishlistController.countryCodeController.value.clear();
-          _addToCartOrWishlistController.countryController.value.clear();
-          _addToCartOrWishlistController.fullAddressController.value.clear();
-          _addToCartOrWishlistController.nameController.value.clear();
-          _addToCartOrWishlistController.phoneController.value.clear();
-          _addToCartOrWishlistController.stateController.value.clear();
-          _addToCartOrWishlistController.zipCodeController.value.clear();
+                _addToCartOrWishlistController
+                    .addToCartOrWishList(
+                      context,
+                      addressModel,
+                      "delievery_address",
+                    )
+                    .then((value) {
+                      // ✅ Clear all controllers after success
+                      _addToCartOrWishlistController.callingCodeController.value
+                          .clear();
+                      _addToCartOrWishlistController.cityController.value
+                          .clear();
+                      _addToCartOrWishlistController.countryCodeController.value
+                          .clear();
+                      _addToCartOrWishlistController.countryController.value
+                          .clear();
+                      _addToCartOrWishlistController.fullAddressController.value
+                          .clear();
+                      _addToCartOrWishlistController.nameController.value
+                          .clear();
+                      _addToCartOrWishlistController.phoneController.value
+                          .clear();
+                      _addToCartOrWishlistController.stateController.value
+                          .clear();
+                      _addToCartOrWishlistController.zipCodeController.value
+                          .clear();
 
-          // ✅ Navigate
-          Navigator.push(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(builder: (context) => PlaceOrderView(
-              adminId:widget.adminId,
-              totalAmount: widget.totalAmount,
-            )),
-          );
+                      // ✅ Navigate
+                      Navigator.push(
+                        // ignore: use_build_context_synchronously
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PlaceOrderView(
+                            adminId: widget.adminId,
+                            totalAmount: widget.totalAmount,
+                          ),
+                        ),
+                      );
 
-          // ✅ Success Message
-          FlushBarMessages.successMessageFlushBar(
-            "Successfully added delivery address",
-            // ignore: use_build_context_synchronously
-            context,
-          );
-        });
-      } else {
-        FlushBarMessages.errorMessageFlushBar(
-          "All Fields should be filled",
-          context,
-        );
-      }
-    },
-    child: Container(
-      height: 40,
-      width: 300,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: _addToCartOrWishlistController.isLoading.value
-            ? const   SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-            : Text(
-                "Add Delivery Address",
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                      // ✅ Success Message
+                      FlushBarMessages.successMessageFlushBar(
+                        "Successfully added delivery address",
+                        // ignore: use_build_context_synchronously
+                        context,
+                      );
+                    });
+              } else {
+                FlushBarMessages.errorMessageFlushBar(
+                  "All Fields should be filled",
+                  context,
+                );
+              }
+            },
+            child: Container(
+              height: 40,
+              width: 300,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: Center(
+                child: _addToCartOrWishlistController.isLoading.value
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        "Add Delivery Address",
+                        style: GoogleFonts.openSans(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+              ),
+            ),
+          );
+        }),
       ),
-    ),
-  );
-  }),
-),
-
 
       resizeToAvoidBottomInset: true,
       body: SafeArea(

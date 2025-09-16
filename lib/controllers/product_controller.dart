@@ -19,7 +19,7 @@ class ProductController extends GetxController {
   var selectedCategory = ''.obs;
   var selectedImages = <File>[].obs; // 👈 multiple images
   var isLoading = false.obs;
-  var productListViewController=TextEditingController().obs;
+  var productListViewController = TextEditingController().obs;
   final FirestoreServices _firestoreServices = FirestoreServices();
   Future<void> pickImagesFromGallery() async {
     final picker = ImagePicker();

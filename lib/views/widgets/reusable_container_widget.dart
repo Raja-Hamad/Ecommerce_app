@@ -9,11 +9,11 @@ class ReusableContainerWidget extends StatefulWidget {
     super.key,
     required this.conrainerText,
     required this.title,
-   
   });
 
   @override
-  State<ReusableContainerWidget> createState() => _ReusableContainerWidgetState();
+  State<ReusableContainerWidget> createState() =>
+      _ReusableContainerWidgetState();
 }
 
 class _ReusableContainerWidgetState extends State<ReusableContainerWidget> {
@@ -31,24 +31,24 @@ class _ReusableContainerWidgetState extends State<ReusableContainerWidget> {
             fontWeight: FontWeight.bold,
           ),
         ),
-    Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black,
-        width: 0.2),
-        borderRadius: BorderRadius.circular(12)
-      ),
-      child: Padding(padding: EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 10
-      ),
-      child: Text(widget.conrainerText,
-        style: GoogleFonts.dmSans(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),),),
-    )
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Text(
+              widget.conrainerText,
+              style: GoogleFonts.dmSans(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
