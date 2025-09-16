@@ -215,7 +215,7 @@ class _ProfileViewState extends State<ProfileView> {
                       children: [
                         reusableWidget(
                           onPress: () {
-                            if (emailAddress! == "kayanihamad0316@gmail.com") {
+                            if (emailAddress  == "kayanihamad0316@gmail.com") {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
