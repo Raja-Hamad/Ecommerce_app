@@ -1,5 +1,6 @@
 import 'package:ecommerce_app_my/views/cart_view.dart';
 import 'package:ecommerce_app_my/views/dashboard_view.dart';
+import 'package:ecommerce_app_my/views/notifications_view.dart';
 import 'package:ecommerce_app_my/views/wishlist_view.dart';
 import 'package:ecommerce_app_my/views/profile_view.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+
     GlobalKey<NavigatorState>(),
   ];
 
@@ -45,7 +48,8 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
             _buildNavigator(0, const DashboardView()),
             _buildNavigator(1, const CartView()),
             _buildNavigator(2, const WishListView()),
-            _buildNavigator(3, const ProfileView()),
+            _buildNavigator(3, const NotificationsView()),
+            _buildNavigator(4, const ProfileView()),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -66,6 +70,10 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'WishList',
+            ),
+               BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'Notifications',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],

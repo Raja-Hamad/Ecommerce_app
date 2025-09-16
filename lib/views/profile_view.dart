@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
 import 'package:ecommerce_app_my/views/admin_all_faqs_view.dart';
 import 'package:ecommerce_app_my/views/all_faqs_view.dart';
+import 'package:ecommerce_app_my/views/login_view.dart';
 import 'package:ecommerce_app_my/views/my_orders_view.dart';
 import 'package:ecommerce_app_my/views/my_shipping_address_view.dart';
 import 'package:ecommerce_app_my/views/personal_details_view.dart';
 import 'package:ecommerce_app_my/views/wishlist_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -20,6 +25,8 @@ class _ProfileViewState extends State<ProfileView> {
   final LocalStorage _localStorage = LocalStorage();
   String? name;
   String? imageUrl;
+  String? userDeviceToken;
+  String? userId;
   String? emailAddress;
   bool isLoading = true;
 
@@ -27,9 +34,29 @@ class _ProfileViewState extends State<ProfileView> {
     name = await _localStorage.getValue("userName");
     emailAddress = await _localStorage.getValue("email");
     imageUrl = await _localStorage.getValue("imageUrl");
+    userId = await _localStorage.getValue("id");
+    userDeviceToken = await _localStorage.getValue("userDeviceToken");
+
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> logout() async {
+    // Step 1: local storage clear karo
+    await _localStorage.clear("id");
+    await _localStorage.clear("userName");
+
+    await _localStorage.clear("imageUrl");
+
+    await _localStorage.clear("email");
+
+    await _localStorage.clear("userDeviceToken");
+
+    await FirebaseAuth.instance.signOut();
+
+    // Step 3: Navigate back to SplashView (stack clear)
+    Get.offAll(() => LoginView());
   }
 
   @override
@@ -77,15 +104,11 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         child: Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                imageUrl ?? '',
-                                height: 80,
-                                width: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                          ClipRRect(
+  borderRadius: BorderRadius.circular(10),
+  child: _buildProfileImage(),
+),
+
                             const SizedBox(width: 12),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -216,6 +239,13 @@ class _ProfileViewState extends State<ProfileView> {
                           title: "Privacy Policy",
                           icon: Icons.security,
                         ),
+                        reusableWidget(
+                          onPress: () {
+                            logout();
+                          },
+                          title: "Sign Out",
+                          icon: Icons.logout,
+                        ),
                       ],
                     ),
                   ),
@@ -273,4 +303,38 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
+  Widget _buildProfileImage() {
+  if (imageUrl == null || imageUrl!.isEmpty) {
+    // Default Avatar agar koi image save nahi hai
+    return Image.asset(
+      "assets/images/default_avatar.png", // apni asset path dalna
+      height: 80,
+      width: 80,
+      fit: BoxFit.cover,
+    );
+  } else if (imageUrl!.startsWith("http")) {
+    // Agar URL hai (Firebase/online)
+    return Image.network(
+      imageUrl!,
+      height: 80,
+      width: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(Icons.person, size: 80, color: Colors.grey);
+      },
+    );
+  } else {
+    // Agar local file path hai
+    return Image.file(
+      File(imageUrl!),
+      height: 80,
+      width: 80,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(Icons.person, size: 80, color: Colors.grey);
+      },
+    );
+  }
+}
+
 }

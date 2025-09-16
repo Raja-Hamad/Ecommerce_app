@@ -556,15 +556,58 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                             ),
 
                                             /// 🔹 Update Button
-                                            GestureDetector(
-                                              onTap: () async {
-                                                await FirebaseFirestore.instance
-                                                    .collection("orders")
-                                                    .doc(order.id)
-                                                    .update({
-                                                      "status": order.status,
-                                                    })
-                                                    .then((value) {
+                                            StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection("notifications")
+                                                  .where(
+                                                    "adminId",
+                                                    isEqualTo: FirebaseAuth
+                                                        .instance
+                                                        .currentUser!
+                                                        .uid,
+                                                  )
+                                                  .snapshots(),
+
+                                              builder: (context, snapshots) {
+                                                if (!snapshots.hasData ||
+                                                    snapshots.data == null) {
+                                                  return SizedBox();
+                                                }
+                                                if (snapshots.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return ListView.builder(
+                                                    itemCount: 6,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemBuilder: (context, index) {
+                                                      return const ReusableShimmerWidget();
+                                                    },
+                                                  );
+                                                }
+
+                                                List<NotificationModel>
+                                                allNotifcations = snapshots
+                                                    .data!
+                                                    .docs
+                                                    .map(
+                                                      (notification) =>
+                                                          NotificationModel.fromJson(
+                                                            notification.data(),
+                                                          ),
+                                                    )
+                                                    .toList();
+                                                bool
+                                                isPresent = allNotifcations.any(
+                                                  (notification) =>
+                                                      notification.orderId ==
+                                                      order.id,
+                                                );
+                                                return GestureDetector(
+                                                  onTap: () async {
+                                                    await FirebaseFirestore.instance.collection("orders").doc(order.id).update({"status": order.status}).then((
+                                                      value,
+                                                    ) async {
                                                       FlushBarMessages.successMessageFlushBar(
                                                         "Successfully updated the status",
                                                         // ignore: use_build_context_synchronously
@@ -584,83 +627,121 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                                             .first,
                                                         "orders",
                                                       );
-                                                      NotificationModel
-                                                      model = NotificationModel(
-                                                        id: Uuid().v4(),
-                                                        orderId: order.id,
-                                                        userId:
-                                                            order.userModel.id,
-                                                        adminId: FirebaseAuth
-                                                            .instance
-                                                            .currentUser!
-                                                            .uid,
-                                                        cancelledBy:
-                                                            order.status ==
-                                                                "Cancelled"
-                                                            ? "Admin"
-                                                            : "",
-                                                        orderStatus:
-                                                            order.status,
-                                                        productId: order
-                                                            .cartModel
-                                                            .first
-                                                            .productModel
-                                                            .id,
-                                                        productName: order
-                                                            .cartModel
-                                                            .first
-                                                            .productModel
-                                                            .title,
-                                                        productImage: order
-                                                            .cartModel
-                                                            .first
-                                                            .productModel
-                                                            .imageUrls
-                                                            .first,
-                                                        notificationTitle:
-                                                            "Order Status",
-                                                        notificationBody:
-                                                            "Your order status for the product ${order.cartModel.first.productModel.title}",
-                                                        notificationReadStatus:
-                                                            "unread",
-                                                      );
-                                                      final createdAt = model
-                                                          .toJson();
-                                                      createdAt['createdAt'] =
-                                                          FieldValue.serverTimestamp(); // Add timestamp manually
+                                                      if (isPresent) {
+                                                        // Pichle notification ka doc id le aao
+                                                        final notificationDoc =
+                                                            snapshots.data!.docs
+                                                                .firstWhere(
+                                                                  (doc) =>
+                                                                      doc['orderId'] ==
+                                                                      order.id,
+                                                                );
 
-                                                      _controller
-                                                          .addFaqOrOrders(
-                                                            context,
-                                                            model,
-                                                            "notifications",
-                                                          );
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                              "notifications",
+                                                            )
+                                                            .doc(
+                                                              notificationDoc
+                                                                  .id,
+                                                            )
+                                                            .update({
+                                                              "orderStatus": order
+                                                                  .status
+                                                                  .toString(),
+                                                              "updatedAt":
+                                                                  FieldValue.serverTimestamp(),
+                                                            });
+                                                      } else {
+                                                        // Naya notification create karo
+                                                        NotificationModel
+                                                        model = NotificationModel(
+                                                          id: Uuid().v4(),
+                                                          orderId: order.id,
+                                                          userId: order
+                                                              .userModel
+                                                              .id,
+                                                          adminId: FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid,
+                                                          cancelledBy:
+                                                              order.status ==
+                                                                  "Cancelled"
+                                                              ? "Admin"
+                                                              : "",
+                                                          orderStatus:
+                                                              order.status,
+                                                          productId: order
+                                                              .cartModel
+                                                              .first
+                                                              .productModel
+                                                              .id,
+                                                          productName: order
+                                                              .cartModel
+                                                              .first
+                                                              .productModel
+                                                              .title,
+                                                          productImage: order
+                                                              .cartModel
+                                                              .first
+                                                              .productModel
+                                                              .imageUrls
+                                                              .first,
+                                                          notificationTitle:
+                                                              "Order Status",
+                                                          notificationBody:
+                                                              "Your order status for the product ${order.cartModel.first.productModel.title}",
+                                                          notificationReadStatus:
+                                                              "unread",
+                                                        );
+
+                                                        final createdAt = model
+                                                            .toJson();
+                                                        createdAt['createdAt'] =
+                                                            FieldValue.serverTimestamp();
+
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                              "notifications",
+                                                            )
+                                                            .doc(
+                                                              model.id,
+                                                            ) // id ko as docId use karo
+                                                            .set(createdAt);
+                                                      }
                                                     });
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 6,
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6,
+                                                          ),
                                                     ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "Update Status",
-                                                    style: GoogleFonts.dmSans(
-                                                      color: Colors
-                                                          .white, // 🔹 Fix color (white text on black background)
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 10,
+                                                          vertical: 6,
+                                                        ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Update Status",
+                                                        style: GoogleFonts.dmSans(
+                                                          color: Colors
+                                                              .white, // 🔹 Fix color (white text on black background)
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
+                                                );
+                                              },
                                             ),
                                           ],
                                         ),

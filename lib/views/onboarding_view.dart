@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
+import 'package:ecommerce_app_my/views/admin_bottom_nav_bar.dart';
+import 'package:ecommerce_app_my/views/bottom_nav_bar.dart';
 import 'package:ecommerce_app_my/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,9 +23,22 @@ class _OnboardingViewState extends State<OnboardingView> {
     _checkLogin();
   }
 
+  final LocalStorage _localStorage = LocalStorage();
+
   Future<void> _checkLogin() async {
     await Future.delayed(const Duration(seconds: 3)); // optional splash delay
-    Get.offAll(SplashView());
+    String? userId = await _localStorage.getValue("id");
+    String? userEmail = await _localStorage.getValue("email");
+
+    if (userId != null && userEmail != null) {
+      if (userEmail == "kayanihamad0316@gmail.com") {
+        Get.offAll(() => AdminBottomNavBar());
+      } else {
+        Get.offAll(BottomNavBarView());
+      }
+    } else {
+      Get.offAll(() => SplashView());
+    }
   }
 
   @override
