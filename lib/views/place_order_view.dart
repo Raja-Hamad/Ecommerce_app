@@ -468,145 +468,100 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                     .docs[index]
                                     .id; // Firestore doc ID
 
-                                return Dismissible(
-                                  key: Key(docId),
-                                  direction: DismissDirection
-                                      .endToStart, // right-to-left swipe
-                                  background: Container(
-                                    alignment: Alignment.centerRight,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    color: Colors.red,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: const [
-                                        Icon(Icons.delete, color: Colors.white),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          "Delete",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 6,
+                                          offset: const Offset(
+                                            0,
+                                            3,
+                                          ), // shadow position
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  onDismissed: (direction) async {
-                                    await FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(
-                                          FirebaseAuth
-                                              .instance
-                                              .currentUser!
-                                              .uid,
-                                        )
-                                        .collection("cart")
-                                        .doc(docId)
-                                        .delete();
-
-                                    FlushBarMessages.successMessageFlushBar(
-                                      "${cartProduct.productModel.title} removed from cart",
-                                      // ignore: use_build_context_synchronously
-                                      context,
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            spreadRadius: 2,
-                                            blurRadius: 6,
-                                            offset: const Offset(
-                                              0,
-                                              3,
-                                            ), // shadow position
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 60,
-                                                width: 60,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  child: Image.network(
-                                                    cartProduct
-                                                        .productModel
-                                                        .imageUrls
-                                                        .first,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 60,
+                                              width: 60,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Image.network(
+                                                  cartProduct
+                                                      .productModel
+                                                      .imageUrls
+                                                      .first,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                              const SizedBox(width: 8),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    cartProduct
-                                                        .productModel
-                                                        .title,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: GoogleFonts.dmSans(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  cartProduct
+                                                      .productModel
+                                                      .title,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: GoogleFonts.dmSans(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold,
                                                   ),
-                                                  Text(
-                                                    cartProduct
-                                                        .productModel
-                                                        .subtitle,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: GoogleFonts.dmSans(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
+                                                ),
+                                                Text(
+                                                  cartProduct
+                                                      .productModel
+                                                      .subtitle,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: GoogleFonts.dmSans(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w400,
                                                   ),
-                                                  const SizedBox(height: 10),
-                                                  Text(
-                                                    "\$${cartProduct.productModel.price.toString()}",
-                                                    style: GoogleFonts.dmSans(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  "\$${cartProduct.productModel.price.toString()}",
+                                                  style: GoogleFonts.dmSans(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold,
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );

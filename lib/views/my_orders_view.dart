@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_my/models/order_model.dart';
+import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
+import 'package:ecommerce_app_my/views/widgets/order_processing_statuses_drop_down_widget.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +126,7 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                     ? StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("orders")
-                            .where("status", isEqualTo: "Pending")
+                            .where("status", isNotEqualTo: "Delievered")
                             .snapshots(),
                         builder: (context, snapshots) {
                           if (!snapshots.hasData || snapshots.data == null) {
@@ -502,13 +504,210 @@ class _MyOrdersViewState extends State<MyOrdersView> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(
-                                          "Status: ${order.status}",
-                                          style: GoogleFonts.dmSans(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        order.status != "Pending"
+                                            ? Text(
+                                                "Status: ${order.status}",
+                                                style: GoogleFonts.dmSans(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              )
+                                            : Row(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    Text(
+      "Status: ",
+      style: GoogleFonts.dmSans(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    const SizedBox(width: 8),
+    Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: IntrinsicWidth(
+        child: DropdownButtonFormField<String>(
+          value: order.status,
+          isDense: true,
+          isExpanded: false,
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            isDense: true,
+          ),
+          dropdownColor: Colors.white,
+          iconEnabledColor: Colors.white, // 👈 arrow white
+          style: GoogleFonts.dmSans(
+            color: Colors.white, // 👈 selected value ka style
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+          items: ["Pending", "Cancel"].map((String category) {
+            return DropdownMenuItem<String>(
+              value: category,
+              child: Text(
+                category,
+                style: GoogleFonts.dmSans(
+                  color: Colors.black, // 👈 dropdown list ke items black
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          }).toList(),
+          // 👇 Alag style selected value ke liye
+          selectedItemBuilder: (BuildContext context) {
+            return ["Pending", "Cancel"].map((String category) {
+              return Text(
+                category,
+                style: GoogleFonts.dmSans(
+                  color: Colors.white, // 👈 black container me selected value white
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+            }).toList();
+          },
+         onChanged: (value) {
+  setState(() {
+    order.status = value!;
+    if (order.status == "Cancel") {
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          bool isLoading = false;
+
+          return StatefulBuilder(
+            builder: (context, setStateDialog) {
+              return AlertDialog(
+                title: Text(
+                  "Cancel Order",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: Text(
+                  "Are you sure want to cancel this order?",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                actions: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(dialogContext);
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5),
+                              child: Center(
+                                child: Text(
+                                  "No",
+                                  style: GoogleFonts.dmSans(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () async {
+                            setStateDialog(() {
+                              isLoading = true;
+                            });
+
+                            await FirebaseFirestore.instance
+                                .collection("orders")
+                                .doc(order.id)
+                                .delete();
+
+                            Navigator.pop(dialogContext); // dialog close
+
+                            // 👇 Flushbar call parent context se karni hai
+                            Future.delayed(const Duration(milliseconds: 200), () {
+                              if (context.mounted) {
+                                FlushBarMessages.successMessageFlushBar(
+                                  "Successfully cancelled the order",
+                                  context,
+                                );
+                              }
+                            });
+
+                            setStateDialog(() {
+                              isLoading = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5),
+                              child: Center(
+                                child: isLoading
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
                                         ),
+                                      )
+                                    : Text(
+                                        "Yes",
+                                        style: GoogleFonts.dmSans(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            },
+          );
+        },
+      );
+    }
+  });
+},
+
+
+        ),
+      ),
+    ),
+  ],
+),
+
                                       ],
                                     ),
                                   ),

@@ -3,14 +3,18 @@ import 'package:google_fonts/google_fonts.dart';
 
 class OrderProcessingStatusesDropDownWidget extends StatefulWidget {
   final List<String> items;
+  Color? color;
+  double ?fontSize;
   final Function(String?) onChanged;
   final String? initialValue; // 🔹 add this
 
-  const OrderProcessingStatusesDropDownWidget({
+   OrderProcessingStatusesDropDownWidget({
     super.key,
     required this.items,
     required this.onChanged,
     this.initialValue,
+    this.fontSize,
+    this.color
   });
 
   @override
@@ -43,8 +47,8 @@ class _OrderProcessingStatusesDropDownWidgetState
         ),
       ),
       style: GoogleFonts.dmSans(
-        color: Colors.black,
-        fontSize: 14,
+        color:widget.color?? Colors.black,
+        fontSize:widget.fontSize?? 14,
         fontWeight: FontWeight.w600,
       ),
       items: widget.items.map((String category) {
