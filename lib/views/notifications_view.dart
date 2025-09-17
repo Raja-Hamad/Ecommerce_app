@@ -13,6 +13,26 @@ class NotificationsView extends StatefulWidget {
 }
 
 class _NotificationsViewState extends State<NotificationsView> {
+
+// @override
+// void initState() {
+//   super.initState();
+
+//   /// jaise hi screen khule -> unread notifications ko read kar do
+//   FirebaseFirestore.instance
+//       .collection("notifications")
+//       .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+//       .where("notificationReadStatus", isEqualTo: "unread")
+//       .get()
+//       .then((querySnapshot) {
+//     for (var doc in querySnapshot.docs) {
+//       doc.reference.update({
+//         "notificationReadStatus": "read",
+//       });
+//     }
+//   });
+// }
+
   @override
   Widget build(BuildContext context) {
     var stream = FirebaseFirestore.instance

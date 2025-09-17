@@ -653,6 +653,13 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                                               "updatedAt":
                                                                   FieldValue.serverTimestamp(),
                                                             });
+                                                              // 👇 Cancelled hone par order delete bhi karo
+  if (order.status == "Cancelled") {
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(order.id)
+        .delete();
+  }
                                                       } else {
                                                         // Naya notification create karo
                                                         NotificationModel
@@ -711,6 +718,13 @@ class _AdminAllOrdersViewState extends State<AdminAllOrdersView> {
                                                               model.id,
                                                             ) // id ko as docId use karo
                                                             .set(createdAt);
+// 👇 Cancelled hone par order delete bhi karo
+  if (order.status == "Cancelled") {
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(order.id)
+        .delete();
+  }
                                                       }
                                                     });
                                                   },
