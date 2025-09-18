@@ -3,6 +3,7 @@ import 'package:ecommerce_app_my/models/notification_model.dart';
 import 'package:ecommerce_app_my/views/widgets/reusable_shimmer_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotificationsView extends StatefulWidget {
@@ -83,6 +84,36 @@ class _NotificationsViewState extends State<NotificationsView> {
                               ),
                             )
                             .toList();
+                            if(allNotificationsList.isEmpty){
+                           return   Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 100),
+                          SvgPicture.asset("assets/svgs/nothing_found.svg"),
+                          const SizedBox(height: 30),
+                          Text(
+                            'No Notifications yet.',
+                            style: GoogleFonts.dmSans(
+                              color: Color(0xff000000),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'We will notify you when any notifcations come.',
+                            style: GoogleFonts.openSans(
+                              color: Color(0xff000000),
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                            }
                         return ListView.builder(
                           itemCount: allNotificationsList.length,
                           shrinkWrap: true,
