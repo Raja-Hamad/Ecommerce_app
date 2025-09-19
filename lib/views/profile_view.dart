@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ecommerce_app_my/utils/extensions/flushbar_messaging.dart';
 import 'package:ecommerce_app_my/utils/extensions/local_storage.dart';
 import 'package:ecommerce_app_my/views/admin_all_faqs_view.dart';
 import 'package:ecommerce_app_my/views/all_faqs_view.dart';
@@ -7,6 +8,7 @@ import 'package:ecommerce_app_my/views/login_view.dart';
 import 'package:ecommerce_app_my/views/my_orders_view.dart';
 import 'package:ecommerce_app_my/views/my_shipping_address_view.dart';
 import 'package:ecommerce_app_my/views/personal_details_view.dart';
+import 'package:ecommerce_app_my/views/privacy_policy_view.dart';
 import 'package:ecommerce_app_my/views/wishlist_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -104,10 +106,10 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                         child: Row(
                           children: [
-                          ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-  child: _buildProfileImage(),
-),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: _buildProfileImage(),
+                            ),
 
                             const SizedBox(width: 12),
                             Column(
@@ -215,7 +217,7 @@ class _ProfileViewState extends State<ProfileView> {
                       children: [
                         reusableWidget(
                           onPress: () {
-                            if (emailAddress  == "kayanihamad0316@gmail.com") {
+                            if (emailAddress == "kayanihamad0316@gmail.com") {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -236,12 +238,157 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
 
                         reusableWidget(
+                          onPress: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PrivacyPolicyView(),
+                              ),
+                            );
+                          },
                           title: "Privacy Policy",
                           icon: Icons.security,
                         ),
                         reusableWidget(
                           onPress: () {
-                            logout();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                bool isLoading = false;
+
+                                return StatefulBuilder(
+                                  builder: (context, setStateDialog) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Sign Out",
+                                        style: GoogleFonts.dmSans(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: Text(
+                                        "Are you sure want to Sign Out?",
+                                        style: GoogleFonts.dmSans(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                      actions: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pop(dialogContext);
+                                                },
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Colors.black,
+                                                      ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 5,
+                                                        ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "No",
+                                                        style:
+                                                            GoogleFonts.dmSans(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              flex: 1,
+                                              child: GestureDetector(
+                                                onTap: () async {
+                                                  logout();
+
+                                                  Navigator.pop(
+                                                    dialogContext,
+                                                  ); // dialog close
+
+                                                  // 👇 Flushbar call parent context se karni hai
+                                                  Future.delayed(
+                                                    const Duration(
+                                                      milliseconds: 200,
+                                                    ),
+                                                    () {
+                                                      if (context.mounted) {
+                                                        FlushBarMessages.successMessageFlushBar(
+                                                          "You signed out successfully",
+                                                          context,
+                                                        );
+                                                      }
+                                                    },
+                                                  );
+
+                                                  setStateDialog(() {
+                                                    isLoading = false;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Colors.black,
+                                                      ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 5,
+                                                        ),
+                                                    child: Center(
+                                                      child: isLoading
+                                                          ? const SizedBox(
+                                                              width: 20,
+                                                              height: 20,
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                    strokeWidth:
+                                                                        2,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                            )
+                                                          : Text(
+                                                              "Sign Out",
+                                                              style: GoogleFonts.dmSans(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
                           },
                           title: "Sign Out",
                           icon: Icons.logout,
@@ -303,38 +450,38 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
-  Widget _buildProfileImage() {
-  if (imageUrl == null || imageUrl!.isEmpty) {
-    // Default Avatar agar koi image save nahi hai
-    return Image.asset(
-      "assets/images/default_avatar.png", // apni asset path dalna
-      height: 80,
-      width: 80,
-      fit: BoxFit.cover,
-    );
-  } else if (imageUrl!.startsWith("http")) {
-    // Agar URL hai (Firebase/online)
-    return Image.network(
-      imageUrl!,
-      height: 80,
-      width: 80,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Icon(Icons.person, size: 80, color: Colors.grey);
-      },
-    );
-  } else {
-    // Agar local file path hai
-    return Image.file(
-      File(imageUrl!),
-      height: 80,
-      width: 80,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Icon(Icons.person, size: 80, color: Colors.grey);
-      },
-    );
-  }
-}
 
+  Widget _buildProfileImage() {
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      // Default Avatar agar koi image save nahi hai
+      return Image.asset(
+        "assets/images/default_avatar.png", // apni asset path dalna
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+      );
+    } else if (imageUrl!.startsWith("http")) {
+      // Agar URL hai (Firebase/online)
+      return Image.network(
+        imageUrl!,
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.person, size: 80, color: Colors.grey);
+        },
+      );
+    } else {
+      // Agar local file path hai
+      return Image.file(
+        File(imageUrl!),
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.person, size: 80, color: Colors.grey);
+        },
+      );
+    }
+  }
 }
