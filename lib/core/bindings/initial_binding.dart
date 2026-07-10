@@ -1,0 +1,13 @@
+import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/cart_controller.dart';
+import '../controllers/wishlist_controller.dart';
+
+class InitialBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(AuthController(), permanent: true);
+    Get.put(CartController(), permanent: true);
+    Get.put(WishlistController(), permanent: true);
+  }
+}
