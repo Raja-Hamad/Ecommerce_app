@@ -1,14 +1,13 @@
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
-import '../datasources/mock_data_source.dart';
+import '../datasources/remote/product_remote_data_source.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
-  final _ds = MockDataSource.instance;
+  final _remote = ProductRemoteDataSource();
 
   @override
   Future<List<Product>> getProducts({String? categoryId, String? query}) async {
-    await Future.delayed(_ds.latency);
-    var list = _ds.products.toList();
+    var list = await _remote.getProducts();
     if (categoryId != null) {
       list = list.where((p) => p.categoryId == categoryId).toList();
     }
@@ -21,20 +20,17 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<Product>> getFeaturedProducts() async {
-    await Future.delayed(_ds.latency);
-    return _ds.products.where((p) => p.isFeatured).toList();
+    final list = await _remote.getProducts();
+    return list.where((p) => p.isFeatured).toList();
   }
 
   @override
   Future<List<Product>> getBestSellers() async {
-    await Future.delayed(_ds.latency);
-    final list = _ds.products.toList()..sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
+    final list = await _remote.getProducts()
+      ..sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
     return list.take(8).toList();
   }
 
   @override
-  Future<Product> getProductById(String id) async {
-    await Future.delayed(_ds.latency);
-    return _ds.products.firstWhere((p) => p.id == id);
-  }
+  Future<Product> getProductById(String id) => _remote.getProductById(id);
 }

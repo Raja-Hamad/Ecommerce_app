@@ -7,4 +7,9 @@ class ApiEndpoints {
   static const String register = 'users/register';
   static const String login = 'users/login';
   static const String profile = 'users/profile';
+
+  // Products
+  static const String products = 'products';
+  static const String categories = 'products/categories';
+  static String productById(String id) => 'products/$id';
 }

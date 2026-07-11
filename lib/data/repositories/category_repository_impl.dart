@@ -1,13 +1,10 @@
 import '../../domain/entities/category.dart';
 import '../../domain/repositories/category_repository.dart';
-import '../datasources/mock_data_source.dart';
+import '../datasources/remote/category_remote_data_source.dart';
 
 class CategoryRepositoryImpl implements CategoryRepository {
-  final _ds = MockDataSource.instance;
+  final _remote = CategoryRemoteDataSource();
 
   @override
-  Future<List<Category>> getCategories() async {
-    await Future.delayed(_ds.latency);
-    return _ds.categories;
-  }
+  Future<List<Category>> getCategories() => _remote.getCategories();
 }

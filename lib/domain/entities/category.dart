@@ -5,4 +5,12 @@ class Category {
   final String name;
   final String imageUrl;
   final int productCount;
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: (json['_id'] ?? json['id'] ?? '').toString(),
+      name: json['name'] as String? ?? '',
+      imageUrl: (json['image'] as Map<String, dynamic>?)?['url'] as String? ?? '',
+    );
+  }
 }

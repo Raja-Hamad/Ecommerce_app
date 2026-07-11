@@ -42,12 +42,7 @@ class CategoriesView extends GetView<CategoriesController> {
                     Expanded(child: AppNetworkImage(url: category.imageUrl)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
-                      child: Column(
-                        children: [
-                          Text(category.name, style: AppTextStyles.h4),
-                          Text('${category.productCount} items', style: AppTextStyles.caption),
-                        ],
-                      ),
+                      child: Text(category.name, style: AppTextStyles.h4),
                     ),
                   ],
                 ),
