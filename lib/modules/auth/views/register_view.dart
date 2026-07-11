@@ -28,7 +28,35 @@ class RegisterView extends GetView<AuthFormController> {
                 Text('Create account', style: AppTextStyles.h1),
                 const SizedBox(height: AppSizes.xs),
                 Text('Sign up to get started', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
-                const SizedBox(height: AppSizes.xxl),
+                const SizedBox(height: AppSizes.xl),
+                Center(
+                  child: GestureDetector(
+                    onTap: controller.pickProfileImage,
+                    child: Obx(() {
+                      final image = controller.profileImage.value;
+                      return Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 44,
+                            backgroundColor: AppColors.primaryLight,
+                            backgroundImage: image != null ? FileImage(image) : null,
+                            child: image == null ? const Icon(Icons.person_rounded, size: 40, color: AppColors.primary) : null,
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                              child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
+                const SizedBox(height: AppSizes.xl),
                 CustomTextField(
                   label: 'Full Name',
                   hint: 'John Doe',

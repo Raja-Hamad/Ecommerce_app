@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
+import '../network/app_exception.dart';
+import '../utils/app_snackbar.dart';
 
 class AuthController extends GetxController {
   final _repo = AuthRepositoryImpl();
@@ -15,16 +18,28 @@ class AuthController extends GetxController {
     try {
       user.value = await _repo.login(email, password);
       return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Login failed. Please try again.');
+      return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<bool> register(String name, String email, String password) async {
+  Future<bool> register({
+    required String name,
+    required String email,
+    required String password,
+    String role = 'user',
+    File? profileImage,
+  }) async {
     isLoading.value = true;
     try {
-      user.value = await _repo.register(name, email, password);
+      user.value = await _repo.register(name: name, email: email, password: password, role: role, profileImage: profileImage);
       return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Registration failed. Please try again.');
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -35,8 +50,8 @@ class AuthController extends GetxController {
     user.value = null;
   }
 
-  void updateProfile({String? name, String? phone}) {
+  void updateProfile({String? name}) {
     if (user.value == null) return;
-    user.value = user.value!.copyWith(name: name, phone: phone);
+    user.value = user.value!.copyWith(name: name);
   }
 }

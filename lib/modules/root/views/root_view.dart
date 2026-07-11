@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/cart_controller.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../categories/bindings/categories_binding.dart';
 import '../../categories/views/categories_view.dart';
-import '../../cart/bindings/cart_binding.dart';
 import '../../cart/views/cart_view.dart';
-import '../../home/bindings/home_binding.dart';
 import '../../home/views/home_view.dart';
-import '../../orders/bindings/orders_binding.dart';
 import '../../orders/views/orders_view.dart';
-import '../../profile/bindings/profile_binding.dart';
 import '../../profile/views/profile_view.dart';
 import '../controllers/root_controller.dart';
 
@@ -19,12 +14,6 @@ class RootView extends GetView<RootController> {
 
   @override
   Widget build(BuildContext context) {
-    HomeBinding().dependencies();
-    CategoriesBinding().dependencies();
-    CartBinding().dependencies();
-    OrdersBinding().dependencies();
-    ProfileBinding().dependencies();
-
     final pages = const [
       HomeView(),
       CategoriesView(),
