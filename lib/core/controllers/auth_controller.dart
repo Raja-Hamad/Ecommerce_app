@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
 import '../network/app_exception.dart';
+import '../network/jwt_decoder.dart';
+import '../network/token_storage.dart';
 import '../utils/app_snackbar.dart';
 
 class AuthController extends GetxController {
@@ -45,8 +47,28 @@ class AuthController extends GetxController {
     }
   }
 
+  /// Restores a session from a previously saved token (e.g. on app restart).
+  /// The token only carries userId/role, so name/email stay blank until a
+  /// profile endpoint is available to hydrate the rest of the user.
+  Future<bool> tryAutoLogin() async {
+    final token = await TokenStorage.instance.readToken();
+    if (token == null || JwtDecoder.isExpired(token)) {
+      await TokenStorage.instance.clearToken();
+      return false;
+    }
+    final claims = JwtDecoder.payload(token);
+    user.value = AppUser(
+      id: claims['userId']?.toString() ?? '',
+      name: '',
+      email: '',
+      role: claims['role'] as String? ?? 'user',
+    );
+    return true;
+  }
+
   Future<void> logout() async {
     await _repo.logout();
+    await TokenStorage.instance.clearToken();
     user.value = null;
   }
 

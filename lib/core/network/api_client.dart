@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'api_endpoints.dart';
 import 'app_exception.dart';
+import 'token_storage.dart';
 
 class ApiClient {
   ApiClient._internal();
@@ -15,17 +16,26 @@ class ApiClient {
 
   Uri _uri(String path) => Uri.parse('${ApiEndpoints.baseUrl}$path');
 
-  Map<String, String> get _jsonHeaders => const {'Content-Type': 'application/json', 'Accept': 'application/json'};
+  Future<Map<String, String>> _authHeaders() async {
+    final token = await TokenStorage.instance.readToken();
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
 
   Future<Map<String, dynamic>> get(String path, {Map<String, String>? headers}) async {
-    final response = await _run(() => _client.get(_uri(path), headers: {..._jsonHeaders, ...?headers}));
+    final baseHeaders = await _authHeaders();
+    final response = await _run(() => _client.get(_uri(path), headers: {...baseHeaders, ...?headers}));
     return _decode(response);
   }
 
   Future<Map<String, dynamic>> post(String path, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
+    final baseHeaders = await _authHeaders();
     final response = await _run(() => _client.post(
           _uri(path),
-          headers: {..._jsonHeaders, ...?headers},
+          headers: {...baseHeaders, ...?headers},
           body: body != null ? jsonEncode(body) : null,
         ));
     return _decode(response);
@@ -38,8 +48,13 @@ class ApiClient {
     String method = 'POST',
     Map<String, String>? headers,
   }) async {
+    final token = await TokenStorage.instance.readToken();
     final request = http.MultipartRequest(method, _uri(path));
-    request.headers.addAll({'Accept': 'application/json', ...?headers});
+    request.headers.addAll({
+      'Accept': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+      ...?headers,
+    });
     request.fields.addAll(fields);
     for (final entry in files.entries) {
       request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));

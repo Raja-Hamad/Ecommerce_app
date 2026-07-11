@@ -13,9 +13,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AppUser> login(String email, String password) async {
-    // TODO: replace with real login endpoint once available.
-    await Future.delayed(_ds.latency);
-    final user = AppUser(id: 'u1', name: email.split('@').first, email: email);
+    final user = await _remote.login(email: email, password: password);
     _ds.loggedInUser = user;
     return user;
   }

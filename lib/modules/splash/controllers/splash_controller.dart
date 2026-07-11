@@ -10,9 +10,13 @@ class SplashController extends GetxController {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 1800));
     final auth = Get.find<AuthController>();
-    if (auth.isLoggedIn) {
+    final results = await Future.wait([
+      auth.tryAutoLogin(),
+      Future.delayed(const Duration(milliseconds: 1800)),
+    ]);
+    final loggedIn = results[0] as bool;
+    if (loggedIn) {
       Get.offAllNamed(AppRoutes.root);
     } else {
       Get.offAllNamed(AppRoutes.login);
