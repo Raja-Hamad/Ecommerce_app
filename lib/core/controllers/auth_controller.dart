@@ -48,22 +48,19 @@ class AuthController extends GetxController {
   }
 
   /// Restores a session from a previously saved token (e.g. on app restart).
-  /// The token only carries userId/role, so name/email stay blank until a
-  /// profile endpoint is available to hydrate the rest of the user.
   Future<bool> tryAutoLogin() async {
     final token = await TokenStorage.instance.readToken();
     if (token == null || JwtDecoder.isExpired(token)) {
       await TokenStorage.instance.clearToken();
       return false;
     }
-    final claims = JwtDecoder.payload(token);
-    user.value = AppUser(
-      id: claims['userId']?.toString() ?? '',
-      name: '',
-      email: '',
-      role: claims['role'] as String? ?? 'user',
-    );
-    return true;
+    try {
+      user.value = await _repo.getProfile();
+      return true;
+    } catch (_) {
+      await TokenStorage.instance.clearToken();
+      return false;
+    }
   }
 
   Future<void> logout() async {

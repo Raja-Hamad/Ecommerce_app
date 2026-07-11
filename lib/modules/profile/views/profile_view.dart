@@ -4,6 +4,7 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/app_network_image.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -20,13 +21,19 @@ class ProfileView extends GetView<ProfileController> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 34,
-                  backgroundColor: AppColors.primaryLight,
-                  child: Text(
-                    (user?.name.isNotEmpty == true ? user!.name[0] : '?').toUpperCase(),
-                    style: AppTextStyles.h1.copyWith(color: AppColors.primary),
-                  ),
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+                  clipBehavior: Clip.antiAlias,
+                  child: (user?.profileImage.isNotEmpty ?? false)
+                      ? AppNetworkImage(url: user!.profileImage)
+                      : Center(
+                          child: Text(
+                            (user?.name.isNotEmpty == true ? user!.name[0] : '?').toUpperCase(),
+                            style: AppTextStyles.h1.copyWith(color: AppColors.primary),
+                          ),
+                        ),
                 ),
                 const SizedBox(width: AppSizes.lg),
                 Expanded(

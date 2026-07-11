@@ -13,7 +13,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AppUser> login(String email, String password) async {
-    final user = await _remote.login(email: email, password: password);
+    await _remote.login(email: email, password: password);
+    final user = await _remote.getProfile();
+    _ds.loggedInUser = user;
+    return user;
+  }
+
+  @override
+  Future<AppUser> getProfile() async {
+    final user = await _remote.getProfile();
     _ds.loggedInUser = user;
     return user;
   }
