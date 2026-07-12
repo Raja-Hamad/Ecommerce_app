@@ -1,26 +1,23 @@
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/wishlist_repository.dart';
-import '../datasources/mock_data_source.dart';
 
 class WishlistRepositoryImpl implements WishlistRepository {
-  final _ds = MockDataSource.instance;
+  // Kept in-memory until a backend wishlist API is available.
+  final List<Product> _localWishlist = [];
 
   @override
-  Future<List<Product>> getWishlist() async {
-    await Future.delayed(_ds.latency);
-    return _ds.products.where((p) => _ds.wishlistIds.contains(p.id)).toList();
-  }
+  Future<List<Product>> getWishlist() async => _localWishlist.toList();
 
   @override
   Future<void> toggleWishlist(Product product) async {
-    await Future.delayed(const Duration(milliseconds: 150));
-    if (_ds.wishlistIds.contains(product.id)) {
-      _ds.wishlistIds.remove(product.id);
+    final index = _localWishlist.indexWhere((p) => p.id == product.id);
+    if (index != -1) {
+      _localWishlist.removeAt(index);
     } else {
-      _ds.wishlistIds.add(product.id);
+      _localWishlist.add(product);
     }
   }
 
   @override
-  bool isInWishlist(String productId) => _ds.wishlistIds.contains(productId);
+  bool isInWishlist(String productId) => _localWishlist.any((p) => p.id == productId);
 }
