@@ -41,6 +41,12 @@ class ApiClient {
     return _decode(response);
   }
 
+  Future<Map<String, dynamic>> delete(String path, {Map<String, String>? headers}) async {
+    final baseHeaders = await _authHeaders();
+    final response = await _run(() => _client.delete(_uri(path), headers: {...baseHeaders, ...?headers}));
+    return _decode(response);
+  }
+
   Future<Map<String, dynamic>> multipart(
     String path, {
     required Map<String, String> fields,

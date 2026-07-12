@@ -15,4 +15,6 @@ class ApiEndpoints {
 
   // Cart
   static const String addToCart = 'products/cart/add';
+  static const String getCart = 'products/cart/get';
+  static String removeCartItem(String productId) => 'products/cart/item/$productId';
 }

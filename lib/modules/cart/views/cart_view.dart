@@ -4,6 +4,7 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../core/widgets/primary_button.dart';
@@ -44,7 +45,13 @@ class CartView extends GetView<CartViewController> {
                     item: item,
                     onIncrement: () => cart.updateQuantity(item.product.id, item.quantity + 1),
                     onDecrement: () => cart.updateQuantity(item.product.id, item.quantity - 1),
-                    onRemove: () => cart.removeFromCart(item.product.id),
+                    onRemove: () async {
+                      final confirmed = await ConfirmDialog.show(
+                        title: 'Remove item?',
+                        message: '"${item.product.name}" will be removed from your cart.',
+                      );
+                      if (confirmed) cart.removeFromCart(item.product.id);
+                    },
                   );
                 },
               ),

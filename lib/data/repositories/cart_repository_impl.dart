@@ -6,39 +6,46 @@ import '../datasources/remote/cart_remote_data_source.dart';
 class CartRepositoryImpl implements CartRepository {
   final _remote = CartRemoteDataSource();
 
-  // Kept in-memory until the backend exposes get/update/remove cart endpoints;
-  // addToCart is synced with the server, the rest stay local for now.
-  final List<CartItem> _localCart = [];
+  // The backend doesn't yet expose an update-quantity/clear endpoint, so we
+  // hydrate the cache from the server once and keep those two operations
+  // local — refetching on every call would silently revert them back to
+  // the server's last known state.
+  List<CartItem> _cache = [];
+  bool _hydrated = false;
 
   @override
-  Future<List<CartItem>> getCartItems() async => _localCart.toList();
+  Future<List<CartItem>> getCartItems() async {
+    if (!_hydrated) {
+      _cache = await _remote.getCart();
+      _hydrated = true;
+    }
+    return _cache.toList();
+  }
 
   @override
   Future<void> addToCart(Product product, {int quantity = 1, String? size, String? color}) async {
     await _remote.addToCart(productId: product.id, quantity: quantity);
-    final index = _localCart.indexWhere((i) => i.product.id == product.id && i.size == size && i.color == color);
-    if (index != -1) {
-      _localCart[index].quantity += quantity;
-    } else {
-      _localCart.add(CartItem(product: product, quantity: quantity, size: size, color: color));
-    }
+    // The server recalculates merged quantities, so re-sync from it.
+    _cache = await _remote.getCart();
+    _hydrated = true;
   }
 
   @override
   Future<void> updateQuantity(String productId, int quantity) async {
     // TODO: sync with backend once an update-quantity endpoint is available.
-    final item = _localCart.firstWhere((i) => i.product.id == productId);
+    final item = _cache.firstWhere((i) => i.product.id == productId);
     item.quantity = quantity;
   }
 
   @override
   Future<void> removeFromCart(String productId) async {
-    // TODO: sync with backend once a remove-item endpoint is available.
-    _localCart.removeWhere((i) => i.product.id == productId);
+    await _remote.removeItem(productId);
+    _cache.removeWhere((i) => i.product.id == productId);
   }
 
   @override
   Future<void> clearCart() async {
-    _localCart.clear();
+    // TODO: sync with backend once a clear-cart endpoint is available.
+    _cache.clear();
   }
 }
