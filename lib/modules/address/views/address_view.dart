@@ -4,6 +4,7 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../controllers/address_controller.dart';
@@ -59,7 +60,7 @@ class AddressView extends GetView<AddressController> {
                           children: [
                             Row(
                               children: [
-                                Text(address.label, style: AppTextStyles.h4),
+                                Text(address.label.isNotEmpty ? address.label : address.fullName, style: AppTextStyles.h4),
                                 if (address.isDefault) ...[
                                   const SizedBox(width: AppSizes.sm),
                                   Container(
@@ -71,15 +72,29 @@ class AddressView extends GetView<AddressController> {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            Text(address.fullName, style: AppTextStyles.bodySmall),
+                            if (address.label.isNotEmpty) Text(address.fullName, style: AppTextStyles.bodySmall),
                             Text(address.fullAddress, style: AppTextStyles.caption),
                             Text(address.phone, style: AppTextStyles.caption),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
-                        onPressed: () => controller.deleteAddress(address),
+                        icon: const Icon(Icons.edit_outlined, color: AppColors.primary, size: 20),
+                        onPressed: () async {
+                          final updated = await Get.toNamed(AppRoutes.addAddress, arguments: address);
+                          if (updated == true) controller.fetch();
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline_rounded, color: AppColors.primary, size: 20),
+                        onPressed: () async {
+                          final confirmed = await ConfirmDialog.show(
+                            title: 'Remove address?',
+                            message: '"${address.label.isNotEmpty ? address.label : address.fullName}" will be removed from your addresses.',
+                            isDestructive: false,
+                          );
+                          if (confirmed) controller.deleteAddress(address);
+                        },
                       ),
                     ],
                   ),

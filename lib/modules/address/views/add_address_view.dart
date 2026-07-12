@@ -13,7 +13,7 @@ class AddAddressView extends GetView<AddAddressController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Address', style: AppTextStyles.h3)),
+      appBar: AppBar(title: Text(controller.isEditing ? 'Edit Address' : 'Add Address', style: AppTextStyles.h3)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.lg),
         child: Form(
@@ -39,6 +39,8 @@ class AddAddressView extends GetView<AddAddressController> {
               const SizedBox(height: AppSizes.lg),
               CustomTextField(label: 'Zip Code', hint: '10001', controller: controller.zipCtrl, keyboardType: TextInputType.number, validator: (v) => Validators.notEmpty(v, field: 'Zip code')),
               const SizedBox(height: AppSizes.lg),
+              CustomTextField(label: 'Country', hint: 'Pakistan', controller: controller.countryCtrl, validator: (v) => Validators.notEmpty(v, field: 'Country')),
+              const SizedBox(height: AppSizes.lg),
               Obx(() => CheckboxListTile(
                     value: controller.isDefault.value,
                     onChanged: (v) => controller.isDefault.value = v ?? false,
@@ -47,7 +49,11 @@ class AddAddressView extends GetView<AddAddressController> {
                     title: const Text('Set as default address'),
                   )),
               const SizedBox(height: AppSizes.lg),
-              Obx(() => PrimaryButton(label: 'Save Address', isLoading: controller.isSaving.value, onPressed: controller.save)),
+              Obx(() => PrimaryButton(
+                    label: controller.isEditing ? 'Update Address' : 'Save Address',
+                    isLoading: controller.isSaving.value,
+                    onPressed: controller.save,
+                  )),
             ],
           ),
         ),

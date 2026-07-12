@@ -43,7 +43,7 @@ class PaymentController extends GetxController {
         total: total,
         couponCode: couponCode,
       );
-      cart.items.clear();
+      await cart.clearCart();
       Get.back();
       Get.offNamed(AppRoutes.paymentSuccess, arguments: order);
     } finally {

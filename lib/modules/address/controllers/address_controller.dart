@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/network/app_exception.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/app_snackbar.dart';
 import '../../../data/repositories/address_repository_impl.dart';
@@ -66,15 +67,37 @@ class AddAddressController extends GetxController {
   final cityCtrl = TextEditingController();
   final stateCtrl = TextEditingController();
   final zipCtrl = TextEditingController();
+  final countryCtrl = TextEditingController(text: 'Pakistan');
   final RxBool isDefault = false.obs;
   final RxBool isSaving = false.obs;
+
+  Address? _editingAddress;
+  bool get isEditing => _editingAddress != null;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments;
+    if (args is Address) {
+      _editingAddress = args;
+      labelCtrl.text = args.label.isNotEmpty ? args.label : 'Home';
+      nameCtrl.text = args.fullName;
+      phoneCtrl.text = args.phone;
+      addressCtrl.text = args.addressLine;
+      cityCtrl.text = args.city;
+      stateCtrl.text = args.state;
+      zipCtrl.text = args.zipCode;
+      countryCtrl.text = args.country;
+      isDefault.value = args.isDefault;
+    }
+  }
 
   Future<void> save() async {
     if (!formKey.currentState!.validate()) return;
     isSaving.value = true;
     try {
       final address = Address(
-        id: 'a${DateTime.now().millisecondsSinceEpoch}',
+        id: _editingAddress?.id ?? 'a${DateTime.now().millisecondsSinceEpoch}',
         label: labelCtrl.text.trim(),
         fullName: nameCtrl.text.trim(),
         phone: phoneCtrl.text.trim(),
@@ -82,14 +105,39 @@ class AddAddressController extends GetxController {
         city: cityCtrl.text.trim(),
         state: stateCtrl.text.trim(),
         zipCode: zipCtrl.text.trim(),
+        country: countryCtrl.text.trim(),
         isDefault: isDefault.value,
       );
-      await _repo.addAddress(address);
-      AppSnackbar.success('Address saved');
+      if (isEditing) {
+        await _repo.updateAddress(address);
+        AppSnackbar.success('Address updated');
+      } else {
+        await _repo.addAddress(address);
+        AppSnackbar.success('Address saved');
+        _resetForm();
+      }
+      // Let the snackbar animation start before the route pops, otherwise
+      // the immediate navigation can cut it off before it's visible.
+      await Future.delayed(const Duration(milliseconds: 200));
       Get.back(result: true);
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Something went wrong. Please try again.');
     } finally {
       isSaving.value = false;
     }
+  }
+
+  void _resetForm() {
+    labelCtrl.text = 'Home';
+    nameCtrl.clear();
+    phoneCtrl.clear();
+    addressCtrl.clear();
+    cityCtrl.clear();
+    stateCtrl.clear();
+    zipCtrl.clear();
+    countryCtrl.text = 'Pakistan';
+    isDefault.value = false;
+    formKey.currentState?.reset();
   }
 
   @override
@@ -101,6 +149,7 @@ class AddAddressController extends GetxController {
     cityCtrl.dispose();
     stateCtrl.dispose();
     zipCtrl.dispose();
+    countryCtrl.dispose();
     super.onClose();
   }
 }

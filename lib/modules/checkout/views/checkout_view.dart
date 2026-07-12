@@ -37,7 +37,12 @@ class CheckoutView extends GetView<CheckoutController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${controller.address.label} · ${controller.address.fullName}', style: AppTextStyles.h4),
+                        Text(
+                          controller.address.label.isNotEmpty
+                              ? '${controller.address.label} · ${controller.address.fullName}'
+                              : controller.address.fullName,
+                          style: AppTextStyles.h4,
+                        ),
                         Text(controller.address.fullAddress, style: AppTextStyles.caption),
                       ],
                     ),

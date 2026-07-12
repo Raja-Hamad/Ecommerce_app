@@ -49,6 +49,7 @@ class CartView extends GetView<CartViewController> {
                       final confirmed = await ConfirmDialog.show(
                         title: 'Remove item?',
                         message: '"${item.product.name}" will be removed from your cart.',
+                        isDestructive: false,
                       );
                       if (confirmed) cart.removeFromCart(item.product.id);
                     },

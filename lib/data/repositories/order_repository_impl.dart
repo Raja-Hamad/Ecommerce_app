@@ -44,7 +44,6 @@ class OrderRepositoryImpl implements OrderRepository {
       couponCode: couponCode,
     );
     _ds.orders.add(order);
-    _ds.cart.clear();
     return order;
   }
 }

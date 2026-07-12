@@ -17,4 +17,9 @@ class ApiEndpoints {
   static const String addToCart = 'products/cart/add';
   static const String getCart = 'products/cart/get';
   static String removeCartItem(String productId) => 'products/cart/item/$productId';
+
+  // Addresses
+  static const String addresses = 'addresses';
+  static String deleteAddress(String addressId) => 'addresses/$addressId/delete';
+  static String updateAddress(String addressId) => 'addresses/$addressId/update';
 }
