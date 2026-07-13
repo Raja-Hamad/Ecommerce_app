@@ -1,23 +1,37 @@
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/wishlist_repository.dart';
+import '../datasources/remote/wishlist_remote_data_source.dart';
 
 class WishlistRepositoryImpl implements WishlistRepository {
-  // Kept in-memory until a backend wishlist API is available.
-  final List<Product> _localWishlist = [];
+  final _remote = WishlistRemoteDataSource();
+
+  List<Product> _cache = [];
+  bool _hydrated = false;
 
   @override
-  Future<List<Product>> getWishlist() async => _localWishlist.toList();
+  Future<List<Product>> getWishlist() async {
+    if (!_hydrated) {
+      _cache = await _remote.getWishlist();
+      _hydrated = true;
+    }
+    return _cache.toList();
+  }
 
   @override
   Future<void> toggleWishlist(Product product) async {
-    final index = _localWishlist.indexWhere((p) => p.id == product.id);
-    if (index != -1) {
-      _localWishlist.removeAt(index);
+    if (!_hydrated) {
+      _cache = await _remote.getWishlist();
+      _hydrated = true;
+    }
+    if (_cache.any((p) => p.id == product.id)) {
+      await _remote.removeFromWishlist(product.id);
+      _cache.removeWhere((p) => p.id == product.id);
     } else {
-      _localWishlist.add(product);
+      await _remote.addToWishlist(product.id);
+      _cache.add(product);
     }
   }
 
   @override
-  bool isInWishlist(String productId) => _localWishlist.any((p) => p.id == productId);
+  bool isInWishlist(String productId) => _cache.any((p) => p.id == productId);
 }

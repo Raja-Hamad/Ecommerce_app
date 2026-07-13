@@ -12,6 +12,12 @@ class ApiEndpoints {
   static const String products = 'products';
   static const String categories = 'products/categories';
   static String productById(String id) => 'products/$id';
+  static String addReview(String productId) => 'products/$productId/reviews';
+
+  // Wishlist
+  static const String wishlist = 'products/wishlist';
+  static String addToWishlist(String productId) => 'products/$productId/wishlist';
+  static String removeFromWishlist(String productId) => 'products/wishlist/$productId';
 
   // Cart
   static const String addToCart = 'products/cart/add';
@@ -29,6 +35,7 @@ class ApiEndpoints {
 
   // Orders
   static const String placeOrder = 'products/order/place';
+  static const String myOrders = 'products/order/my-orders';
 
   // Payments
   static const String createPaymentIntent = 'payments/create-payment-intent';

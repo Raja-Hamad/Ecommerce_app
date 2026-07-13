@@ -4,6 +4,7 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/app_network_image.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../domain/entities/order.dart';
 
@@ -66,14 +67,27 @@ class OrderDetailsView extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: AppSizes.sm),
                   child: Row(
                     children: [
-                      Container(
+                      SizedBox(
                         width: 44,
                         height: 44,
-                        decoration: BoxDecoration(color: AppColors.scaffold, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-                        child: const Icon(Icons.inventory_2_outlined, color: AppColors.textHint, size: 20),
+                        child: item.product != null
+                            ? AppNetworkImage(url: item.product!.images.first, borderRadius: BorderRadius.circular(AppSizes.radiusSm))
+                            : Container(
+                                decoration: BoxDecoration(color: AppColors.scaffold, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                                child: const Icon(Icons.inventory_2_outlined, color: AppColors.textHint, size: 20),
+                              ),
                       ),
                       const SizedBox(width: AppSizes.md),
-                      Expanded(child: Text('Qty ${item.quantity} × ${Formatters.currency(item.price)}', style: AppTextStyles.bodySmall)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (item.product != null)
+                              Text(item.product!.name, style: AppTextStyles.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            Text('Qty ${item.quantity} × ${Formatters.currency(item.price)}', style: AppTextStyles.caption),
+                          ],
+                        ),
+                      ),
                       Text(Formatters.currency(item.subtotal), style: AppTextStyles.label),
                     ],
                   ),

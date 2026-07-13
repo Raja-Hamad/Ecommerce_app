@@ -5,6 +5,12 @@ import '../../../domain/entities/order.dart';
 class OrderRemoteDataSource {
   final _client = ApiClient.instance;
 
+  Future<List<Order>> getMyOrders() async {
+    final response = await _client.get(ApiEndpoints.myOrders);
+    final data = response['orders'] as List<dynamic>? ?? [];
+    return data.map((json) => Order.fromJson(json as Map<String, dynamic>)).toList();
+  }
+
   Future<Order> createOrder({
     required String addressId,
     String? couponCode,

@@ -17,4 +17,11 @@ class ProductRemoteDataSource {
     final response = await _client.get(ApiEndpoints.productById(id));
     return Product.fromJson(response);
   }
+
+  Future<void> addReview(String productId, {required double rating, required String comment}) async {
+    await _client.post(
+      ApiEndpoints.addReview(productId),
+      body: {'rating': rating, 'comment': comment},
+    );
+  }
 }

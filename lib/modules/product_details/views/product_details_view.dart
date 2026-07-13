@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/theme/app_colors.dart';
@@ -8,6 +9,7 @@ import '../../../core/widgets/app_network_image.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../../core/widgets/quantity_stepper.dart';
 import '../../../domain/entities/product.dart';
+import '../../../domain/entities/review.dart';
 import '../controllers/product_details_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
@@ -125,6 +127,17 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         Text('Description', style: AppTextStyles.h4),
                         const SizedBox(height: AppSizes.sm),
                         Text(product.description, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary, height: 1.5)),
+                        const SizedBox(height: AppSizes.xl),
+                        const Divider(),
+                        const SizedBox(height: AppSizes.lg),
+                        Text('Reviews (${product.reviews.length})', style: AppTextStyles.h4),
+                        const SizedBox(height: AppSizes.md),
+                        if (product.reviews.isEmpty)
+                          Text('No reviews yet. Be the first to review this product!', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary))
+                        else
+                          ...product.reviews.map((review) => _ReviewTile(review: review)),
+                        const SizedBox(height: AppSizes.xl),
+                        const _WriteReviewCard(),
                       ],
                     ),
                   ),
@@ -243,6 +256,100 @@ class _BottomBar extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ReviewTile extends StatelessWidget {
+  const _ReviewTile({required this.review});
+
+  final Review review;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSizes.md),
+      padding: const EdgeInsets.all(AppSizes.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              RatingBarIndicator(
+                rating: review.rating,
+                itemCount: 5,
+                itemSize: 16,
+                unratedColor: AppColors.border,
+                itemBuilder: (context, _) => const Icon(Icons.star_rounded, color: AppColors.star),
+              ),
+              const SizedBox(width: AppSizes.sm),
+              Text(review.rating.toStringAsFixed(1), style: AppTextStyles.label),
+            ],
+          ),
+          const SizedBox(height: AppSizes.xs),
+          Text(review.comment, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+        ],
+      ),
+    );
+  }
+}
+
+class _WriteReviewCard extends StatelessWidget {
+  const _WriteReviewCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<ProductDetailsController>();
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.lg),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLight,
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Write a Review', style: AppTextStyles.h4),
+          const SizedBox(height: AppSizes.md),
+          Center(
+            child: Obx(() => RatingBar.builder(
+                  initialRating: controller.reviewRating.value,
+                  minRating: 0.5,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 32,
+                  glowColor: AppColors.star,
+                  itemBuilder: (context, _) => const Icon(Icons.star_rounded, color: AppColors.star),
+                  unratedColor: AppColors.border,
+                  onRatingUpdate: (value) => controller.reviewRating.value = value,
+                )),
+          ),
+          const SizedBox(height: AppSizes.md),
+          TextField(
+            controller: controller.reviewCommentCtrl,
+            maxLines: 3,
+            style: AppTextStyles.body,
+            decoration: InputDecoration(
+              hintText: 'Share your experience with this product...',
+              filled: true,
+              fillColor: AppColors.surface,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusMd), borderSide: BorderSide.none),
+            ),
+          ),
+          const SizedBox(height: AppSizes.md),
+          Obx(() => PrimaryButton(
+                label: 'Submit Review',
+                icon: Icons.rate_review_outlined,
+                isLoading: controller.isSubmittingReview.value,
+                onPressed: controller.submitReview,
+              )),
+        ],
       ),
     );
   }

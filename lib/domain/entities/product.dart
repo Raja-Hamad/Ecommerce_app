@@ -1,3 +1,5 @@
+import 'review.dart';
+
 class Product {
   const Product({
     required this.id,
@@ -14,6 +16,7 @@ class Product {
     this.sizes = const [],
     this.colors = const [],
     this.isFeatured = false,
+    this.reviews = const [],
   });
 
   final String id;
@@ -30,6 +33,7 @@ class Product {
   final List<String> sizes;
   final List<String> colors;
   final bool isFeatured;
+  final List<Review> reviews;
 
   double get displayPrice => discountPrice ?? price;
 
@@ -60,6 +64,9 @@ class Product {
       sizes: List<String>.from(json['sizes'] as List? ?? const []),
       colors: List<String>.from(json['colors'] as List? ?? const []),
       isFeatured: json['isFeatured'] as bool? ?? false,
+      reviews: (json['reviews'] as List<dynamic>? ?? [])
+          .map((e) => Review.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 }
