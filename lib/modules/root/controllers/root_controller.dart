@@ -13,8 +13,13 @@ class RootController extends GetxController {
     super.onInit();
     _registerTabControllers();
     final args = Get.arguments;
-    if (args is Map && args['tab'] is int) {
-      currentIndex.value = args['tab'] as int;
+    final initialTab = (args is Map && args['tab'] is int) ? args['tab'] as int : 0;
+    currentIndex.value = initialTab;
+    // Orders is populated once by its permanent controller's onInit, so
+    // landing on it directly (e.g. "Track Order" after checkout) needs an
+    // explicit refresh to pick up the order that was just placed.
+    if (initialTab == 3) {
+      Get.find<OrdersController>().fetch();
     }
   }
 
@@ -26,5 +31,10 @@ class RootController extends GetxController {
     if (!Get.isRegistered<ProfileController>()) Get.put(ProfileController(), permanent: true);
   }
 
-  void changeTab(int index) => currentIndex.value = index;
+  void changeTab(int index) {
+    currentIndex.value = index;
+    if (index == 3) {
+      Get.find<OrdersController>().fetch();
+    }
+  }
 }
