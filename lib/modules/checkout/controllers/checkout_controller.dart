@@ -14,7 +14,7 @@ class CheckoutController extends GetxController {
 
   double get subtotal => cart.subtotal;
   double get deliveryFee => subtotal > 50 ? 0 : 5.99;
-  double get discount => appliedCoupon.value == null ? 0 : subtotal * (appliedCoupon.value!.discountPercent / 100);
+  double get discount => appliedCoupon.value?.discountFor(subtotal) ?? 0;
   double get total => subtotal + deliveryFee - discount;
 
   Future<void> applyCoupon() async {

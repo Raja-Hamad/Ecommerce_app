@@ -71,7 +71,10 @@ class _CouponCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('${coupon.discountPercent.toInt()}%', style: AppTextStyles.h3.copyWith(color: Colors.white)),
+                  Text(
+                    coupon.isPercentage ? '${coupon.discountValue.toInt()}%' : Formatters.currency(coupon.discountValue),
+                    style: AppTextStyles.h3.copyWith(color: Colors.white),
+                  ),
                   Text('OFF', style: AppTextStyles.labelSmall.copyWith(color: Colors.white70)),
                 ],
               ),
