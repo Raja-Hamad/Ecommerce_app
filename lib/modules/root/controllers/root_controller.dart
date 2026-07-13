@@ -17,9 +17,12 @@ class RootController extends GetxController {
     currentIndex.value = initialTab;
     // Orders is populated once by its permanent controller's onInit, so
     // landing on it directly (e.g. "Track Order" after checkout) needs an
-    // explicit refresh to pick up the order that was just placed.
+    // explicit refresh to pick up the order that was just placed. Deferred
+    // to a microtask since onInit runs synchronously during RootView's
+    // build (via Get.find), and mutating an Rx here would otherwise trigger
+    // "setState() called during build" on the Orders tab's Obx.
     if (initialTab == 3) {
-      Get.find<OrdersController>().fetch();
+      Future.microtask(() => Get.find<OrdersController>().fetch());
     }
   }
 

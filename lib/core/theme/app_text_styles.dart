@@ -5,7 +5,7 @@ import 'app_colors.dart';
 class AppTextStyles {
   AppTextStyles._();
 
-  static TextStyle get _base => GoogleFonts.plusJakartaSans(color: AppColors.textPrimary);
+  static TextStyle get _base => GoogleFonts.inter(color: AppColors.textPrimary);
 
   static TextStyle h1 = _base.copyWith(fontSize: 28, fontWeight: FontWeight.w700, height: 1.2);
   static TextStyle h2 = _base.copyWith(fontSize: 22, fontWeight: FontWeight.w700, height: 1.2);

@@ -36,7 +36,7 @@ class CartItemTile extends StatelessWidget {
           SizedBox(
             width: 84,
             height: 84,
-            child: AppNetworkImage(url: item.product.images.first, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
+            child: AppNetworkImage(url: item.product.firstImageUrl, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
           ),
           const SizedBox(width: AppSizes.md),
           Expanded(

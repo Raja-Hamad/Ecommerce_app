@@ -194,7 +194,7 @@ class _ProductListTile extends StatelessWidget {
             SizedBox(
               width: 90,
               height: 90,
-              child: AppNetworkImage(url: product.images.first, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
+              child: AppNetworkImage(url: product.firstImageUrl, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
             ),
             const SizedBox(width: AppSizes.md),
             Expanded(

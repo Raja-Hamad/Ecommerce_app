@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    AppNetworkImage(url: product.images.first),
+                    AppNetworkImage(url: product.firstImageUrl),
                     if (!product.inStock)
                       Container(
                         color: Colors.black.withValues(alpha: 0.45),

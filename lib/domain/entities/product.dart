@@ -44,6 +44,8 @@ class Product {
 
   bool get inStock => stock > 0;
 
+  String get firstImageUrl => images.isNotEmpty ? images.first : '';
+
   factory Product.fromJson(Map<String, dynamic> json) {
     final category = json['category'];
     final images = (json['images'] as List<dynamic>? ?? [])

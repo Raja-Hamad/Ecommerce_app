@@ -91,7 +91,7 @@ class _OrderCard extends StatelessWidget {
                             child: SizedBox(
                               width: 52,
                               height: 52,
-                              child: AppNetworkImage(url: i.product!.images.first, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
+                              child: AppNetworkImage(url: i.product!.firstImageUrl, borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
                             ),
                           )),
                       if (extraCount > 0)

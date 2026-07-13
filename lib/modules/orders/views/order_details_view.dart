@@ -71,7 +71,7 @@ class OrderDetailsView extends StatelessWidget {
                         width: 44,
                         height: 44,
                         child: item.product != null
-                            ? AppNetworkImage(url: item.product!.images.first, borderRadius: BorderRadius.circular(AppSizes.radiusSm))
+                            ? AppNetworkImage(url: item.product!.firstImageUrl, borderRadius: BorderRadius.circular(AppSizes.radiusSm))
                             : Container(
                                 decoration: BoxDecoration(color: AppColors.scaffold, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
                                 child: const Icon(Icons.inventory_2_outlined, color: AppColors.textHint, size: 20),
