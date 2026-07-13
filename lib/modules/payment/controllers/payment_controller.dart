@@ -1,51 +1,48 @@
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../core/controllers/cart_controller.dart';
+import '../../../core/network/app_exception.dart';
 import '../../../core/routes/app_routes.dart';
-import '../../../data/repositories/order_repository_impl.dart';
-import '../../../domain/entities/address.dart';
+import '../../../core/utils/app_snackbar.dart';
+import '../../../data/repositories/payment_repository_impl.dart';
 import '../../../domain/entities/order.dart';
 
 class PaymentController extends GetxController {
-  final _repo = OrderRepositoryImpl();
+  final _paymentRepo = PaymentRepositoryImpl();
 
-  late final Address address;
-  late final double subtotal;
-  late final double discount;
-  late final double deliveryFee;
-  late final double total;
-  String? couponCode;
+  late final Order order;
 
   final RxBool isProcessing = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments as Map;
-    address = args['address'] as Address;
-    subtotal = args['subtotal'] as double;
-    discount = args['discount'] as double;
-    deliveryFee = args['deliveryFee'] as double;
-    total = args['total'] as double;
-    couponCode = args['couponCode'] as String?;
+    order = Get.arguments as Order;
   }
 
   Future<void> confirmPayment() async {
     isProcessing.value = true;
     try {
-      await Future.delayed(const Duration(seconds: 2));
-      final cart = Get.find<CartController>();
-      final order = await _repo.placeOrder(
-        items: cart.items.toList(),
-        address: address,
-        subtotal: subtotal,
-        discount: discount,
-        deliveryFee: deliveryFee,
-        total: total,
-        couponCode: couponCode,
+      final intent = await _paymentRepo.createPaymentIntent(order.id);
+
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: intent.clientSecret,
+          merchantDisplayName: AppStrings.appName,
+        ),
       );
+      await Stripe.instance.presentPaymentSheet();
+
+      final cart = Get.find<CartController>();
       await cart.clearCart();
-      Get.back();
       Get.offNamed(AppRoutes.paymentSuccess, arguments: order);
+    } on StripeException catch (e) {
+      if (e.error.code != FailureCode.Canceled) {
+        AppSnackbar.error(e.error.localizedMessage ?? 'Payment failed. Please try again.');
+      }
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Payment failed. Please try again.');
     } finally {
       isProcessing.value = false;
     }

@@ -6,6 +6,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../../domain/entities/order.dart';
 import '../controllers/checkout_controller.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
@@ -90,10 +91,34 @@ class CheckoutView extends GetView<CheckoutController> {
               );
             }),
             const SizedBox(height: AppSizes.xl),
+            Text('Payment Method', style: AppTextStyles.h4),
+            const SizedBox(height: AppSizes.sm),
+            Obx(() => Row(
+                  children: [
+                    Expanded(
+                      child: _PaymentMethodTile(
+                        icon: Icons.credit_card_rounded,
+                        label: 'Card (Stripe)',
+                        selected: controller.paymentMethod.value == PaymentMethod.stripe,
+                        onTap: () => controller.selectPaymentMethod(PaymentMethod.stripe),
+                      ),
+                    ),
+                    const SizedBox(width: AppSizes.md),
+                    Expanded(
+                      child: _PaymentMethodTile(
+                        icon: Icons.payments_outlined,
+                        label: 'Cash on Delivery',
+                        selected: controller.paymentMethod.value == PaymentMethod.cod,
+                        onTap: () => controller.selectPaymentMethod(PaymentMethod.cod),
+                      ),
+                    ),
+                  ],
+                )),
+            const SizedBox(height: AppSizes.xl),
             Obx(() => OrderSummaryCard(
                   subtotal: controller.subtotal,
                   discount: controller.discount,
-                  deliveryFee: controller.deliveryFee,
+                  deliveryFee: 0,
                   total: controller.total,
                 )),
           ],
@@ -103,7 +128,43 @@ class CheckoutView extends GetView<CheckoutController> {
         padding: const EdgeInsets.all(AppSizes.lg),
         child: SafeArea(
           top: false,
-          child: PrimaryButton(label: 'Place Order', icon: Icons.check_circle_outline_rounded, onPressed: controller.proceedToPayment),
+          child: Obx(() => PrimaryButton(
+                label: 'Place Order',
+                icon: Icons.check_circle_outline_rounded,
+                isLoading: controller.isPlacingOrder.value,
+                onPressed: controller.placeOrder,
+              )),
+        ),
+      ),
+    );
+  }
+}
+
+class _PaymentMethodTile extends StatelessWidget {
+  const _PaymentMethodTile({required this.icon, required this.label, required this.selected, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+          border: Border.all(color: selected ? AppColors.primary : AppColors.border, width: selected ? 1.5 : 1),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: selected ? AppColors.primary : AppColors.textHint, size: AppSizes.iconLg),
+            const SizedBox(height: AppSizes.xs),
+            Text(label, style: AppTextStyles.bodySmall.copyWith(color: selected ? AppColors.primary : AppColors.textPrimary), textAlign: TextAlign.center),
+          ],
         ),
       ),
     );

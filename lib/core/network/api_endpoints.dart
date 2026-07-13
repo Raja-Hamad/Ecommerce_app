@@ -16,6 +16,7 @@ class ApiEndpoints {
   // Cart
   static const String addToCart = 'products/cart/add';
   static const String getCart = 'products/cart/get';
+  static const String updateCartQuantity = 'products/cart/update';
   static String removeCartItem(String productId) => 'products/cart/item/$productId';
 
   // Addresses
@@ -25,4 +26,10 @@ class ApiEndpoints {
 
   // Coupons
   static const String coupons = 'coupons';
+
+  // Orders
+  static const String placeOrder = 'products/order/place';
+
+  // Payments
+  static const String createPaymentIntent = 'payments/create-payment-intent';
 }

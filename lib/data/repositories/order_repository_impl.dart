@@ -1,49 +1,33 @@
-import '../../domain/entities/address.dart';
-import '../../domain/entities/cart_item.dart';
 import '../../domain/entities/order.dart';
 import '../../domain/repositories/order_repository.dart';
-import '../datasources/mock_data_source.dart';
+import '../datasources/remote/order_remote_data_source.dart';
 
 class OrderRepositoryImpl implements OrderRepository {
-  final _ds = MockDataSource.instance;
+  OrderRepositoryImpl._internal();
+  static final OrderRepositoryImpl _instance = OrderRepositoryImpl._internal();
+  factory OrderRepositoryImpl() => _instance;
+
+  final _remote = OrderRemoteDataSource();
+
+  // There's no "get my orders" / "get order by id" endpoint yet, so orders
+  // created this session are cached locally so they show up in My Orders
+  // immediately. Singleton so every screen shares the same cache.
+  final List<Order> _cache = [];
 
   @override
-  Future<List<Order>> getOrders() async {
-    await Future.delayed(_ds.latency);
-    return _ds.orders.reversed.toList();
-  }
+  Future<List<Order>> getOrders() async => _cache.reversed.toList();
 
   @override
-  Future<Order> getOrderById(String id) async {
-    await Future.delayed(_ds.latency);
-    return _ds.orders.firstWhere((o) => o.id == id);
-  }
+  Future<Order> getOrderById(String id) async => _cache.firstWhere((o) => o.id == id);
 
   @override
-  Future<Order> placeOrder({
-    required List<CartItem> items,
-    required Address address,
-    required double subtotal,
-    required double discount,
-    required double deliveryFee,
-    required double total,
+  Future<Order> createOrder({
+    required String addressId,
     String? couponCode,
+    required PaymentMethod paymentMethod,
   }) async {
-    await Future.delayed(_ds.latency);
-    final order = Order(
-      id: 'ORD${1000 + _ds.orders.length + 1}',
-      items: items,
-      address: address,
-      subtotal: subtotal,
-      discount: discount,
-      deliveryFee: deliveryFee,
-      total: total,
-      status: OrderStatus.processing,
-      paymentStatus: PaymentStatus.paid,
-      createdAt: DateTime.now(),
-      couponCode: couponCode,
-    );
-    _ds.orders.add(order);
+    final order = await _remote.createOrder(addressId: addressId, couponCode: couponCode, paymentMethod: paymentMethod);
+    _cache.add(order);
     return order;
   }
 }

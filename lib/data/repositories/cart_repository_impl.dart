@@ -6,10 +6,10 @@ import '../datasources/remote/cart_remote_data_source.dart';
 class CartRepositoryImpl implements CartRepository {
   final _remote = CartRemoteDataSource();
 
-  // The backend doesn't yet expose an update-quantity/clear endpoint, so we
-  // hydrate the cache from the server once and keep those two operations
-  // local — refetching on every call would silently revert them back to
-  // the server's last known state.
+  // The backend doesn't yet expose a clear-cart endpoint, so we hydrate the
+  // cache from the server once and keep that operation local — refetching
+  // on every call would silently revert it back to the server's last
+  // known state.
   List<CartItem> _cache = [];
   bool _hydrated = false;
 
@@ -32,9 +32,8 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> updateQuantity(String productId, int quantity) async {
-    // TODO: sync with backend once an update-quantity endpoint is available.
-    final item = _cache.firstWhere((i) => i.product.id == productId);
-    item.quantity = quantity;
+    _cache = await _remote.updateQuantity(productId: productId, quantity: quantity);
+    _hydrated = true;
   }
 
   @override

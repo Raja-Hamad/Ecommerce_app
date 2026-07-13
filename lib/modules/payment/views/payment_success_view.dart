@@ -14,6 +14,7 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
   @override
   Widget build(BuildContext context) {
     final order = controller.order;
+    final isCod = order.paymentMethod.name == 'cod';
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -28,9 +29,13 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
                 child: const Icon(Icons.check_rounded, color: AppColors.success, size: 52),
               ),
               const SizedBox(height: AppSizes.xl),
-              Text('Payment Successful!', style: AppTextStyles.h1, textAlign: TextAlign.center),
+              Text(isCod ? 'Order Placed!' : 'Payment Successful!', style: AppTextStyles.h1, textAlign: TextAlign.center),
               const SizedBox(height: AppSizes.sm),
-              Text('Your order has been placed successfully', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary), textAlign: TextAlign.center),
+              Text(
+                isCod ? 'Pay in cash when your order arrives' : 'Your order has been placed successfully',
+                style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: AppSizes.xxl),
               Container(
                 width: double.infinity,
@@ -42,9 +47,13 @@ class PaymentSuccessView extends GetView<PaymentSuccessController> {
                     const SizedBox(height: AppSizes.sm),
                     _row('Items', '${order.itemCount}'),
                     const SizedBox(height: AppSizes.sm),
-                    _row('Amount Paid', Formatters.currency(order.total)),
+                    _row(isCod ? 'Amount Due' : 'Amount Paid', Formatters.currency(order.finalAmount)),
                     const SizedBox(height: AppSizes.sm),
-                    _row('Payment Status', 'Paid', valueColor: AppColors.success),
+                    _row(
+                      'Payment Status',
+                      isCod ? 'Cash on Delivery' : 'Paid',
+                      valueColor: AppColors.success,
+                    ),
                   ],
                 ),
               ),

@@ -46,7 +46,7 @@ class OrdersView extends GetView<OrdersController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(order.id, style: AppTextStyles.h4),
+                        Text('Order #${order.id.length > 8 ? order.id.substring(order.id.length - 8).toUpperCase() : order.id}', style: AppTextStyles.h4),
                         _StatusBadge(status: order.status),
                       ],
                     ),
@@ -57,7 +57,7 @@ class OrdersView extends GetView<OrdersController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('${order.itemCount} items', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
-                        Text(Formatters.currency(order.total), style: AppTextStyles.h4.copyWith(color: AppColors.primary)),
+                        Text(Formatters.currency(order.finalAmount), style: AppTextStyles.h4.copyWith(color: AppColors.primary)),
                       ],
                     ),
                   ],

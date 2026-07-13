@@ -7,7 +7,6 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../controllers/payment_controller.dart';
-import 'stripe_payment_sheet.dart';
 
 class PaymentView extends GetView<PaymentController> {
   const PaymentView({super.key});
@@ -21,7 +20,7 @@ class PaymentView extends GetView<PaymentController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            OrderSummaryCard(subtotal: controller.subtotal, discount: controller.discount, deliveryFee: controller.deliveryFee, total: controller.total),
+            OrderSummaryCard(subtotal: controller.order.totalAmount, discount: controller.order.discount, deliveryFee: 0, total: controller.order.finalAmount),
             const SizedBox(height: AppSizes.xl),
             Text('Deliver to', style: AppTextStyles.h4),
             const SizedBox(height: AppSizes.sm),
@@ -32,7 +31,7 @@ class PaymentView extends GetView<PaymentController> {
                 children: [
                   const Icon(Icons.location_on_rounded, color: AppColors.primary),
                   const SizedBox(width: AppSizes.md),
-                  Expanded(child: Text(controller.address.fullAddress, style: AppTextStyles.bodySmall)),
+                  Expanded(child: Text(controller.order.shippingAddress.fullAddress, style: AppTextStyles.bodySmall)),
                 ],
               ),
             ),
@@ -70,11 +69,12 @@ class PaymentView extends GetView<PaymentController> {
         padding: const EdgeInsets.all(AppSizes.lg),
         child: SafeArea(
           top: false,
-          child: PrimaryButton(
-            label: 'Pay ${Formatters.currency(controller.total)}',
-            icon: Icons.lock_outline_rounded,
-            onPressed: () => showStripePaymentSheet(context, controller),
-          ),
+          child: Obx(() => PrimaryButton(
+                label: 'Pay ${Formatters.currency(controller.order.finalAmount)}',
+                icon: Icons.lock_outline_rounded,
+                isLoading: controller.isProcessing.value,
+                onPressed: controller.confirmPayment,
+              )),
         ),
       ),
     );
