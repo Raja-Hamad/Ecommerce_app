@@ -24,4 +24,7 @@ class OrderRepositoryImpl implements OrderRepository {
     required PaymentMethod paymentMethod,
   }) =>
       _remote.createOrder(addressId: addressId, couponCode: couponCode, paymentMethod: paymentMethod);
+
+  @override
+  Future<Order> cancelOrder(String orderId) => _remote.cancelOrder(orderId);
 }

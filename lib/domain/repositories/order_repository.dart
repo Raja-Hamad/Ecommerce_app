@@ -8,4 +8,5 @@ abstract class OrderRepository {
     String? couponCode,
     required PaymentMethod paymentMethod,
   });
+  Future<Order> cancelOrder(String orderId);
 }

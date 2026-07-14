@@ -9,14 +9,14 @@ extension PaymentMethodApi on PaymentMethod {
   static PaymentMethod fromApi(String? value) => value == 'COD' ? PaymentMethod.cod : PaymentMethod.stripe;
 }
 
-enum OrderStatus { pending, processing, shipped, delivered, cancelled }
+enum OrderStatus { pending, confirmed, shipped, delivered, cancelled }
 
 enum PaymentStatus { pending, paid, failed }
 
 OrderStatus _parseOrderStatus(String? value) {
   switch (value) {
-    case 'processing':
-      return OrderStatus.processing;
+    case 'confirmed':
+      return OrderStatus.confirmed;
     case 'shipped':
       return OrderStatus.shipped;
     case 'delivered':
@@ -102,6 +102,8 @@ class Order {
   final String? stripePaymentIntentId;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
+
+  bool get isCancellable => status == OrderStatus.pending || status == OrderStatus.confirmed;
 
   factory Order.fromJson(Map<String, dynamic> json) {
     final totalAmount = (json['totalAmount'] as num?)?.toDouble() ?? 0;

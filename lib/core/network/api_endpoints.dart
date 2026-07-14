@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://192.168.1.31:3000/';
+  static const String baseUrl = 'http://192.168.1.10:3000/';
 
   // Auth
   static const String register = 'users/register';
@@ -36,6 +36,7 @@ class ApiEndpoints {
   // Orders
   static const String placeOrder = 'products/order/place';
   static const String myOrders = 'products/order/my-orders';
+  static String cancelOrder(String orderId) => 'products/order/$orderId/cancel';
 
   // Payments
   static const String createPaymentIntent = 'payments/create-payment-intent';

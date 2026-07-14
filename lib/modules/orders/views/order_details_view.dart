@@ -7,6 +7,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../domain/entities/order.dart';
+import '../controllers/orders_controller.dart';
 
 class OrderDetailsView extends StatelessWidget {
   const OrderDetailsView({super.key});
@@ -14,6 +15,7 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final order = Get.arguments as Order;
+    final ordersController = Get.find<OrdersController>();
     return Scaffold(
       appBar: AppBar(title: Text('Order Details', style: AppTextStyles.h3)),
       body: SingleChildScrollView(
@@ -97,6 +99,31 @@ class OrderDetailsView extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: order.isCancellable
+          ? Padding(
+              padding: const EdgeInsets.all(AppSizes.lg),
+              child: SafeArea(
+                top: false,
+                child: Obx(() => SizedBox(
+                      width: double.infinity,
+                      height: AppSizes.buttonHeight,
+                      child: OutlinedButton.icon(
+                        onPressed: ordersController.isCancelling.value
+                            ? null
+                            : () async {
+                                final cancelled = await ordersController.cancelOrder(order);
+                                if (cancelled) Get.back();
+                              },
+                        icon: ordersController.isCancelling.value
+                            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.2, color: AppColors.error))
+                            : const Icon(Icons.cancel_outlined, color: AppColors.error),
+                        label: Text('Cancel Order', style: AppTextStyles.label.copyWith(color: AppColors.error)),
+                        style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.error)),
+                      ),
+                    )),
+              ),
+            )
+          : null,
     );
   }
 }

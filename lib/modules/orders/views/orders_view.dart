@@ -13,30 +13,62 @@ import '../controllers/orders_controller.dart';
 class OrdersView extends GetView<OrdersController> {
   const OrdersView({super.key});
 
+  static const List<OrderStatus?> _tabStatuses = [null, OrderStatus.pending, OrderStatus.confirmed, OrderStatus.shipped, OrderStatus.delivered, OrderStatus.cancelled];
+  static const List<String> _tabLabels = ['All', 'Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('My Orders', style: AppTextStyles.h3)),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (controller.orders.isEmpty) {
-          return EmptyState(
-            icon: Icons.receipt_long_outlined,
-            title: 'No orders yet',
-            message: 'Your placed orders will show up here',
-            actionLabel: 'Start Shopping',
-            onAction: () => Get.toNamed(AppRoutes.productListing),
+    return DefaultTabController(
+      length: _tabStatuses.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('My Orders', style: AppTextStyles.h3),
+          bottom: TabBar(
+            isScrollable: true,
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.textSecondary,
+            indicatorColor: AppColors.primary,
+            labelStyle: AppTextStyles.label,
+            unselectedLabelStyle: AppTextStyles.body,
+            tabs: _tabLabels.map((label) => Tab(text: label)).toList(),
+          ),
+        ),
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (controller.orders.isEmpty) {
+            return EmptyState(
+              icon: Icons.receipt_long_outlined,
+              title: 'No orders yet',
+              message: 'Your placed orders will show up here',
+              actionLabel: 'Start Shopping',
+              onAction: () => Get.toNamed(AppRoutes.productListing),
+            );
+          }
+          return TabBarView(
+            children: _tabStatuses.map((status) {
+              final filtered = status == null ? controller.orders : controller.orders.where((o) => o.status == status).toList();
+              if (filtered.isEmpty) {
+                return const EmptyState(
+                  icon: Icons.inbox_outlined,
+                  title: 'No orders here',
+                  message: 'There\'s nothing in this category yet',
+                );
+              }
+              return RefreshIndicator(
+                onRefresh: controller.fetch,
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(AppSizes.lg),
+                  itemCount: filtered.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: AppSizes.md),
+                  itemBuilder: (context, index) => _OrderCard(order: filtered[index], onTap: () => controller.openOrder(filtered[index])),
+                ),
+              );
+            }).toList(),
           );
-        }
-        return ListView.separated(
-          padding: const EdgeInsets.all(AppSizes.lg),
-          itemCount: controller.orders.length,
-          separatorBuilder: (context, index) => const SizedBox(height: AppSizes.md),
-          itemBuilder: (context, index) => _OrderCard(order: controller.orders[index], onTap: () => controller.openOrder(controller.orders[index])),
-        );
-      }),
+        }),
+      ),
     );
   }
 }
@@ -163,7 +195,7 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final config = {
       OrderStatus.pending: (AppColors.warning, 'Pending'),
-      OrderStatus.processing: (AppColors.primary, 'Processing'),
+      OrderStatus.confirmed: (AppColors.primary, 'Confirmed'),
       OrderStatus.shipped: (AppColors.primary, 'Shipped'),
       OrderStatus.delivered: (AppColors.success, 'Delivered'),
       OrderStatus.cancelled: (AppColors.error, 'Cancelled'),
