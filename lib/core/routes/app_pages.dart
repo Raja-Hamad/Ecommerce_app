@@ -26,6 +26,7 @@ import '../../modules/user/product_details/views/product_details_view.dart';
 import '../../modules/user/product_listing/bindings/product_listing_binding.dart';
 import '../../modules/user/product_listing/views/product_listing_view.dart';
 import '../../modules/user/profile/bindings/profile_binding.dart';
+import '../../modules/user/profile/views/change_password_view.dart';
 import '../../modules/user/profile/views/profile_view.dart';
 import '../../modules/root/bindings/root_binding.dart';
 import '../../modules/root/views/root_view.dart';
@@ -58,5 +59,6 @@ class AppPages {
     GetPage(name: AppRoutes.orders, page: () => const OrdersView(), binding: OrdersBinding()),
     GetPage(name: AppRoutes.orderDetails, page: () => const OrderDetailsView(), binding: OrderDetailsBinding()),
     GetPage(name: AppRoutes.profile, page: () => const ProfileView(), binding: ProfileBinding()),
+    GetPage(name: AppRoutes.changePassword, page: () => const ChangePasswordView(), binding: ChangePasswordBinding()),
   ];
 }

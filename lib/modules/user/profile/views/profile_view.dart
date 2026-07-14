@@ -36,6 +36,7 @@ class ProfileView extends GetView<ProfileController> {
                   _ProfileTile(icon: Icons.favorite_rounded, label: 'Wishlist', onTap: () => Get.toNamed(AppRoutes.wishlist)),
                   _ProfileTile(icon: Icons.location_on_rounded, label: 'Addresses', onTap: () => Get.toNamed(AppRoutes.address)),
                   _ProfileTile(icon: Icons.local_offer_rounded, label: 'Coupons', onTap: () => Get.toNamed(AppRoutes.coupon, arguments: 0.0)),
+                  _ProfileTile(icon: Icons.lock_reset_rounded, label: 'Change Password', onTap: () => Get.toNamed(AppRoutes.changePassword)),
                   const SizedBox(height: AppSizes.lg),
                   Text('PREFERENCES', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textHint, letterSpacing: 0.8)),
                   const SizedBox(height: AppSizes.sm),

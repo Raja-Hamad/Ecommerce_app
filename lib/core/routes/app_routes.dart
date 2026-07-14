@@ -21,4 +21,5 @@ class AppRoutes {
   static const orders = '/orders';
   static const orderDetails = '/order-details';
   static const profile = '/profile';
+  static const changePassword = '/change-password';
 }

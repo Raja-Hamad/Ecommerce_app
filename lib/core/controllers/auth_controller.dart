@@ -78,4 +78,14 @@ class AuthController extends GetxController {
     if (user.value == null) return;
     user.value = user.value!.copyWith(name: name);
   }
+
+  Future<bool> changePassword({required String currentPassword, required String newPassword}) async {
+    try {
+      await _repo.changePassword(currentPassword: currentPassword, newPassword: newPassword);
+      return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to change password. Please try again.');
+      return false;
+    }
+  }
 }

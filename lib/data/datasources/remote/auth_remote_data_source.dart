@@ -28,6 +28,13 @@ class AuthRemoteDataSource {
     return AppUser.fromJson(response['user'] as Map<String, dynamic>);
   }
 
+  Future<void> changePassword({required String currentPassword, required String newPassword}) async {
+    await _client.put(
+      ApiEndpoints.changePassword,
+      body: {'currentPassword': currentPassword, 'newPassword': newPassword},
+    );
+  }
+
   Future<AppUser> register({
     required String name,
     required String email,
