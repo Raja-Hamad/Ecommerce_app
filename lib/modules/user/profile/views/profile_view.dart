@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_decorations.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_network_image.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
@@ -42,7 +43,20 @@ class ProfileView extends GetView<ProfileController> {
                   _ProfileTile(icon: Icons.help_rounded, label: 'Help & Support', onTap: () {}),
                   _ProfileTile(icon: Icons.settings_rounded, label: 'Settings', onTap: () {}),
                   const SizedBox(height: AppSizes.lg),
-                  _ProfileTile(icon: Icons.logout_rounded, label: 'Logout', onTap: controller.logout, isDestructive: true),
+                  _ProfileTile(
+                    icon: Icons.logout_rounded,
+                    label: 'Logout',
+                    isDestructive: true,
+                    onTap: () async {
+                      final confirmed = await ConfirmDialog.show(
+                        title: 'Logout?',
+                        message: 'Are you sure you want to logout of your account?',
+                        icon: Icons.logout_rounded,
+                        confirmLabel: 'Logout',
+                      );
+                      if (confirmed) controller.logout();
+                    },
+                  ),
                 ],
               ),
             ),
