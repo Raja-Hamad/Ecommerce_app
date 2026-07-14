@@ -33,49 +33,57 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                 children: [
                   _ImageGallery(product: product),
                   Padding(
-                    padding: const EdgeInsets.all(AppSizes.lg),
+                    padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.md, AppSizes.lg, AppSizes.lg),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (product.brand.isNotEmpty)
+                        if (product.brand.isNotEmpty) ...[
                           Text(product.brand.toUpperCase(), style: AppTextStyles.labelSmall.copyWith(color: AppColors.primary)),
-                        const SizedBox(height: 4),
-                        Text(product.name, style: AppTextStyles.h2),
-                        const SizedBox(height: AppSizes.sm),
+                          const SizedBox(height: 3),
+                        ],
+                        Text(product.name, style: AppTextStyles.h3),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
-                            const Icon(Icons.star_rounded, color: AppColors.star, size: 18),
-                            const SizedBox(width: 4),
-                            Text('${product.rating}', style: AppTextStyles.label),
-                            const SizedBox(width: 4),
-                            Text('(${product.reviewCount} reviews)', style: AppTextStyles.caption),
+                            const Icon(Icons.star_rounded, color: AppColors.star, size: 16),
+                            const SizedBox(width: 3),
+                            Text('${product.rating}', style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600)),
+                            const SizedBox(width: 3),
+                            Text('(${product.reviewCount})', style: AppTextStyles.caption),
                             const Spacer(),
                             Text(
                               product.inStock ? 'In Stock' : 'Out of Stock',
-                              style: AppTextStyles.label.copyWith(color: product.inStock ? AppColors.success : AppColors.error),
+                              style: AppTextStyles.labelSmall.copyWith(color: product.inStock ? AppColors.success : AppColors.error),
                             ),
                           ],
                         ),
-                        const SizedBox(height: AppSizes.md),
+                        const SizedBox(height: AppSizes.sm),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(Formatters.currency(product.displayPrice), style: AppTextStyles.h2.copyWith(color: AppColors.primary)),
+                            Text(Formatters.currency(product.displayPrice), style: AppTextStyles.h1.copyWith(color: AppColors.primary, fontSize: 26)),
                             if (product.hasDiscount) ...[
                               const SizedBox(width: AppSizes.sm),
-                              Text(Formatters.currency(product.price), style: AppTextStyles.priceStrike),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(Formatters.currency(product.price), style: AppTextStyles.priceStrike),
+                              ),
                               const SizedBox(width: AppSizes.sm),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-                                child: Text('-${product.discountPercent}%', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                                  child: Text('-${product.discountPercent}%', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+                                ),
                               ),
                             ],
                           ],
                         ),
                         if (product.sizes.isNotEmpty) ...[
-                          const SizedBox(height: AppSizes.lg),
-                          Text('Size', style: AppTextStyles.h4),
-                          const SizedBox(height: AppSizes.sm),
+                          const SizedBox(height: AppSizes.md),
+                          Text('Size', style: AppTextStyles.label),
+                          const SizedBox(height: AppSizes.xs),
                           Obx(() => Wrap(
                                 spacing: AppSizes.sm,
                                 children: product.sizes.map((size) {
@@ -93,9 +101,9 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               )),
                         ],
                         if (product.colors.isNotEmpty) ...[
-                          const SizedBox(height: AppSizes.lg),
-                          Text('Color', style: AppTextStyles.h4),
-                          const SizedBox(height: AppSizes.sm),
+                          const SizedBox(height: AppSizes.md),
+                          Text('Color', style: AppTextStyles.label),
+                          const SizedBox(height: AppSizes.xs),
                           Obx(() => Wrap(
                                 spacing: AppSizes.sm,
                                 children: product.colors.map((color) {
@@ -112,11 +120,11 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                 }).toList(),
                               )),
                         ],
-                        const SizedBox(height: AppSizes.lg),
+                        const SizedBox(height: AppSizes.md),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Quantity', style: AppTextStyles.h4),
+                            Text('Quantity', style: AppTextStyles.label),
                             Obx(() => QuantityStepper(
                                   quantity: controller.quantity.value,
                                   onIncrement: controller.incrementQuantity,
@@ -124,20 +132,20 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                                 )),
                           ],
                         ),
-                        const SizedBox(height: AppSizes.lg),
-                        Text('Description', style: AppTextStyles.h4),
-                        const SizedBox(height: AppSizes.sm),
-                        Text(product.description, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary, height: 1.5)),
-                        const SizedBox(height: AppSizes.xl),
-                        const Divider(),
-                        const SizedBox(height: AppSizes.lg),
-                        Text('Reviews (${product.reviews.length})', style: AppTextStyles.h4),
                         const SizedBox(height: AppSizes.md),
+                        Text('Description', style: AppTextStyles.label),
+                        const SizedBox(height: AppSizes.xs),
+                        Text(product.description, style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary, height: 1.5)),
+                        const SizedBox(height: AppSizes.lg),
+                        const Divider(height: 1),
+                        const SizedBox(height: AppSizes.md),
+                        Text('Reviews (${product.reviews.length})', style: AppTextStyles.label),
+                        const SizedBox(height: AppSizes.sm),
                         if (product.reviews.isEmpty)
                           Text('No reviews yet. Be the first to review this product!', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary))
                         else
                           ...product.reviews.map((review) => _ReviewTile(review: review)),
-                        const SizedBox(height: AppSizes.xl),
+                        const SizedBox(height: AppSizes.md),
                         const _WriteReviewCard(),
                       ],
                     ),
