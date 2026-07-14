@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../core/network/token_storage.dart';
@@ -7,16 +8,19 @@ import '../../../domain/entities/user.dart';
 class AuthRemoteDataSource {
   final _client = ApiClient.instance;
 
-  /// Authenticates and persists the returned token. The login endpoint only
-  /// returns a JWT, not the profile, so callers should follow up with
-  /// [getProfile] to hydrate the full user.
-  Future<void> login({required String email, required String password}) async {
+  /// Authenticates and persists the returned token + role. The login
+  /// response now includes the full user profile, so no follow-up
+  /// [getProfile] call is needed here.
+  Future<AppUser> login({required String email, required String password}) async {
     final response = await _client.post(
       ApiEndpoints.login,
       body: {'email': email, 'password': password},
     );
     final token = response['token'] as String;
+    final user = AppUser.fromJson(response['user'] as Map<String, dynamic>);
     await TokenStorage.instance.saveToken(token);
+    await TokenStorage.instance.saveRole(user.role);
+    return user;
   }
 
   Future<AppUser> getProfile() async {

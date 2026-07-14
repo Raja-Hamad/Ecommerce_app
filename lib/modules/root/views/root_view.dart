@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/cart_controller.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../categories/views/categories_view.dart';
-import '../../cart/views/cart_view.dart';
-import '../../home/views/home_view.dart';
-import '../../orders/views/orders_view.dart';
-import '../../profile/views/profile_view.dart';
+import '../../user/categories/views/categories_view.dart';
+import '../../user/cart/views/cart_view.dart';
+import '../../user/home/views/home_view.dart';
+import '../../user/orders/views/orders_view.dart';
+import '../../user/profile/views/profile_view.dart';
 import '../controllers/root_controller.dart';
 
 class RootView extends GetView<RootController> {

@@ -5,6 +5,7 @@ class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const root = '/root';
+  static const adminDashboard = '/admin-dashboard';
   static const home = '/home';
   static const categories = '/categories';
   static const productListing = '/product-listing';

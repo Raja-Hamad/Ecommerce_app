@@ -5,6 +5,7 @@ import '../../domain/entities/user.dart';
 import '../network/app_exception.dart';
 import '../network/jwt_decoder.dart';
 import '../network/token_storage.dart';
+import '../routes/app_routes.dart';
 import '../utils/app_snackbar.dart';
 
 class AuthController extends GetxController {
@@ -14,6 +15,10 @@ class AuthController extends GetxController {
   final RxBool isLoading = false.obs;
 
   bool get isLoggedIn => user.value != null;
+
+  /// Where to land a logged-in user based on their role. Admin dashboard is
+  /// still a placeholder until the admin APIs are ready.
+  String get homeRoute => user.value?.role == 'user' ? AppRoutes.root : AppRoutes.adminDashboard;
 
   Future<bool> login(String email, String password) async {
     isLoading.value = true;

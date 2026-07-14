@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import '../../categories/controllers/categories_controller.dart';
-import '../../cart/controllers/cart_view_controller.dart';
-import '../../home/controllers/home_controller.dart';
-import '../../orders/controllers/orders_controller.dart';
-import '../../profile/controllers/profile_controller.dart';
+import '../../user/categories/controllers/categories_controller.dart';
+import '../../user/cart/controllers/cart_view_controller.dart';
+import '../../user/home/controllers/home_controller.dart';
+import '../../user/orders/controllers/orders_controller.dart';
+import '../../user/profile/controllers/profile_controller.dart';
 
 class RootController extends GetxController {
   final RxInt currentIndex = 0.obs;

@@ -6,8 +6,10 @@ class TokenStorage {
 
   final _storage = const FlutterSecureStorage();
   static const _tokenKey = 'auth_token';
+  static const _roleKey = 'auth_role';
 
   String? _cachedToken;
+  String? _cachedRole;
 
   Future<void> saveToken(String token) async {
     _cachedToken = token;
@@ -20,8 +22,21 @@ class TokenStorage {
     return _cachedToken;
   }
 
+  Future<void> saveRole(String role) async {
+    _cachedRole = role;
+    await _storage.write(key: _roleKey, value: role);
+  }
+
+  Future<String?> readRole() async {
+    if (_cachedRole != null) return _cachedRole;
+    _cachedRole = await _storage.read(key: _roleKey);
+    return _cachedRole;
+  }
+
   Future<void> clearToken() async {
     _cachedToken = null;
+    _cachedRole = null;
     await _storage.delete(key: _tokenKey);
+    await _storage.delete(key: _roleKey);
   }
 }

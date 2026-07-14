@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/controllers/auth_controller.dart';
-import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/app_snackbar.dart';
 
 class AuthFormController extends GetxController {
@@ -32,7 +31,7 @@ class AuthFormController extends GetxController {
     final success = await auth.login(loginEmailCtrl.text.trim(), loginPasswordCtrl.text);
     if (success) {
       AppSnackbar.success('Welcome back!');
-      Get.offAllNamed(AppRoutes.root);
+      Get.offAllNamed(auth.homeRoute);
     }
   }
 
@@ -48,7 +47,7 @@ class AuthFormController extends GetxController {
     );
     if (success) {
       AppSnackbar.success('Account created successfully');
-      Get.offAllNamed(AppRoutes.root);
+      Get.offAllNamed(auth.homeRoute);
     }
   }
 
