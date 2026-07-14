@@ -12,10 +12,7 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Order> getOrderById(String id) async {
-    final orders = await _remote.getMyOrders();
-    return orders.firstWhere((o) => o.id == id);
-  }
+  Future<Order> getOrderById(String id) => _remote.getOrderById(id);
 
   @override
   Future<Order> createOrder({

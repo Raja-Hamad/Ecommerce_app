@@ -15,9 +15,9 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
   final PageController _controller = PageController();
 
   final List<_Banner> _banners = const [
-    _Banner(title: 'Summer Sale', subtitle: 'Up to 50% off', color: AppColors.primary),
-    _Banner(title: 'New Arrivals', subtitle: 'Fresh styles weekly', color: AppColors.primaryDark),
-    _Banner(title: 'Free Delivery', subtitle: 'On orders above \$50', color: Color(0xFF2A6E62)),
+    _Banner(title: 'Summer Sale', subtitle: 'Up to 50% off storewide', icon: Icons.local_fire_department_rounded, colors: [AppColors.primary, AppColors.primaryDark]),
+    _Banner(title: 'New Arrivals', subtitle: 'Fresh styles, every week', icon: Icons.auto_awesome_rounded, colors: [Color(0xFF2A6E62), Color(0xFF123D35)]),
+    _Banner(title: 'Free Delivery', subtitle: 'On all orders above \$50', icon: Icons.local_shipping_rounded, colors: [Color(0xFF1E5B4F), Color(0xFF0D3129)]),
   ];
 
   @override
@@ -25,7 +25,7 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 140,
+          height: 150,
           child: PageView.builder(
             controller: _controller,
             itemCount: _banners.length,
@@ -33,25 +33,36 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
               final banner = _banners[index];
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: AppSizes.lg),
-                padding: const EdgeInsets.all(AppSizes.lg),
+                padding: const EdgeInsets.all(AppSizes.xl),
                 decoration: BoxDecoration(
-                  color: banner.color,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                  gradient: LinearGradient(colors: banner.colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+                  boxShadow: [
+                    BoxShadow(color: banner.colors.first.withValues(alpha: 0.35), blurRadius: 20, offset: const Offset(0, 10)),
+                  ],
                 ),
-                child: Row(
+                child: Stack(
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(banner.title, style: AppTextStyles.h2.copyWith(color: Colors.white)),
-                          const SizedBox(height: AppSizes.xs),
-                          Text(banner.subtitle, style: AppTextStyles.body.copyWith(color: Colors.white70)),
-                        ],
-                      ),
+                    Positioned(
+                      right: -18,
+                      bottom: -18,
+                      child: Icon(banner.icon, color: Colors.white.withValues(alpha: 0.14), size: 120),
                     ),
-                    Icon(Icons.local_offer_rounded, color: Colors.white.withValues(alpha: 0.25), size: 64),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(banner.title, style: AppTextStyles.h2.copyWith(color: Colors.white)),
+                        const SizedBox(height: AppSizes.xs),
+                        Text(banner.subtitle, style: AppTextStyles.body.copyWith(color: Colors.white70)),
+                        const SizedBox(height: AppSizes.md),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: 6),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppSizes.radiusPill)),
+                          child: Text('Shop Now', style: AppTextStyles.labelSmall.copyWith(color: banner.colors.first)),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               );
@@ -70,8 +81,9 @@ class _HomeBannerCarouselState extends State<HomeBannerCarousel> {
 }
 
 class _Banner {
-  const _Banner({required this.title, required this.subtitle, required this.color});
+  const _Banner({required this.title, required this.subtitle, required this.icon, required this.colors});
   final String title;
   final String subtitle;
-  final Color color;
+  final IconData icon;
+  final List<Color> colors;
 }

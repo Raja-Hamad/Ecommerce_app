@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_network_image.dart';
 import '../controllers/profile_controller.dart';
@@ -24,7 +25,11 @@ class ProfileView extends GetView<ProfileController> {
                 Container(
                   width: 68,
                   height: 68,
-                  decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.18), blurRadius: 16, offset: const Offset(0, 6))],
+                  ),
                   clipBehavior: Clip.antiAlias,
                   child: (user?.profileImage.isNotEmpty ?? false)
                       ? AppNetworkImage(url: user!.profileImage)
@@ -86,7 +91,7 @@ class _ProfileTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.border)),
+            decoration: AppDecorations.card(radius: AppSizes.radiusMd, color: Colors.transparent),
             child: Row(
               children: [
                 Icon(icon, color: color, size: AppSizes.iconMd),

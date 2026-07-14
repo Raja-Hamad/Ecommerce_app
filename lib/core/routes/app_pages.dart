@@ -13,6 +13,7 @@ import '../../modules/checkout/bindings/checkout_binding.dart';
 import '../../modules/checkout/views/checkout_view.dart';
 import '../../modules/coupon/bindings/coupon_binding.dart';
 import '../../modules/coupon/views/coupon_view.dart';
+import '../../modules/orders/bindings/order_details_binding.dart';
 import '../../modules/orders/bindings/orders_binding.dart';
 import '../../modules/orders/views/order_details_view.dart';
 import '../../modules/orders/views/orders_view.dart';
@@ -53,7 +54,7 @@ class AppPages {
     GetPage(name: AppRoutes.payment, page: () => const PaymentView(), binding: PaymentBinding()),
     GetPage(name: AppRoutes.paymentSuccess, page: () => const PaymentSuccessView(), binding: PaymentSuccessBinding()),
     GetPage(name: AppRoutes.orders, page: () => const OrdersView(), binding: OrdersBinding()),
-    GetPage(name: AppRoutes.orderDetails, page: () => const OrderDetailsView()),
+    GetPage(name: AppRoutes.orderDetails, page: () => const OrderDetailsView(), binding: OrderDetailsBinding()),
     GetPage(name: AppRoutes.profile, page: () => const ProfileView(), binding: ProfileBinding()),
   ];
 }

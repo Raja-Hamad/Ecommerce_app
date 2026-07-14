@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/order_summary_card.dart';
@@ -26,7 +27,7 @@ class PaymentView extends GetView<PaymentController> {
             const SizedBox(height: AppSizes.sm),
             Container(
               padding: const EdgeInsets.all(AppSizes.md),
-              decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppSizes.radiusLg), border: Border.all(color: AppColors.border)),
+              decoration: AppDecorations.card(radius: AppSizes.radiusLg),
               child: Row(
                 children: [
                   const Icon(Icons.location_on_rounded, color: AppColors.primary),
@@ -40,7 +41,9 @@ class PaymentView extends GetView<PaymentController> {
             const SizedBox(height: AppSizes.sm),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
-              decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppSizes.radiusLg), border: Border.all(color: AppColors.primary, width: 1.4)),
+              decoration: AppDecorations.card(radius: AppSizes.radiusLg, tinted: true).copyWith(
+                border: Border.all(color: AppColors.primary, width: 1.4),
+              ),
               child: Row(
                 children: [
                   Container(

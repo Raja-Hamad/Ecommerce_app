@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/controllers/wishlist_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
@@ -32,23 +33,9 @@ class ProductListingView extends GetView<ProductListingController> {
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg, vertical: AppSizes.sm),
             child: Row(
               children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _openSortSheet(context),
-                    icon: const Icon(Icons.swap_vert_rounded, size: AppSizes.iconSm),
-                    label: const Text('Sort'),
-                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
-                  ),
-                ),
+                Expanded(child: _PillActionButton(icon: Icons.swap_vert_rounded, label: 'Sort', onTap: () => _openSortSheet(context))),
                 const SizedBox(width: AppSizes.md),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _openFilterSheet(context),
-                    icon: const Icon(Icons.tune_rounded, size: AppSizes.iconSm),
-                    label: const Text('Filter'),
-                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
-                  ),
-                ),
+                Expanded(child: _PillActionButton(icon: Icons.tune_rounded, label: 'Filter', onTap: () => _openFilterSheet(context))),
               ],
             ),
           ),
@@ -170,6 +157,39 @@ class ProductListingView extends GetView<ProductListingController> {
   }
 }
 
+class _PillActionButton extends StatelessWidget {
+  const _PillActionButton({required this.icon, required this.label, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+        child: Container(
+          height: 42,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusPill), boxShadow: AppDecorations.softShadow),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: AppSizes.iconSm, color: AppColors.textPrimary),
+              const SizedBox(width: AppSizes.xs),
+              Text(label, style: AppTextStyles.label),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ProductListTile extends StatelessWidget {
   const _ProductListTile({required this.product, required this.isWishlisted, required this.onTap, required this.onWishlistTap});
 
@@ -180,16 +200,16 @@ class _ProductListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(AppSizes.sm),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        child: Container(
+          padding: const EdgeInsets.all(AppSizes.sm),
+          decoration: AppDecorations.card(radius: AppSizes.radiusLg, color: Colors.transparent),
+          child: Row(
           children: [
             SizedBox(
               width: 90,
@@ -228,6 +248,7 @@ class _ProductListTile extends StatelessWidget {
               onPressed: onWishlistTap,
             ),
           ],
+          ),
         ),
       ),
     );

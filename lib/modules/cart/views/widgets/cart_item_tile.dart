@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_decorations.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_network_image.dart';
@@ -25,11 +26,7 @@ class CartItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSizes.sm),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppDecorations.card(radius: AppSizes.radiusLg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

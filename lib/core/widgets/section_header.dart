@@ -4,9 +4,10 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.title, this.actionLabel, this.onAction});
+  const SectionHeader({super.key, required this.title, this.subtitle, this.actionLabel, this.onAction});
 
   final String title;
+  final String? subtitle;
   final String? actionLabel;
   final VoidCallback? onAction;
 
@@ -15,13 +16,36 @@ class SectionHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: AppTextStyles.h3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.h3),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 2),
+                  Text(subtitle!, style: AppTextStyles.caption),
+                ],
+              ],
+            ),
+          ),
           if (actionLabel != null)
-            GestureDetector(
+            InkWell(
               onTap: onAction,
-              child: Text(actionLabel!, style: AppTextStyles.label.copyWith(color: AppColors.primary)),
+              borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(actionLabel!, style: AppTextStyles.label.copyWith(color: AppColors.primary)),
+                    const SizedBox(width: 2),
+                    const Icon(Icons.arrow_forward_rounded, size: 14, color: AppColors.primary),
+                  ],
+                ),
+              ),
             ),
         ],
       ),

@@ -36,19 +36,29 @@ class RegisterView extends GetView<AuthFormController> {
                       final image = controller.profileImage.value;
                       return Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 44,
-                            backgroundColor: AppColors.primaryLight,
-                            backgroundImage: image != null ? FileImage(image) : null,
-                            child: image == null ? const Icon(Icons.person_rounded, size: 40, color: AppColors.primary) : null,
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.22), blurRadius: 18, offset: const Offset(0, 8))],
+                            ),
+                            child: CircleAvatar(
+                              radius: 44,
+                              backgroundColor: AppColors.primaryLight,
+                              backgroundImage: image != null ? FileImage(image) : null,
+                              child: image == null ? const Icon(Icons.person_rounded, size: 40, color: AppColors.primary) : null,
+                            ),
                           ),
                           Positioned(
                             right: 0,
                             bottom: 0,
                             child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                              child: const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.white),
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2),
+                              ),
+                              child: const Icon(Icons.camera_alt_rounded, size: 15, color: Colors.white),
                             ),
                           ),
                         ],

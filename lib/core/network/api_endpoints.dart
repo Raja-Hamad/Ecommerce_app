@@ -37,6 +37,7 @@ class ApiEndpoints {
   static const String placeOrder = 'products/order/place';
   static const String myOrders = 'products/order/my-orders';
   static String cancelOrder(String orderId) => 'products/order/$orderId/cancel';
+  static String orderDetails(String orderId) => 'products/order/$orderId';
 
   // Payments
   static const String createPaymentIntent = 'payments/create-payment-intent';

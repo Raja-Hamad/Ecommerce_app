@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_sizes.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_decorations.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/formatters.dart';
 
@@ -22,11 +23,7 @@ class OrderSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSizes.lg),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppDecorations.card(radius: AppSizes.radiusLg),
       child: Column(
         children: [
           _row('Subtotal', Formatters.currency(subtotal)),

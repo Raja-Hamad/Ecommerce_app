@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
@@ -44,10 +45,8 @@ class AddressView extends GetView<AddressController> {
                 onTap: () => controller.select(address),
                 child: Container(
                   padding: const EdgeInsets.all(AppSizes.md),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-                    border: Border.all(color: isSelected ? AppColors.primary : AppColors.border, width: isSelected ? 1.5 : 1),
+                  decoration: AppDecorations.card(radius: AppSizes.radiusLg, tinted: isSelected).copyWith(
+                    border: isSelected ? Border.all(color: AppColors.primary, width: 1.5) : null,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

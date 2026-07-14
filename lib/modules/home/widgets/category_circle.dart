@@ -16,18 +16,29 @@ class CategoryCircle extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 72,
+        width: 76,
         child: Column(
           children: [
             Container(
-              width: 64,
-              height: 64,
-              padding: const EdgeInsets.all(2),
-              decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+              width: 68,
+              height: 68,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(color: AppColors.primary.withValues(alpha: 0.12), blurRadius: 12, offset: const Offset(0, 4)),
+                ],
+              ),
               child: ClipOval(child: AppNetworkImage(url: category.imageUrl)),
             ),
-            const SizedBox(height: AppSizes.xs),
-            Text(category.name, style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: AppSizes.sm),
+            Text(
+              category.name,
+              style: AppTextStyles.caption.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

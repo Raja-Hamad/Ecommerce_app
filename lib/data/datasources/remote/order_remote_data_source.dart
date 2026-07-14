@@ -31,4 +31,9 @@ class OrderRemoteDataSource {
     final response = await _client.put(ApiEndpoints.cancelOrder(orderId));
     return Order.fromJson(response['order'] as Map<String, dynamic>);
   }
+
+  Future<Order> getOrderById(String orderId) async {
+    final response = await _client.get(ApiEndpoints.orderDetails(orderId));
+    return Order.fromJson(response);
+  }
 }

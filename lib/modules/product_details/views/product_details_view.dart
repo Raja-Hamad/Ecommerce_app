@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
@@ -271,11 +272,7 @@ class _ReviewTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSizes.md),
       padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(color: AppColors.border),
-      ),
+      decoration: AppDecorations.card(radius: AppSizes.radiusMd),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -308,10 +305,7 @@ class _WriteReviewCard extends StatelessWidget {
     final controller = Get.find<ProductDetailsController>();
     return Container(
       padding: const EdgeInsets.all(AppSizes.lg),
-      decoration: BoxDecoration(
-        color: AppColors.primaryLight,
-        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-      ),
+      decoration: AppDecorations.card(color: AppColors.primaryLight, radius: AppSizes.radiusLg, tinted: true),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

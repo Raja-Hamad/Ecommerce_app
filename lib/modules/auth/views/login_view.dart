@@ -28,10 +28,14 @@ class LoginView extends GetView<AuthFormController> {
               children: [
                 const SizedBox(height: AppSizes.xxl),
                 Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(AppSizes.radiusLg)),
-                  child: const Icon(Icons.shopping_bag_rounded, color: AppColors.primary, size: 32),
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                    boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.30), blurRadius: 20, offset: const Offset(0, 8))],
+                  ),
+                  child: const Icon(Icons.shopping_bag_rounded, color: Colors.white, size: 32),
                 ),
                 const SizedBox(height: AppSizes.lg),
                 Text('Welcome back', style: AppTextStyles.h1),

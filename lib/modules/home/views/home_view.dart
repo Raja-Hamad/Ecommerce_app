@@ -5,6 +5,7 @@ import '../../../core/constants/app_strings.dart';
 import '../../../core/controllers/wishlist_controller.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/product_card.dart';
 import '../../../core/widgets/section_header.dart';
@@ -42,9 +43,9 @@ class HomeView extends GetView<HomeController> {
                         ],
                       ),
                       Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.border)),
+                        width: 46,
+                        height: 46,
+                        decoration: AppDecorations.card(radius: AppSizes.radiusMd),
                         child: const Icon(Icons.notifications_none_rounded, color: AppColors.textPrimary),
                       ),
                     ],
@@ -52,15 +53,21 @@ class HomeView extends GetView<HomeController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg),
-                  child: TextField(
-                    controller: controller.searchCtrl,
-                    onSubmitted: controller.onSearchSubmitted,
-                    decoration: InputDecoration(
-                      hintText: 'Search products, brands...',
-                      prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textHint),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusPill), borderSide: BorderSide.none),
-                      filled: true,
-                      fillColor: AppColors.surface,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+                      boxShadow: AppDecorations.softShadow,
+                    ),
+                    child: TextField(
+                      controller: controller.searchCtrl,
+                      onSubmitted: controller.onSearchSubmitted,
+                      decoration: InputDecoration(
+                        hintText: 'Search products, brands...',
+                        prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textHint),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusPill), borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: AppColors.surface,
+                      ),
                     ),
                   ),
                 ),
