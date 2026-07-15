@@ -70,7 +70,7 @@ class LoginView extends GetView<AuthFormController> {
                 const SizedBox(height: AppSizes.sm),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(onPressed: () {}, child: const Text('Forgot Password?')),
+                  child: TextButton(onPressed: () => Get.toNamed(AppRoutes.forgotPassword), child: const Text('Forgot Password?')),
                 ),
                 const SizedBox(height: AppSizes.lg),
                 Obx(() => PrimaryButton(

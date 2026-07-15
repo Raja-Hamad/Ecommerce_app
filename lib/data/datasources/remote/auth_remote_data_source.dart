@@ -35,6 +35,14 @@ class AuthRemoteDataSource {
     );
   }
 
+  Future<void> forgotPassword({required String email}) async {
+    await _client.post(ApiEndpoints.forgotPassword, body: {'email': email});
+  }
+
+  Future<void> resetPassword({required String token, required String newPassword}) async {
+    await _client.put(ApiEndpoints.resetPassword(token), body: {'newPassword': newPassword});
+  }
+
   Future<AppUser> register({
     required String name,
     required String email,

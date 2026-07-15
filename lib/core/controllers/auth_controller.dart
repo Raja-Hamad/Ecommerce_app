@@ -88,4 +88,24 @@ class AuthController extends GetxController {
       return false;
     }
   }
+
+  Future<bool> forgotPassword(String email) async {
+    try {
+      await _repo.forgotPassword(email);
+      return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to send reset link. Please try again.');
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword({required String token, required String newPassword}) async {
+    try {
+      await _repo.resetPassword(token: token, newPassword: newPassword);
+      return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to reset password. Please try again.');
+      return false;
+    }
+  }
 }

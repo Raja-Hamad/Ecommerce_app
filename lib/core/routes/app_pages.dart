@@ -4,8 +4,10 @@ import '../../modules/user/address/bindings/address_binding.dart';
 import '../../modules/user/address/views/add_address_view.dart';
 import '../../modules/user/address/views/address_view.dart';
 import '../../modules/auth/bindings/auth_binding.dart';
+import '../../modules/auth/views/forgot_password_view.dart';
 import '../../modules/auth/views/login_view.dart';
 import '../../modules/auth/views/register_view.dart';
+import '../../modules/auth/views/reset_password_view.dart';
 import '../../modules/user/cart/views/cart_view.dart';
 import '../../modules/user/cart/bindings/cart_binding.dart';
 import '../../modules/user/categories/views/categories_view.dart';
@@ -43,6 +45,8 @@ class AppPages {
     GetPage(name: AppRoutes.splash, page: () => const SplashView(), binding: BindingsBuilder(() { Get.put(SplashController()); })),
     GetPage(name: AppRoutes.login, page: () => const LoginView(), binding: AuthBinding()),
     GetPage(name: AppRoutes.register, page: () => const RegisterView(), binding: AuthBinding()),
+    GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordView(), binding: ForgotPasswordBinding()),
+    GetPage(name: AppRoutes.resetPassword, page: () => const ResetPasswordView(), binding: ResetPasswordBinding()),
     GetPage(name: AppRoutes.root, page: () => const RootView(), binding: RootBinding()),
     GetPage(name: AppRoutes.adminDashboard, page: () => const AdminDashboardView()),
     GetPage(name: AppRoutes.categories, page: () => const CategoriesView(), binding: CategoriesBinding()),

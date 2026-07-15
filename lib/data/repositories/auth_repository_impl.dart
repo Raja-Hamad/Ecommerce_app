@@ -56,7 +56,12 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> forgotPassword(String email) async {
-    await Future.delayed(_ds.latency);
+  Future<void> forgotPassword(String email) {
+    return _remote.forgotPassword(email: email);
+  }
+
+  @override
+  Future<void> resetPassword({required String token, required String newPassword}) {
+    return _remote.resetPassword(token: token, newPassword: newPassword);
   }
 }

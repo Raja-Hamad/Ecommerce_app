@@ -1,13 +1,15 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://192.168.1.17:3000/';
+  static const String baseUrl = 'http://192.168.1.33:3000/';
 
   // Auth
   static const String register = 'users/register';
   static const String login = 'users/login';
   static const String profile = 'users/profile';
   static const String changePassword = 'users/change-password';
+  static const String forgotPassword = 'users/forgot-password';
+  static String resetPassword(String token) => 'users/reset-password/$token';
 
   // Products
   static const String products = 'products';
