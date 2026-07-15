@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../modules/admin/bindings/admin_binding.dart';
 import '../../modules/admin/views/admin_dashboard_view.dart';
 import '../../modules/user/address/bindings/address_binding.dart';
 import '../../modules/user/address/views/add_address_view.dart';
@@ -48,7 +49,7 @@ class AppPages {
     GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordView(), binding: ForgotPasswordBinding()),
     GetPage(name: AppRoutes.resetPassword, page: () => const ResetPasswordView(), binding: ResetPasswordBinding()),
     GetPage(name: AppRoutes.root, page: () => const RootView(), binding: RootBinding()),
-    GetPage(name: AppRoutes.adminDashboard, page: () => const AdminDashboardView()),
+    GetPage(name: AppRoutes.adminDashboard, page: () => const AdminDashboardView(), binding: AdminBinding()),
     GetPage(name: AppRoutes.categories, page: () => const CategoriesView(), binding: CategoriesBinding()),
     GetPage(name: AppRoutes.productListing, page: () => const ProductListingView(), binding: ProductListingBinding()),
     GetPage(name: AppRoutes.productDetails, page: () => const ProductDetailsView(), binding: ProductDetailsBinding()),

@@ -44,4 +44,7 @@ class ApiEndpoints {
 
   // Payments
   static const String createPaymentIntent = 'payments/create-payment-intent';
+
+  // Admin
+  static const String adminDashboard = 'admin/dashboard';
 }
