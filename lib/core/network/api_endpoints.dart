@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://192.168.1.33:3000/';
+  static const String baseUrl = 'http://192.168.1.5:3000/';
 
   // Auth
   static const String register = 'users/register';
@@ -47,4 +47,5 @@ class ApiEndpoints {
 
   // Admin
   static const String adminDashboard = 'admin/dashboard';
+  static const String adminMonthlySales = 'admin/dashboard/monthly-sales';
 }
