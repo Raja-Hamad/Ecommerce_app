@@ -5,6 +5,7 @@ import '../../../data/repositories/admin_repository_impl.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/recent_order.dart';
+import '../../../domain/entities/top_selling_product.dart';
 
 class AdminDashboardController extends GetxController {
   final _repo = AdminRepositoryImpl();
@@ -12,6 +13,7 @@ class AdminDashboardController extends GetxController {
   final Rxn<AdminDashboardStats> stats = Rxn<AdminDashboardStats>();
   final RxList<MonthlySales> monthlySales = <MonthlySales>[].obs;
   final RxList<RecentOrder> recentOrders = <RecentOrder>[].obs;
+  final RxList<TopSellingProduct> topSellingProducts = <TopSellingProduct>[].obs;
   final RxBool isLoading = true.obs;
 
   @override
@@ -23,10 +25,16 @@ class AdminDashboardController extends GetxController {
   Future<void> fetch() async {
     isLoading.value = true;
     try {
-      final results = await Future.wait([_repo.getDashboardStats(), _repo.getMonthlySales(), _repo.getRecentOrders()]);
+      final results = await Future.wait([
+        _repo.getDashboardStats(),
+        _repo.getMonthlySales(),
+        _repo.getRecentOrders(),
+        _repo.getTopSellingProducts(),
+      ]);
       stats.value = results[0] as AdminDashboardStats;
       monthlySales.value = results[1] as List<MonthlySales>;
       recentOrders.value = results[2] as List<RecentOrder>;
+      topSellingProducts.value = results[3] as List<TopSellingProduct>;
     } catch (e) {
       AppSnackbar.error(e is AppException ? e.message : 'Failed to load dashboard. Please try again.');
     } finally {

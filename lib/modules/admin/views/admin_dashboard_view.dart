@@ -11,6 +11,8 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/recent_order.dart';
+import '../../../domain/entities/top_selling_product.dart';
+import '../../../core/widgets/app_network_image.dart';
 import '../controllers/admin_dashboard_controller.dart';
 
 class AdminDashboardView extends GetView<AdminDashboardController> {
@@ -87,6 +89,10 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                     const _SectionTitle(icon: Icons.history_rounded, title: 'Recent Orders'),
                     const SizedBox(height: AppSizes.md),
                     _RecentOrdersCard(orders: controller.recentOrders),
+                    const SizedBox(height: AppSizes.xl),
+                    const _SectionTitle(icon: Icons.local_fire_department_rounded, title: 'Top Selling Products'),
+                    const SizedBox(height: AppSizes.md),
+                    _TopSellingProductsList(products: controller.topSellingProducts),
                   ],
                 ),
               ),
@@ -625,6 +631,115 @@ class _MonthlySalesChart extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TopSellingProductsList extends StatelessWidget {
+  const _TopSellingProductsList({required this.products});
+
+  final List<TopSellingProduct> products;
+
+  static const _rankColors = [Color(0xFFE8A33D), Color(0xFF9CA3AF), Color(0xFFB87333)];
+
+  @override
+  Widget build(BuildContext context) {
+    if (products.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSizes.xl),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          children: [
+            const Icon(Icons.inventory_2_outlined, color: AppColors.textHint, size: 32),
+            const SizedBox(height: AppSizes.sm),
+            Text('No sales data yet', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 224,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: products.length,
+        separatorBuilder: (_, _) => const SizedBox(width: AppSizes.md),
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final rankColor = index < _rankColors.length ? _rankColors[index] : AppColors.textHint;
+          return Container(
+            width: 148,
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 16, offset: const Offset(0, 6))],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1.2,
+                      child: AppNetworkImage(url: product.firstImageUrl),
+                    ),
+                    Positioned(
+                      top: AppSizes.sm,
+                      left: AppSizes.sm,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(color: rankColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: rankColor.withValues(alpha: 0.5), blurRadius: 6)]),
+                        child: Text('${index + 1}', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+                      ),
+                    ),
+                    Positioned(
+                      top: AppSizes.sm,
+                      right: AppSizes.sm,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(color: AppColors.primaryDark.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.local_fire_department_rounded, color: Colors.white, size: 11),
+                            const SizedBox(width: 2),
+                            Text('${product.totalSold}', style: AppTextStyles.labelSmall.copyWith(color: Colors.white, fontSize: 10)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(AppSizes.sm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        style: AppTextStyles.label,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(Formatters.currency(product.price), style: AppTextStyles.body.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

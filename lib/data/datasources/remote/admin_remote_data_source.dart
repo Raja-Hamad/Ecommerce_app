@@ -3,6 +3,7 @@ import '../../../core/network/api_endpoints.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/recent_order.dart';
+import '../../../domain/entities/top_selling_product.dart';
 
 class AdminRemoteDataSource {
   final _client = ApiClient.instance;
@@ -22,5 +23,11 @@ class AdminRemoteDataSource {
     final response = await _client.get(ApiEndpoints.adminRecentOrders);
     final list = response['orders'] as List<dynamic>? ?? [];
     return list.map((e) => RecentOrder.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<TopSellingProduct>> getTopSellingProducts() async {
+    final response = await _client.get(ApiEndpoints.adminTopSellingProducts);
+    final list = response['products'] as List<dynamic>? ?? [];
+    return list.map((e) => TopSellingProduct.fromJson(e as Map<String, dynamic>)).toList();
   }
 }
