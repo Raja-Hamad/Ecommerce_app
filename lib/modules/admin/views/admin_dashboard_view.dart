@@ -10,6 +10,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
+import '../../../domain/entities/recent_order.dart';
 import '../controllers/admin_dashboard_controller.dart';
 
 class AdminDashboardView extends GetView<AdminDashboardController> {
@@ -82,6 +83,10 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                     const _SectionTitle(icon: Icons.pie_chart_rounded, title: 'Orders Status'),
                     const SizedBox(height: AppSizes.md),
                     _OrdersStatusCard(stats: stats),
+                    const SizedBox(height: AppSizes.xl),
+                    const _SectionTitle(icon: Icons.history_rounded, title: 'Recent Orders'),
+                    const SizedBox(height: AppSizes.md),
+                    _RecentOrdersCard(orders: controller.recentOrders),
                   ],
                 ),
               ),
@@ -342,6 +347,136 @@ class _OrdersStatusCard extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentOrdersCard extends StatelessWidget {
+  const _RecentOrdersCard({required this.orders});
+
+  final List<RecentOrder> orders;
+
+  static (Color, String) _orderStatusConfig(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return (AppColors.warning, 'Pending');
+      case 'confirmed':
+        return (AppColors.primary, 'Confirmed');
+      case 'shipped':
+        return (AppColors.primary, 'Shipped');
+      case 'delivered':
+        return (AppColors.success, 'Delivered');
+      case 'cancelled':
+        return (AppColors.error, 'Cancelled');
+      default:
+        return (AppColors.textSecondary, status);
+    }
+  }
+
+  static (Color, IconData) _paymentStatusConfig(String status) {
+    switch (status.toLowerCase()) {
+      case 'paid':
+        return (AppColors.success, Icons.check_circle_rounded);
+      case 'failed':
+        return (AppColors.error, Icons.error_rounded);
+      default:
+        return (AppColors.warning, Icons.schedule_rounded);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cardDecoration = BoxDecoration(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      border: Border.all(color: AppColors.border),
+      boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+    );
+
+    if (orders.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSizes.xl),
+        decoration: cardDecoration,
+        child: Column(
+          children: [
+            const Icon(Icons.receipt_long_rounded, color: AppColors.textHint, size: 32),
+            const SizedBox(height: AppSizes.sm),
+            Text('No recent orders', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+      decoration: cardDecoration,
+      child: Column(
+        children: [
+          for (int i = 0; i < orders.length; i++) ...[
+            _RecentOrderTile(order: orders[i]),
+            if (i != orders.length - 1) const Divider(height: 1, indent: AppSizes.lg, endIndent: AppSizes.lg, color: AppColors.border),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentOrderTile extends StatelessWidget {
+  const _RecentOrderTile({required this.order});
+
+  final RecentOrder order;
+
+  @override
+  Widget build(BuildContext context) {
+    final (statusColor, statusLabel) = _RecentOrdersCard._orderStatusConfig(order.orderStatus);
+    final (paymentColor, paymentIcon) = _RecentOrdersCard._paymentStatusConfig(order.paymentStatus);
+    final initial = order.customerName.isNotEmpty ? order.customerName[0].toUpperCase() : '?';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg, vertical: AppSizes.sm),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+            child: Center(child: Text(initial, style: AppTextStyles.label.copyWith(color: AppColors.primary))),
+          ),
+          const SizedBox(width: AppSizes.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(order.customerName, style: AppTextStyles.bodyLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(paymentIcon, size: 12, color: paymentColor),
+                    const SizedBox(width: 4),
+                    Text(Formatters.dateTime(order.createdAt), style: AppTextStyles.caption),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSizes.sm),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(Formatters.currency(order.totalAmount), style: AppTextStyles.label),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 3),
+                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                child: Text(statusLabel, style: AppTextStyles.labelSmall.copyWith(color: statusColor)),
+              ),
+            ],
           ),
         ],
       ),

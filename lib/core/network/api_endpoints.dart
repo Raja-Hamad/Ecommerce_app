@@ -48,4 +48,5 @@ class ApiEndpoints {
   // Admin
   static const String adminDashboard = 'admin/dashboard';
   static const String adminMonthlySales = 'admin/dashboard/monthly-sales';
+  static const String adminRecentOrders = 'admin/dashboard/recent-orders';
 }

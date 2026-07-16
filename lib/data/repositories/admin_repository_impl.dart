@@ -1,5 +1,6 @@
 import '../../domain/entities/admin_dashboard_stats.dart';
 import '../../domain/entities/monthly_sales.dart';
+import '../../domain/entities/recent_order.dart';
 import '../../domain/repositories/admin_repository.dart';
 import '../datasources/remote/admin_remote_data_source.dart';
 
@@ -14,5 +15,10 @@ class AdminRepositoryImpl implements AdminRepository {
   @override
   Future<List<MonthlySales>> getMonthlySales() {
     return _remote.getMonthlySales();
+  }
+
+  @override
+  Future<List<RecentOrder>> getRecentOrders() {
+    return _remote.getRecentOrders();
   }
 }
