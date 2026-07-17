@@ -15,7 +15,7 @@ class ProductRemoteDataSource {
 
   Future<Product> getProductById(String id) async {
     final response = await _client.get(ApiEndpoints.productById(id));
-    return Product.fromJson(response);
+    return Product.fromJson(response['product'] as Map<String, dynamic>? ?? response);
   }
 
   Future<void> addReview(String productId, {required double rating, required String comment}) async {

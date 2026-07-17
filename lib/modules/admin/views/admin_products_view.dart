@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -257,9 +258,15 @@ class _AdminProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inStock = product.stock > 0;
-    return Container(
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      child: InkWell(
+        onTap: () => Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        child: Container(
       padding: const EdgeInsets.all(AppSizes.md),
-      decoration: AppDecorations.card(radius: AppSizes.radiusLg),
+      decoration: AppDecorations.card(radius: AppSizes.radiusLg, color: Colors.transparent),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -336,6 +343,8 @@ class _AdminProductCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+        ),
       ),
     );
   }

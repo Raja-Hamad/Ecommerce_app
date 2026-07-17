@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../modules/admin/bindings/admin_binding.dart';
 import '../../modules/admin/views/admin_dashboard_view.dart';
+import '../../modules/admin/views/admin_product_details_view.dart';
 import '../../modules/admin/views/admin_products_view.dart';
 import '../../modules/user/address/bindings/address_binding.dart';
 import '../../modules/user/address/views/add_address_view.dart';
@@ -52,6 +53,7 @@ class AppPages {
     GetPage(name: AppRoutes.root, page: () => const RootView(), binding: RootBinding()),
     GetPage(name: AppRoutes.adminDashboard, page: () => const AdminDashboardView(), binding: AdminBinding()),
     GetPage(name: AppRoutes.adminProducts, page: () => const AdminProductsView(), binding: AdminProductsBinding()),
+    GetPage(name: AppRoutes.adminProductDetails, page: () => const AdminProductDetailsView(), binding: AdminProductDetailsBinding()),
     GetPage(name: AppRoutes.categories, page: () => const CategoriesView(), binding: CategoriesBinding()),
     GetPage(name: AppRoutes.productListing, page: () => const ProductListingView(), binding: ProductListingBinding()),
     GetPage(name: AppRoutes.productDetails, page: () => const ProductDetailsView(), binding: ProductDetailsBinding()),
