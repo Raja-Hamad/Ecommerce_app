@@ -11,6 +11,7 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/recent_order.dart';
+import '../../../domain/entities/recent_user.dart';
 import '../../../domain/entities/top_selling_product.dart';
 import '../../../core/widgets/app_network_image.dart';
 import '../controllers/admin_dashboard_controller.dart';
@@ -93,6 +94,10 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                     const _SectionTitle(icon: Icons.local_fire_department_rounded, title: 'Top Selling Products'),
                     const SizedBox(height: AppSizes.md),
                     _TopSellingProductsList(products: controller.topSellingProducts),
+                    const SizedBox(height: AppSizes.xl),
+                    const _SectionTitle(icon: Icons.person_add_alt_1_rounded, title: 'Recent Users'),
+                    const SizedBox(height: AppSizes.md),
+                    _RecentUsersList(users: controller.recentUsers),
                   ],
                 ),
               ),
@@ -790,6 +795,97 @@ class _OrderStatusLegend extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _RecentUsersList extends StatelessWidget {
+  const _RecentUsersList({required this.users});
+
+  final List<RecentUser> users;
+
+  @override
+  Widget build(BuildContext context) {
+    if (users.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSizes.xl),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          children: [
+            const Icon(Icons.people_outline_rounded, color: AppColors.textHint, size: 32),
+            const SizedBox(height: AppSizes.sm),
+            Text('No recent users', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 96,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: users.length,
+        separatorBuilder: (_, _) => const SizedBox(width: AppSizes.lg),
+        itemBuilder: (context, index) {
+          final user = users[index];
+          final isAdmin = user.role.toLowerCase() == 'admin';
+          final initial = user.name.isNotEmpty ? user.name[0].toUpperCase() : '?';
+          return SizedBox(
+            width: 72,
+            child: Column(
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: isAdmin ? AppColors.accent : AppColors.border, width: 2),
+                      ),
+                      child: ClipOval(
+                        child: Container(
+                          color: AppColors.primaryLight,
+                          child: user.profileImage.isNotEmpty
+                              ? AppNetworkImage(url: user.profileImage)
+                              : Center(child: Text(initial, style: AppTextStyles.label.copyWith(color: AppColors.primary))),
+                        ),
+                      ),
+                    ),
+                    if (isAdmin)
+                      Positioned(
+                        bottom: -2,
+                        right: -2,
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle, border: Border.all(color: AppColors.surface, width: 2)),
+                          child: const Icon(Icons.verified_rounded, color: Colors.white, size: 11),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSizes.xs),
+                Text(
+                  user.name,
+                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
