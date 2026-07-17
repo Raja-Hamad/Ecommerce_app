@@ -322,7 +322,10 @@ class _AdminProductCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => AppSnackbar.info('Edit product is coming soon'),
+                  onPressed: () async {
+                    final updated = await Get.toNamed(AppRoutes.adminEditProduct, arguments: product);
+                    if (updated != null) Get.find<AdminProductsController>().fetch(reset: true);
+                  },
                   icon: const Icon(Icons.edit_outlined, size: 16),
                   label: const Text('Edit'),
                   style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: AppSizes.sm)),

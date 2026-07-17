@@ -24,4 +24,9 @@ class ProductRemoteDataSource {
       body: {'rating': rating, 'comment': comment},
     );
   }
+
+  Future<Product> updateProduct(String id, Map<String, dynamic> fields) async {
+    final response = await _client.put(ApiEndpoints.productById(id), body: fields);
+    return Product.fromJson(response['product'] as Map<String, dynamic>? ?? response);
+  }
 }

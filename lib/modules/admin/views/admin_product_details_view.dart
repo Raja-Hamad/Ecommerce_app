@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -287,8 +288,10 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () =>
-                            AppSnackbar.info('Edit product is coming soon'),
+                        onPressed: () async {
+                          final updated = await Get.toNamed(AppRoutes.adminEditProduct, arguments: product);
+                          if (updated != null) controller.fetch(product.id);
+                        },
                         icon: const Icon(Icons.edit_outlined, size: 18),
                         label: const Text('Edit Product'),
                         style: OutlinedButton.styleFrom(

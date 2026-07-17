@@ -6,4 +6,5 @@ abstract class ProductRepository {
   Future<List<Product>> getBestSellers();
   Future<Product> getProductById(String id);
   Future<void> addReview(String productId, {required double rating, required String comment});
+  Future<Product> updateProduct(String id, Map<String, dynamic> fields);
 }

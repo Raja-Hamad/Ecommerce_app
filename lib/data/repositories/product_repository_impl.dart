@@ -37,4 +37,7 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<void> addReview(String productId, {required double rating, required String comment}) =>
       _remote.addReview(productId, rating: rating, comment: comment);
+
+  @override
+  Future<Product> updateProduct(String id, Map<String, dynamic> fields) => _remote.updateProduct(id, fields);
 }
