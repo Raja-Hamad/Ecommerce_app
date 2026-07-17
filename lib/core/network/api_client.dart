@@ -25,9 +25,13 @@ class ApiClient {
     };
   }
 
-  Future<Map<String, dynamic>> get(String path, {Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> get(String path, {Map<String, String>? headers, Map<String, dynamic>? query}) async {
     final baseHeaders = await _authHeaders();
-    final response = await _run(() => _client.get(_uri(path), headers: {...baseHeaders, ...?headers}));
+    var uri = _uri(path);
+    if (query != null && query.isNotEmpty) {
+      uri = uri.replace(queryParameters: query.map((key, value) => MapEntry(key, value.toString())));
+    }
+    final response = await _run(() => _client.get(uri, headers: {...baseHeaders, ...?headers}));
     return _decode(response);
   }
 

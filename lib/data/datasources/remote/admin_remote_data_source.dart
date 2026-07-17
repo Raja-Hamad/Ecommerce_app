@@ -1,6 +1,7 @@
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
+import '../../../domain/entities/admin_products_page.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/recent_order.dart';
 import '../../../domain/entities/recent_user.dart';
@@ -36,5 +37,23 @@ class AdminRemoteDataSource {
     final response = await _client.get(ApiEndpoints.adminRecentUsers);
     final list = response['users'] as List<dynamic>? ?? [];
     return list.map((e) => RecentUser.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<AdminProductsPage> getAllProducts({
+    String? search,
+    String? categoryName,
+    String? status,
+    String? sort,
+    int page = 1,
+  }) async {
+    final query = <String, dynamic>{
+      'page': page,
+      if (search != null && search.isNotEmpty) 'search': search,
+      if (categoryName != null && categoryName.isNotEmpty) 'category': categoryName,
+      if (status != null && status.isNotEmpty) 'status': status,
+      if (sort != null && sort.isNotEmpty) 'sort': sort,
+    };
+    final response = await _client.get(ApiEndpoints.adminAllProducts, query: query);
+    return AdminProductsPage.fromJson(response);
   }
 }

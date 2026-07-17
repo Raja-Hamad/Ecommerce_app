@@ -63,6 +63,7 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                           color: const Color(0xFF8B5CF6),
                           value: '${stats?.totalProducts ?? 0}',
                           label: 'Total Products',
+                          onTap: () => Get.toNamed(AppRoutes.adminProducts),
                         ),
                         _StatCard(
                           icon: Icons.receipt_long_rounded,
@@ -245,16 +246,17 @@ class _HeaderMiniStat extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  const _StatCard({required this.icon, required this.color, required this.value, required this.label});
+  const _StatCard({required this.icon, required this.color, required this.value, required this.label, this.onTap});
 
   final IconData icon;
   final Color color;
   final String value;
   final String label;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: [color.withValues(alpha: 0.08), AppColors.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
@@ -277,6 +279,17 @@ class _StatCard extends StatelessWidget {
           Text(label.toUpperCase(), style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, letterSpacing: 0.5,
           fontSize: 10)),
         ],
+      ),
+    );
+
+    if (onTap == null) return card;
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        child: card,
       ),
     );
   }

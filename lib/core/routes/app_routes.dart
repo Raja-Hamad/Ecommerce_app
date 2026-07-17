@@ -8,6 +8,7 @@ class AppRoutes {
   static const resetPassword = '/reset-password';
   static const root = '/root';
   static const adminDashboard = '/admin-dashboard';
+  static const adminProducts = '/admin-products';
   static const home = '/home';
   static const categories = '/categories';
   static const productListing = '/product-listing';

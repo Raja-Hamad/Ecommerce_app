@@ -1,4 +1,5 @@
 import '../entities/admin_dashboard_stats.dart';
+import '../entities/admin_products_page.dart';
 import '../entities/monthly_sales.dart';
 import '../entities/recent_order.dart';
 import '../entities/recent_user.dart';
@@ -10,4 +11,5 @@ abstract class AdminRepository {
   Future<List<RecentOrder>> getRecentOrders();
   Future<List<TopSellingProduct>> getTopSellingProducts();
   Future<List<RecentUser>> getRecentUsers();
+  Future<AdminProductsPage> getAllProducts({String? search, String? categoryName, String? status, String? sort, int page = 1});
 }

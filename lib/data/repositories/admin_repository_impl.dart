@@ -1,4 +1,5 @@
 import '../../domain/entities/admin_dashboard_stats.dart';
+import '../../domain/entities/admin_products_page.dart';
 import '../../domain/entities/monthly_sales.dart';
 import '../../domain/entities/recent_order.dart';
 import '../../domain/entities/recent_user.dart';
@@ -32,5 +33,10 @@ class AdminRepositoryImpl implements AdminRepository {
   @override
   Future<List<RecentUser>> getRecentUsers() {
     return _remote.getRecentUsers();
+  }
+
+  @override
+  Future<AdminProductsPage> getAllProducts({String? search, String? categoryName, String? status, String? sort, int page = 1}) {
+    return _remote.getAllProducts(search: search, categoryName: categoryName, status: status, sort: sort, page: page);
   }
 }
