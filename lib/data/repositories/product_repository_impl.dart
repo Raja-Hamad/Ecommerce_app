@@ -44,4 +44,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Product> createProduct(Map<String, String> fields, List<File> images) => _remote.createProduct(fields, images);
+
+  @override
+  Future<void> deleteProduct(String id) => _remote.deleteProduct(id);
 }

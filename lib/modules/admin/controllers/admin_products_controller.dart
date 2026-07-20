@@ -5,12 +5,14 @@ import '../../../core/network/app_exception.dart';
 import '../../../core/utils/app_snackbar.dart';
 import '../../../data/repositories/admin_repository_impl.dart';
 import '../../../data/repositories/category_repository_impl.dart';
+import '../../../data/repositories/product_repository_impl.dart';
 import '../../../domain/entities/category.dart';
 import '../../../domain/entities/product.dart';
 
 class AdminProductsController extends GetxController {
   final _repo = AdminRepositoryImpl();
   final _categoryRepo = CategoryRepositoryImpl();
+  final _productRepo = ProductRepositoryImpl();
 
   final searchCtrl = TextEditingController();
   Timer? _debounce;
@@ -114,6 +116,17 @@ class AdminProductsController extends GetxController {
     isLoadingMore.value = true;
     _page++;
     await fetch();
+  }
+
+  Future<void> deleteProduct(Product product) async {
+    try {
+      await _productRepo.deleteProduct(product.id);
+      products.remove(product);
+      totalProducts.value = totalProducts.value - 1;
+      AppSnackbar.success('Product deleted');
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to delete product. Please try again.');
+    }
   }
 
   @override

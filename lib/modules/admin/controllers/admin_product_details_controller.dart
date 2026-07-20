@@ -12,6 +12,7 @@ class AdminProductDetailsController extends GetxController {
 
   final Rxn<Product> product = Rxn<Product>();
   final RxBool isLoading = true.obs;
+  final RxBool isDeleting = false.obs;
   final RxInt selectedImage = 0.obs;
   List<Category> _categories = [];
 
@@ -38,6 +39,21 @@ class AdminProductDetailsController extends GetxController {
       AppSnackbar.error(e is AppException ? e.message : 'Failed to load product. Please try again.');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<bool> deleteProduct() async {
+    if (product.value == null) return false;
+    isDeleting.value = true;
+    try {
+      await _repo.deleteProduct(product.value!.id);
+      AppSnackbar.success('Product deleted');
+      return true;
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to delete product. Please try again.');
+      return false;
+    } finally {
+      isDeleting.value = false;
     }
   }
 }

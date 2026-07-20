@@ -5,9 +5,9 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../core/utils/app_snackbar.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/product.dart';
 import '../controllers/admin_product_details_controller.dart';
 
@@ -304,8 +304,16 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
                     const SizedBox(width: AppSizes.md),
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () =>
-                            AppSnackbar.info('Delete product is coming soon'),
+                        onPressed: () async {
+                          final confirmed = await ConfirmDialog.show(
+                            title: 'Delete Product?',
+                            message: 'Are you sure you want to delete "${product.name}"? This cannot be undone.',
+                            confirmLabel: 'Delete',
+                          );
+                          if (!confirmed) return;
+                          final deleted = await controller.deleteProduct();
+                          if (deleted) Get.back(result: true);
+                        },
                         icon: const Icon(
                           Icons.delete_outline_rounded,
                           size: 18,

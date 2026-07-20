@@ -5,9 +5,9 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../core/utils/app_snackbar.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../domain/entities/category.dart';
 import '../../../domain/entities/product.dart';
@@ -271,7 +271,10 @@ class _AdminProductCard extends StatelessWidget {
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
       child: InkWell(
-        onTap: () => Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id),
+        onTap: () async {
+          final result = await Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id);
+          if (result != null) Get.find<AdminProductsController>().fetch(reset: true);
+        },
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         child: Container(
       padding: const EdgeInsets.all(AppSizes.md),
@@ -343,7 +346,14 @@ class _AdminProductCard extends StatelessWidget {
               const SizedBox(width: AppSizes.sm),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => AppSnackbar.info('Delete product is coming soon'),
+                  onPressed: () async {
+                    final confirmed = await ConfirmDialog.show(
+                      title: 'Delete Product?',
+                      message: 'Are you sure you want to delete "${product.name}"? This cannot be undone.',
+                      confirmLabel: 'Delete',
+                    );
+                    if (confirmed) Get.find<AdminProductsController>().deleteProduct(product);
+                  },
                   icon: const Icon(Icons.delete_outline_rounded, size: 16, color: AppColors.error),
                   label: const Text('Delete', style: TextStyle(color: AppColors.error)),
                   style: OutlinedButton.styleFrom(

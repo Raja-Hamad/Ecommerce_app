@@ -39,4 +39,8 @@ class ProductRemoteDataSource {
     );
     return Product.fromJson(response['product'] as Map<String, dynamic>? ?? response);
   }
+
+  Future<void> deleteProduct(String id) async {
+    await _client.delete(ApiEndpoints.productById(id));
+  }
 }
