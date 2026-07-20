@@ -314,16 +314,34 @@ class _AdminProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
-                decoration: BoxDecoration(
-                  color: (isActive ? AppColors.success : AppColors.error).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-                ),
-                child: Text(
-                  isActive ? 'Active' : 'Inactive',
-                  style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
-                ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isActive ? 'Active' : 'Inactive',
+                    style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
+                  ),
+                  Transform.scale(
+                    scale: 0.75,
+                    child: Switch(
+                      value: isActive,
+                      activeThumbColor: AppColors.success,
+                      onChanged: (value) async {
+                        final newStatus = value ? 'active' : 'inactive';
+                        final confirmed = await ConfirmDialog.show(
+                          title: value ? 'Activate Product?' : 'Deactivate Product?',
+                          message: value
+                              ? '"${product.name}" will become visible to customers again.'
+                              : '"${product.name}" will be hidden from customers.',
+                          icon: value ? Icons.visibility_rounded : Icons.visibility_off_rounded,
+                          confirmLabel: value ? 'Activate' : 'Deactivate',
+                          isDestructive: !value,
+                        );
+                        if (confirmed) Get.find<AdminProductsController>().updateStatus(product, newStatus);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

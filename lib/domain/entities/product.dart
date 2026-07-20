@@ -50,6 +50,27 @@ class Product {
 
   String get firstImageUrl => images.isNotEmpty ? images.first : '';
 
+  Product copyWith({String? status}) {
+    return Product(
+      id: id,
+      name: name,
+      description: description,
+      price: price,
+      discountPrice: discountPrice,
+      images: images,
+      categoryId: categoryId,
+      rating: rating,
+      reviewCount: reviewCount,
+      stock: stock,
+      brand: brand,
+      sizes: sizes,
+      colors: colors,
+      isFeatured: isFeatured,
+      reviews: reviews,
+      status: status ?? this.status,
+    );
+  }
+
   factory Product.fromJson(Map<String, dynamic> json) {
     final category = json['category'];
     final images = (json['images'] as List<dynamic>? ?? [])

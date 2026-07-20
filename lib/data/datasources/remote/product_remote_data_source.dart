@@ -43,4 +43,8 @@ class ProductRemoteDataSource {
   Future<void> deleteProduct(String id) async {
     await _client.delete(ApiEndpoints.productById(id));
   }
+
+  Future<void> updateProductStatus(String id, String status) async {
+    await _client.put(ApiEndpoints.productStatus(id), body: {'status': status});
+  }
 }

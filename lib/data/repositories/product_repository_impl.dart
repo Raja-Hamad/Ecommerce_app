@@ -47,4 +47,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<void> deleteProduct(String id) => _remote.deleteProduct(id);
+
+  @override
+  Future<void> updateProductStatus(String id, String status) => _remote.updateProductStatus(id, status);
 }

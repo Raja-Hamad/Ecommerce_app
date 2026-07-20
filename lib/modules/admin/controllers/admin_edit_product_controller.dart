@@ -26,7 +26,6 @@ class AdminEditProductController extends GetxController {
   final RxList<Category> categories = <Category>[].obs;
   final Rxn<Category> selectedCategory = Rxn<Category>();
   final RxBool isFeatured = false.obs;
-  final RxString status = 'active'.obs;
   late final RxList<String> sizes;
   late final RxList<String> colors;
 
@@ -36,7 +35,6 @@ class AdminEditProductController extends GetxController {
   AdminEditProductController() {
     product = Get.arguments as Product;
     isFeatured.value = product.isFeatured;
-    status.value = product.status;
     sizes = <String>[...product.sizes].obs;
     colors = <String>[...product.colors].obs;
   }
@@ -62,8 +60,6 @@ class AdminEditProductController extends GetxController {
   void setCategory(Category? category) => selectedCategory.value = category;
 
   void toggleFeatured(bool value) => isFeatured.value = value;
-
-  void setStatus(String value) => status.value = value;
 
   void addSize() {
     final value = sizeInputCtrl.text.trim();
@@ -101,7 +97,6 @@ class AdminEditProductController extends GetxController {
         'category': selectedCategory.value!.id,
         'brand': brandCtrl.text.trim(),
         'isFeatured': isFeatured.value,
-        'status': status.value,
         'sizes': sizes,
         'colors': colors,
       };

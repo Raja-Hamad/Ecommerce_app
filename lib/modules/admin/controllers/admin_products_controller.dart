@@ -129,6 +129,17 @@ class AdminProductsController extends GetxController {
     }
   }
 
+  Future<void> updateStatus(Product product, String newStatus) async {
+    try {
+      await _productRepo.updateProductStatus(product.id, newStatus);
+      final index = products.indexWhere((p) => p.id == product.id);
+      if (index != -1) products[index] = product.copyWith(status: newStatus);
+      AppSnackbar.success('Product status updated');
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to update status. Please try again.');
+    }
+  }
+
   @override
   void onClose() {
     _debounce?.cancel();
