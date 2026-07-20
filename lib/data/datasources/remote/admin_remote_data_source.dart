@@ -3,6 +3,7 @@ import '../../../core/network/api_endpoints.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/admin_products_page.dart';
 import '../../../domain/entities/monthly_sales.dart';
+import '../../../domain/entities/product.dart';
 import '../../../domain/entities/recent_order.dart';
 import '../../../domain/entities/recent_user.dart';
 import '../../../domain/entities/top_selling_product.dart';
@@ -55,5 +56,17 @@ class AdminRemoteDataSource {
     };
     final response = await _client.get(ApiEndpoints.adminAllProducts, query: query);
     return AdminProductsPage.fromJson(response);
+  }
+
+  Future<List<Product>> getLowStockProducts() async {
+    final response = await _client.get(ApiEndpoints.adminLowStockProducts);
+    final list = response['products'] as List<dynamic>? ?? [];
+    return list.map((e) => Product.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<Product>> getOutOfStockProducts() async {
+    final response = await _client.get(ApiEndpoints.adminOutOfStockProducts);
+    final list = response['products'] as List<dynamic>? ?? [];
+    return list.map((e) => Product.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

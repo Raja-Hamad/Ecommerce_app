@@ -10,6 +10,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/monthly_sales.dart';
+import '../../../domain/entities/product.dart';
 import '../../../domain/entities/recent_order.dart';
 import '../../../domain/entities/recent_user.dart';
 import '../../../domain/entities/top_selling_product.dart';
@@ -79,6 +80,10 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppSizes.xl),
+                    const _SectionTitle(icon: Icons.warning_amber_rounded, title: 'Inventory Alerts'),
+                    const SizedBox(height: AppSizes.md),
+                    const _InventoryAlertsCard(),
                     const SizedBox(height: AppSizes.xl),
                     const _SectionTitle(icon: Icons.show_chart_rounded, title: 'Monthly Sales'),
                     const SizedBox(height: AppSizes.md),
@@ -898,6 +903,160 @@ class _RecentUsersList extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _InventoryAlertsCard extends StatelessWidget {
+  const _InventoryAlertsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<AdminDashboardController>();
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSizes.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Obx(() => Row(
+                children: [
+                  Expanded(
+                    child: _InventoryTab(
+                      label: 'Low Stock',
+                      count: controller.lowStockProducts.length,
+                      color: AppColors.warning,
+                      selected: controller.inventoryTab.value == 0,
+                      onTap: () => controller.setInventoryTab(0),
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.sm),
+                  Expanded(
+                    child: _InventoryTab(
+                      label: 'Out of Stock',
+                      count: controller.outOfStockProducts.length,
+                      color: AppColors.error,
+                      selected: controller.inventoryTab.value == 1,
+                      onTap: () => controller.setInventoryTab(1),
+                    ),
+                  ),
+                ],
+              )),
+          const SizedBox(height: AppSizes.md),
+          Obx(() {
+            final products = controller.inventoryTab.value == 0 ? controller.lowStockProducts : controller.outOfStockProducts;
+            if (products.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.lg),
+                child: Column(
+                  children: [
+                    const Icon(Icons.check_circle_outline_rounded, color: AppColors.success, size: 28),
+                    const SizedBox(height: AppSizes.sm),
+                    Text(
+                      controller.inventoryTab.value == 0 ? 'No low stock products' : 'No out of stock products',
+                      style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Column(
+              children: [
+                for (int i = 0; i < products.length; i++) ...[
+                  _InventoryProductTile(product: products[i]),
+                  if (i != products.length - 1) const Divider(height: AppSizes.lg, color: AppColors.border),
+                ],
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _InventoryTab extends StatelessWidget {
+  const _InventoryTab({required this.label, required this.count, required this.color, required this.selected, required this.onTap});
+
+  final String label;
+  final int count;
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? color.withValues(alpha: 0.12) : AppColors.scaffold,
+      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.sm),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            border: Border.all(color: selected ? color : Colors.transparent),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(label, style: AppTextStyles.label.copyWith(color: selected ? color : AppColors.textSecondary)),
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppSizes.radiusPill)),
+                child: Text('$count', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InventoryProductTile extends StatelessWidget {
+  const _InventoryProductTile({required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    final outOfStock = product.stock == 0;
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            child: SizedBox(width: 40, height: 40, child: AppNetworkImage(url: product.firstImageUrl)),
+          ),
+          const SizedBox(width: AppSizes.sm),
+          Expanded(
+            child: Text(product.name, style: AppTextStyles.bodyLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 3),
+            decoration: BoxDecoration(
+              color: (outOfStock ? AppColors.error : AppColors.warning).withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            ),
+            child: Text(
+              '${product.stock} left',
+              style: AppTextStyles.labelSmall.copyWith(color: outOfStock ? AppColors.error : AppColors.warning),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -54,4 +54,6 @@ class ApiEndpoints {
   static const String adminTopSellingProducts = 'admin/dashboard/top-selling-products';
   static const String adminRecentUsers = 'admin/dashboard/recent-users';
   static const String adminAllProducts = 'admin/all-products';
+  static const String adminLowStockProducts = 'admin/products/low-stock';
+  static const String adminOutOfStockProducts = 'admin/products/out-of-stock';
 }
