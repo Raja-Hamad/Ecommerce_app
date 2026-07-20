@@ -99,6 +99,10 @@ class AdminCreateProductView extends GetView<AdminCreateProductController> {
                 );
               }),
               const SizedBox(height: AppSizes.xl),
+              const AdminFormSectionLabel('Status'),
+              const SizedBox(height: AppSizes.md),
+              Obx(() => AdminStatusToggle(value: controller.status.value, onChanged: controller.setStatus)),
+              const SizedBox(height: AppSizes.xl),
               Obx(() => Container(
                     decoration: AppDecorations.card(radius: AppSizes.radiusLg),
                     child: SwitchListTile(

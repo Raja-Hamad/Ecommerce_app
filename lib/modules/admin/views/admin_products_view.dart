@@ -266,7 +266,7 @@ class _AdminProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inStock = product.stock > 0;
+    final isActive = product.isActive;
     return Material(
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
@@ -317,12 +317,12 @@ class _AdminProductCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
                 decoration: BoxDecoration(
-                  color: (inStock ? AppColors.success : AppColors.error).withValues(alpha: 0.12),
+                  color: (isActive ? AppColors.success : AppColors.error).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 ),
                 child: Text(
-                  inStock ? 'Active' : 'Out of Stock',
-                  style: AppTextStyles.labelSmall.copyWith(color: inStock ? AppColors.success : AppColors.error),
+                  isActive ? 'Active' : 'Inactive',
+                  style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
                 ),
               ),
             ],

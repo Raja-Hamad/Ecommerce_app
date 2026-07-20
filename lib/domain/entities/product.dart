@@ -17,6 +17,7 @@ class Product {
     this.colors = const [],
     this.isFeatured = false,
     this.reviews = const [],
+    this.status = 'active',
   });
 
   final String id;
@@ -34,6 +35,7 @@ class Product {
   final List<String> colors;
   final bool isFeatured;
   final List<Review> reviews;
+  final String status;
 
   double get displayPrice => discountPrice ?? price;
 
@@ -43,6 +45,8 @@ class Product {
       hasDiscount ? (((price - discountPrice!) / price) * 100).round() : 0;
 
   bool get inStock => stock > 0;
+
+  bool get isActive => status.toLowerCase() == 'active';
 
   String get firstImageUrl => images.isNotEmpty ? images.first : '';
 
@@ -69,6 +73,7 @@ class Product {
       reviews: (json['reviews'] as List<dynamic>? ?? [])
           .map((e) => Review.fromJson(e as Map<String, dynamic>))
           .toList(),
+      status: json['status'] as String? ?? 'active',
     );
   }
 }

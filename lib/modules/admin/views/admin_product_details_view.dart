@@ -24,7 +24,7 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
           return const Center(child: CircularProgressIndicator());
         }
         final product = controller.product.value!;
-        final inStock = product.inStock;
+        final isActive = product.isActive;
         return Column(
           children: [
             Expanded(
@@ -64,7 +64,7 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
                                 ),
                                 decoration: BoxDecoration(
                                   color:
-                                      (inStock
+                                      (isActive
                                               ? AppColors.success
                                               : AppColors.error)
                                           .withValues(alpha: 0.12),
@@ -73,9 +73,9 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
                                   ),
                                 ),
                                 child: Text(
-                                  inStock ? 'Active' : 'Out of Stock',
+                                  isActive ? 'Active' : 'Inactive',
                                   style: AppTextStyles.labelSmall.copyWith(
-                                    color: inStock
+                                    color: isActive
                                         ? AppColors.success
                                         : AppColors.error,
                                   ),
@@ -161,6 +161,14 @@ class AdminProductDetailsView extends GetView<AdminProductDetailsController> {
                                 _InfoRow(
                                   label: 'Stock',
                                   value: '${product.stock} units',
+                                ),
+                                const Divider(
+                                  height: AppSizes.lg,
+                                  color: AppColors.border,
+                                ),
+                                _InfoRow(
+                                  label: 'Status',
+                                  value: product.isActive ? 'Active' : 'Inactive',
                                 ),
                                 if (controller.categoryName.isNotEmpty) ...[
                                   const Divider(

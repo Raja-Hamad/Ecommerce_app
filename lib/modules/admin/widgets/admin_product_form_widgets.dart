@@ -15,6 +15,55 @@ class AdminFormSectionLabel extends StatelessWidget {
   }
 }
 
+class AdminStatusToggle extends StatelessWidget {
+  const AdminStatusToggle({super.key, required this.value, required this.onChanged});
+
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = value.toLowerCase() == 'active';
+    return Row(
+      children: [
+        Expanded(child: _Segment(label: 'Active', selected: isActive, color: AppColors.success, onTap: () => onChanged('active'))),
+        const SizedBox(width: AppSizes.sm),
+        Expanded(child: _Segment(label: 'Inactive', selected: !isActive, color: AppColors.error, onTap: () => onChanged('inactive'))),
+      ],
+    );
+  }
+}
+
+class _Segment extends StatelessWidget {
+  const _Segment({required this.label, required this.selected, required this.color, required this.onTap});
+
+  final String label;
+  final bool selected;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? color.withValues(alpha: 0.12) : AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: AppSizes.md),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            border: Border.all(color: selected ? color : AppColors.border),
+          ),
+          child: Text(label, style: AppTextStyles.label.copyWith(color: selected ? color : AppColors.textSecondary)),
+        ),
+      ),
+    );
+  }
+}
+
 class AdminCategoryPicker extends StatelessWidget {
   const AdminCategoryPicker({super.key, required this.categories, required this.selected, required this.onSelect});
 

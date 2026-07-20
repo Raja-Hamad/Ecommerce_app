@@ -26,6 +26,7 @@ class AdminCreateProductController extends GetxController {
   final RxList<Category> categories = <Category>[].obs;
   final Rxn<Category> selectedCategory = Rxn<Category>();
   final RxBool isFeatured = false.obs;
+  final RxString status = 'active'.obs;
   final RxList<String> sizes = <String>[].obs;
   final RxList<String> colors = <String>[].obs;
   final RxList<File> images = <File>[].obs;
@@ -53,6 +54,8 @@ class AdminCreateProductController extends GetxController {
   void setCategory(Category? category) => selectedCategory.value = category;
 
   void toggleFeatured(bool value) => isFeatured.value = value;
+
+  void setStatus(String value) => status.value = value;
 
   void addSize() {
     final value = sizeInputCtrl.text.trim();
@@ -102,6 +105,7 @@ class AdminCreateProductController extends GetxController {
         'category': selectedCategory.value!.id,
         'brand': brandCtrl.text.trim(),
         'isFeatured': isFeatured.value.toString(),
+        'status': status.value,
         'sizes': sizes.join(','),
         'colors': colors.join(','),
       };
