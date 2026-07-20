@@ -28,6 +28,15 @@ class AdminProductsView extends GetView<AdminProductsController> {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
       appBar: AppBar(title: Text('Products', style: AppTextStyles.h3)),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final created = await Get.toNamed(AppRoutes.adminCreateProduct);
+          if (created != null) controller.fetch(reset: true);
+        },
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.add_rounded, color: Colors.white),
+        label: const Text('Add Product', style: TextStyle(color: Colors.white)),
+      ),
       body: Column(
         children: [
           Padding(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../domain/entities/product.dart';
@@ -27,6 +28,15 @@ class ProductRemoteDataSource {
 
   Future<Product> updateProduct(String id, Map<String, dynamic> fields) async {
     final response = await _client.put(ApiEndpoints.productById(id), body: fields);
+    return Product.fromJson(response['product'] as Map<String, dynamic>? ?? response);
+  }
+
+  Future<Product> createProduct(Map<String, String> fields, List<File> images) async {
+    final response = await _client.multipart(
+      ApiEndpoints.createProduct,
+      fields: fields,
+      fileLists: {'images': images},
+    );
     return Product.fromJson(response['product'] as Map<String, dynamic>? ?? response);
   }
 }

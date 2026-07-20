@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../controllers/admin_create_product_controller.dart';
 import '../controllers/admin_dashboard_controller.dart';
 import '../controllers/admin_edit_product_controller.dart';
 import '../controllers/admin_product_details_controller.dart';
@@ -29,5 +30,12 @@ class AdminEditProductBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => AdminEditProductController());
+  }
+}
+
+class AdminCreateProductBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AdminCreateProductController());
   }
 }

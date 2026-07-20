@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/remote/product_remote_data_source.dart';
@@ -40,4 +41,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Product> updateProduct(String id, Map<String, dynamic> fields) => _remote.updateProduct(id, fields);
+
+  @override
+  Future<Product> createProduct(Map<String, String> fields, List<File> images) => _remote.createProduct(fields, images);
 }

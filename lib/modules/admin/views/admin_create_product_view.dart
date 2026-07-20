@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
@@ -7,17 +8,17 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/primary_button.dart';
-import '../controllers/admin_edit_product_controller.dart';
+import '../controllers/admin_create_product_controller.dart';
 import '../widgets/admin_product_form_widgets.dart';
 
-class AdminEditProductView extends GetView<AdminEditProductController> {
-  const AdminEditProductView({super.key});
+class AdminCreateProductView extends GetView<AdminCreateProductController> {
+  const AdminCreateProductView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
-      appBar: AppBar(title: Text('Edit Product', style: AppTextStyles.h3)),
+      appBar: AppBar(title: Text('Add Product', style: AppTextStyles.h3)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSizes.lg),
         child: Form(
@@ -25,6 +26,10 @@ class AdminEditProductView extends GetView<AdminEditProductController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const AdminFormSectionLabel('Images'),
+              const SizedBox(height: AppSizes.md),
+              Obx(() => _ImagePickerRow(images: controller.images.toList(), onAdd: controller.pickImages, onRemove: controller.removeImage)),
+              const SizedBox(height: AppSizes.xl),
               const AdminFormSectionLabel('Basic Info'),
               const SizedBox(height: AppSizes.md),
               CustomTextField(label: 'Name', controller: controller.nameCtrl, validator: (v) => Validators.notEmpty(v, field: 'Name')),
@@ -126,13 +131,71 @@ class AdminEditProductView extends GetView<AdminEditProductController> {
               Obx(() => AdminTagList(tags: controller.colors.toList(), onRemove: controller.removeColor)),
               const SizedBox(height: AppSizes.xxl),
               Obx(() => PrimaryButton(
-                    label: 'Save Changes',
+                    label: 'Create Product',
                     isLoading: controller.isSaving.value,
                     onPressed: controller.save,
                   )),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ImagePickerRow extends StatelessWidget {
+  const _ImagePickerRow({required this.images, required this.onAdd, required this.onRemove});
+
+  final List<File> images;
+  final VoidCallback onAdd;
+  final ValueChanged<File> onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 92,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          Material(
+            color: AppColors.primaryLight,
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+              onTap: onAdd,
+              child: Container(
+                width: 92,
+                height: 92,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.primary, style: BorderStyle.solid)),
+                child: const Icon(Icons.add_photo_alternate_rounded, color: AppColors.primary, size: 28),
+              ),
+            ),
+          ),
+          for (final file in images)
+            Padding(
+              padding: const EdgeInsets.only(left: AppSizes.sm),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                    child: Image.file(file, width: 92, height: 92, fit: BoxFit.cover),
+                  ),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () => onRemove(file),
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+                        child: const Icon(Icons.close_rounded, color: Colors.white, size: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

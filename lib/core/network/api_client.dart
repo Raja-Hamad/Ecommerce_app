@@ -65,6 +65,7 @@ class ApiClient {
     String path, {
     required Map<String, String> fields,
     Map<String, File> files = const {},
+    Map<String, List<File>> fileLists = const {},
     String method = 'POST',
     Map<String, String>? headers,
   }) async {
@@ -78,6 +79,13 @@ class ApiClient {
     request.fields.addAll(fields);
     for (final entry in files.entries) {
       request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));
+    }
+    // Repeated multipart fields (e.g. multiple "images" under the same key)
+    // aren't representable in a Map<String, File>, so they get their own param.
+    for (final entry in fileLists.entries) {
+      for (final file in entry.value) {
+        request.files.add(await http.MultipartFile.fromPath(entry.key, file.path));
+      }
     }
     final response = await _run(() async => http.Response.fromStream(await request.send()));
     return _decode(response);
