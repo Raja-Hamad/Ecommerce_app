@@ -468,7 +468,10 @@ class _RecentOrderTile extends StatelessWidget {
     final (paymentColor, paymentIcon) = _RecentOrdersCard._paymentStatusConfig(order.paymentStatus);
     final initial = order.customerName.isNotEmpty ? order.customerName[0].toUpperCase() : '?';
 
-    return Padding(
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.adminOrderDetails, arguments: order.orderId),
+      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+      child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg, vertical: AppSizes.sm),
       child: Row(
         children: [
@@ -509,6 +512,7 @@ class _RecentOrderTile extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

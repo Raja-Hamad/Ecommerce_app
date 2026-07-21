@@ -13,6 +13,7 @@ class AppRoutes {
   static const adminEditProduct = '/admin-edit-product';
   static const adminCreateProduct = '/admin-create-product';
   static const adminOrders = '/admin-orders';
+  static const adminOrderDetails = '/admin-order-details';
   static const home = '/home';
   static const categories = '/categories';
   static const productListing = '/product-listing';
