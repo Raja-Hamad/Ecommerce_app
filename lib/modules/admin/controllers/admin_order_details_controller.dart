@@ -14,6 +14,7 @@ class AdminOrderDetailsController extends GetxController {
   final Rxn<Order> order = Rxn<Order>();
   final RxBool isLoading = true.obs;
   final RxBool isUpdatingStatus = false.obs;
+  final RxBool isCancelling = false.obs;
 
   @override
   void onInit() {
@@ -54,6 +55,24 @@ class AdminOrderDetailsController extends GetxController {
       AppSnackbar.error(e is AppException ? e.message : 'Failed to update order status. Please try again.');
     } finally {
       isUpdatingStatus.value = false;
+    }
+  }
+
+  // Backend only allows cancelling orders that are still pending; this
+  // mirrors that rule so the button doesn't even appear otherwise.
+  bool get canCancel => order.value?.status == OrderStatus.pending;
+
+  Future<void> cancelOrder() async {
+    final current = order.value;
+    if (current == null || !canCancel) return;
+    isCancelling.value = true;
+    try {
+      order.value = await _repo.cancelOrder(current.id);
+      AppSnackbar.success('Order cancelled');
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to cancel order. Please try again.');
+    } finally {
+      isCancelling.value = false;
     }
   }
 }

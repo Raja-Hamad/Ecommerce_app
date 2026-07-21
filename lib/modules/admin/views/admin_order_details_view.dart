@@ -21,6 +21,38 @@ class AdminOrderDetailsView extends GetView<AdminOrderDetailsController> {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
       appBar: AppBar(title: Text('Order Details', style: AppTextStyles.h3)),
+      bottomNavigationBar: Obx(() {
+        if (!controller.canCancel) return const SizedBox.shrink();
+        return Container(
+          padding: const EdgeInsets.all(AppSizes.lg),
+          decoration: BoxDecoration(color: AppColors.surface, boxShadow: AppDecorations.softShadow),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              width: double.infinity,
+              height: AppSizes.buttonHeight,
+              child: OutlinedButton.icon(
+                onPressed: controller.isCancelling.value
+                    ? null
+                    : () async {
+                        final confirmed = await ConfirmDialog.show(
+                          title: 'Cancel Order?',
+                          message: 'This order will be cancelled. This cannot be undone.',
+                          confirmLabel: 'Cancel Order',
+                          cancelLabel: 'Keep Order',
+                        );
+                        if (confirmed) controller.cancelOrder();
+                      },
+                icon: controller.isCancelling.value
+                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.2, color: AppColors.error))
+                    : const Icon(Icons.cancel_outlined, color: AppColors.error),
+                label: Text('Cancel Order', style: AppTextStyles.label.copyWith(color: AppColors.error)),
+                style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.error)),
+              ),
+            ),
+          ),
+        );
+      }),
       body: Obx(() {
         final order = controller.order.value;
         if (controller.isLoading.value || order == null) {
