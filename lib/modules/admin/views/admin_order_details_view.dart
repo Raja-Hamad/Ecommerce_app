@@ -6,10 +6,12 @@ import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/order_summary_card.dart';
 import '../../../domain/entities/order.dart';
 import '../controllers/admin_order_details_controller.dart';
 import '../utils/order_status_helpers.dart';
+import '../widgets/admin_filter_widgets.dart';
 
 class AdminOrderDetailsView extends GetView<AdminOrderDetailsController> {
   const AdminOrderDetailsView({super.key});
@@ -60,6 +62,10 @@ class AdminOrderDetailsView extends GetView<AdminOrderDetailsController> {
                   ],
                 ),
               ),
+              const SizedBox(height: AppSizes.xl),
+              Text('Update Status', style: AppTextStyles.h4),
+              const SizedBox(height: AppSizes.sm),
+              _StatusUpdateField(order: order),
               const SizedBox(height: AppSizes.xl),
               Text('Customer', style: AppTextStyles.h4),
               const SizedBox(height: AppSizes.sm),
@@ -164,5 +170,90 @@ class AdminOrderDetailsView extends GetView<AdminOrderDetailsController> {
         );
       }),
     );
+  }
+}
+
+class _StatusUpdateField extends StatelessWidget {
+  const _StatusUpdateField({required this.order});
+
+  final Order order;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<AdminOrderDetailsController>();
+    final selectable = controller.selectableStatuses;
+    final (currentColor, currentLabel) = orderStatusConfig(order.status);
+
+    // Delivered is the final stage and cancelled orders can't be
+    // progressed — nothing left to pick from either way.
+    if (selectable.length <= 1) {
+      return Container(
+        padding: const EdgeInsets.all(AppSizes.md),
+        decoration: AppDecorations.card(radius: AppSizes.radiusLg),
+        child: Row(
+          children: [
+            Icon(Icons.lock_outline_rounded, size: AppSizes.iconSm, color: AppColors.textHint),
+            const SizedBox(width: AppSizes.sm),
+            Expanded(
+              child: Text(
+                order.status == OrderStatus.cancelled
+                    ? 'This order was cancelled — status can no longer be changed.'
+                    : 'Order delivered — no further status changes possible.',
+                style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Obx(() {
+      final isUpdating = controller.isUpdatingStatus.value;
+      return Material(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          onTap: isUpdating
+              ? null
+              : () => AdminOptionsSheet.show<OrderStatus>(
+                    context,
+                    title: 'Update Order Status',
+                    options: selectable.map((s) => (s, orderStatusConfig(s).$2)).toList(),
+                    selected: order.status,
+                    onSelect: (newStatus) async {
+                      if (newStatus == order.status) return;
+                      final label = orderStatusConfig(newStatus).$2;
+                      final confirmed = await ConfirmDialog.show(
+                        title: 'Mark as $label?',
+                        message: 'This will update the order status to "$label". This action cannot be reversed.',
+                        icon: Icons.local_shipping_outlined,
+                        confirmLabel: 'Confirm',
+                        isDestructive: false,
+                      );
+                      if (confirmed) controller.updateStatus(newStatus);
+                    },
+                  ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.border)),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 3),
+                  decoration: BoxDecoration(color: currentColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                  child: Text(currentLabel, style: AppTextStyles.labelSmall.copyWith(color: currentColor)),
+                ),
+                const Spacer(),
+                if (isUpdating)
+                  const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                else
+                  const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textHint),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

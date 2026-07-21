@@ -43,4 +43,7 @@ class OrderRepositoryImpl implements OrderRepository {
         sort: sort,
         page: page,
       );
+
+  @override
+  Future<void> updateOrderStatus(String orderId, String status) => _remote.updateOrderStatus(orderId, status);
 }

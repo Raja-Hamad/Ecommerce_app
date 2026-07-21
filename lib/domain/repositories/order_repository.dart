@@ -18,4 +18,5 @@ abstract class OrderRepository {
     String? sort,
     int page = 1,
   });
+  Future<void> updateOrderStatus(String orderId, String status);
 }

@@ -110,6 +110,25 @@ class Order {
 
   bool get isCancellable => status == OrderStatus.pending || status == OrderStatus.confirmed;
 
+  Order copyWith({OrderStatus? status}) {
+    return Order(
+      id: id,
+      items: items,
+      shippingAddress: shippingAddress,
+      totalAmount: totalAmount,
+      paymentMethod: paymentMethod,
+      paymentStatus: paymentStatus,
+      status: status ?? this.status,
+      discount: discount,
+      finalAmount: finalAmount,
+      createdAt: createdAt,
+      couponCode: couponCode,
+      stripePaymentIntentId: stripePaymentIntentId,
+      customerName: customerName,
+      customerEmail: customerEmail,
+    );
+  }
+
   factory Order.fromJson(Map<String, dynamic> json) {
     final totalAmount = (json['totalAmount'] as num?)?.toDouble() ?? 0;
     final user = json['user'];

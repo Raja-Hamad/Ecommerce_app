@@ -57,4 +57,8 @@ class OrderRemoteDataSource {
     final response = await _client.get(ApiEndpoints.adminAllOrders, query: query);
     return AdminOrdersPage.fromJson(response);
   }
+
+  Future<void> updateOrderStatus(String orderId, String status) async {
+    await _client.put(ApiEndpoints.orderStatus(orderId), body: {'status': status});
+  }
 }
