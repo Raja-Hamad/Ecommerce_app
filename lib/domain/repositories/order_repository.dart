@@ -1,3 +1,4 @@
+import '../entities/admin_orders_page.dart';
 import '../entities/order.dart';
 
 abstract class OrderRepository {
@@ -9,4 +10,12 @@ abstract class OrderRepository {
     required PaymentMethod paymentMethod,
   });
   Future<Order> cancelOrder(String orderId);
+  Future<AdminOrdersPage> getAllOrders({
+    String? search,
+    String? status,
+    String? paymentStatus,
+    String? paymentMethod,
+    String? sort,
+    int page = 1,
+  });
 }

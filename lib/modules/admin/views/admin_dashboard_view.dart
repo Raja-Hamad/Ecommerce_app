@@ -71,6 +71,7 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                           color: const Color(0xFFE8A33D),
                           value: '${stats?.totalOrders ?? 0}',
                           label: 'Total Orders',
+                          onTap: () => Get.toNamed(AppRoutes.adminOrders),
                         ),
                         _StatCard(
                           icon: Icons.local_offer_rounded,

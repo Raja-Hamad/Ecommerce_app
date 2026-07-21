@@ -12,6 +12,7 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../domain/entities/category.dart';
 import '../../../domain/entities/product.dart';
 import '../controllers/admin_products_controller.dart';
+import '../widgets/admin_filter_widgets.dart';
 
 class AdminProductsView extends GetView<AdminProductsController> {
   const AdminProductsView({super.key});
@@ -63,7 +64,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
                 Row(
                   children: [
                     Expanded(
-                      child: Obx(() => _FilterPill(
+                      child: Obx(() => AdminFilterPill(
                             label: controller.selectedCategory.value?.name ?? 'Category',
                             active: controller.selectedCategory.value != null,
                             onTap: () => _showCategorySheet(context),
@@ -71,7 +72,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
                     ),
                     const SizedBox(width: AppSizes.sm),
                     Expanded(
-                      child: Obx(() => _FilterPill(
+                      child: Obx(() => AdminFilterPill(
                             label: AdminProductsController.statusOptions
                                 .firstWhere((e) => e.$1 == controller.selectedStatus.value)
                                 .$2,
@@ -81,7 +82,7 @@ class AdminProductsView extends GetView<AdminProductsController> {
                     ),
                     const SizedBox(width: AppSizes.sm),
                     Expanded(
-                      child: Obx(() => _FilterPill(
+                      child: Obx(() => AdminFilterPill(
                             label: AdminProductsController.sortOptions.firstWhere((e) => e.$1 == controller.selectedSort.value).$2,
                             active: controller.selectedSort.value != null,
                             onTap: () => _showSortSheet(context),
@@ -129,132 +130,32 @@ class AdminProductsView extends GetView<AdminProductsController> {
   }
 
   void _showCategorySheet(BuildContext context) {
-    Get.bottomSheet(
-      _OptionsSheet<Category?>(
-        title: 'Filter by Category',
-        options: [(null, 'All Categories'), ...controller.categories.map((c) => (c, c.name))],
-        selected: controller.selectedCategory.value,
-        onSelect: controller.setCategory,
-      ),
-      backgroundColor: AppColors.surface,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusXl))),
+    AdminOptionsSheet.show<Category?>(
+      context,
+      title: 'Filter by Category',
+      options: [(null, 'All Categories'), ...controller.categories.map((c) => (c, c.name))],
+      selected: controller.selectedCategory.value,
+      onSelect: controller.setCategory,
     );
   }
 
   void _showStatusSheet(BuildContext context) {
-    Get.bottomSheet(
-      _OptionsSheet<String?>(
-        title: 'Filter by Status',
-        options: AdminProductsController.statusOptions,
-        selected: controller.selectedStatus.value,
-        onSelect: controller.setStatus,
-      ),
-      backgroundColor: AppColors.surface,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusXl))),
+    AdminOptionsSheet.show<String?>(
+      context,
+      title: 'Filter by Status',
+      options: AdminProductsController.statusOptions,
+      selected: controller.selectedStatus.value,
+      onSelect: controller.setStatus,
     );
   }
 
   void _showSortSheet(BuildContext context) {
-    Get.bottomSheet(
-      _OptionsSheet<String?>(
-        title: 'Sort By',
-        options: AdminProductsController.sortOptions,
-        selected: controller.selectedSort.value,
-        onSelect: controller.setSort,
-      ),
-      backgroundColor: AppColors.surface,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radiusXl))),
-    );
-  }
-}
-
-class _FilterPill extends StatelessWidget {
-  const _FilterPill({required this.label, required this.active, required this.onTap});
-
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: active ? AppColors.primaryLight : AppColors.surface,
-      borderRadius: BorderRadius.circular(AppSizes.radiusPill),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusPill),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.sm),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.radiusPill),
-            border: Border.all(color: active ? AppColors.primary : AppColors.border),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  label,
-                  style: AppTextStyles.labelSmall.copyWith(color: active ? AppColors.primary : AppColors.textSecondary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 2),
-              Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: active ? AppColors.primary : AppColors.textSecondary),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OptionsSheet<T> extends StatelessWidget {
-  const _OptionsSheet({required this.title, required this.options, required this.selected, required this.onSelect});
-
-  final String title;
-  final List<(T, String)> options;
-  final T selected;
-  final ValueChanged<T> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSizes.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg),
-              child: Text(title, style: AppTextStyles.h3),
-            ),
-            const SizedBox(height: AppSizes.sm),
-            Flexible(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  for (final option in options)
-                    ListTile(
-                      title: Text(option.$2, style: AppTextStyles.body),
-                      trailing: option.$1 == selected ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
-                      onTap: () {
-                        Get.back();
-                        onSelect(option.$1);
-                      },
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    AdminOptionsSheet.show<String?>(
+      context,
+      title: 'Sort By',
+      options: AdminProductsController.sortOptions,
+      selected: controller.selectedSort.value,
+      onSelect: controller.setSort,
     );
   }
 }

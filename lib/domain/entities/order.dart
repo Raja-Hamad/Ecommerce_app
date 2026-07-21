@@ -86,6 +86,8 @@ class Order {
     required this.createdAt,
     this.couponCode,
     this.stripePaymentIntentId,
+    this.customerName,
+    this.customerEmail,
   });
 
   final String id;
@@ -100,6 +102,9 @@ class Order {
   final DateTime createdAt;
   final String? couponCode;
   final String? stripePaymentIntentId;
+  // Only populated by admin-facing endpoints, which embed the customer.
+  final String? customerName;
+  final String? customerEmail;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
 
@@ -107,6 +112,7 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) {
     final totalAmount = (json['totalAmount'] as num?)?.toDouble() ?? 0;
+    final user = json['user'];
     return Order(
       id: (json['orderId'] ?? json['_id'] ?? json['id'] ?? '').toString(),
       items: (json['items'] as List<dynamic>? ?? [])
@@ -124,6 +130,8 @@ class Order {
       createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
       couponCode: json['coupon'] as String?,
       stripePaymentIntentId: json['stripePaymentIntentId'] as String?,
+      customerName: user is Map<String, dynamic> ? user['name'] as String? : null,
+      customerEmail: user is Map<String, dynamic> ? user['email'] as String? : null,
     );
   }
 }

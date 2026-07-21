@@ -1,3 +1,4 @@
+import '../../domain/entities/admin_orders_page.dart';
 import '../../domain/entities/order.dart';
 import '../../domain/repositories/order_repository.dart';
 import '../datasources/remote/order_remote_data_source.dart';
@@ -24,4 +25,22 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<Order> cancelOrder(String orderId) => _remote.cancelOrder(orderId);
+
+  @override
+  Future<AdminOrdersPage> getAllOrders({
+    String? search,
+    String? status,
+    String? paymentStatus,
+    String? paymentMethod,
+    String? sort,
+    int page = 1,
+  }) =>
+      _remote.getAllOrders(
+        search: search,
+        status: status,
+        paymentStatus: paymentStatus,
+        paymentMethod: paymentMethod,
+        sort: sort,
+        page: page,
+      );
 }
