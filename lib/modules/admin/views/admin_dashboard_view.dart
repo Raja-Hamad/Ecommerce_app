@@ -58,6 +58,7 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                           color: const Color(0xFF3B82F6),
                           value: '${stats?.totalUsers ?? 0}',
                           label: 'Total Users',
+                          onTap: () => Get.toNamed(AppRoutes.adminUsers),
                         ),
                         _StatCard(
                           icon: Icons.inventory_2_rounded,
@@ -126,14 +127,12 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 26,
-          height: 26,
-          decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(7)),
-          child: Icon(icon, size: 14, color: AppColors.primary),
+        Icon(icon, size: 15, color: AppColors.primary),
+        const SizedBox(width: 6),
+        Text(
+          title.toUpperCase(),
+          style: AppTextStyles.label.copyWith(color: AppColors.textPrimary, fontSize: 12.5, letterSpacing: 0.4),
         ),
-        const SizedBox(width: AppSizes.sm),
-        Text(title, style: AppTextStyles.h3),
       ],
     );
   }
@@ -177,8 +176,8 @@ class _DashboardHeader extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('WELCOME BACK', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, letterSpacing: 1.0)),
-                      Text(name, style: AppTextStyles.h3.copyWith(color: Colors.white)),
+                      Text('WELCOME BACK', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, fontSize: 10, letterSpacing: 0.8)),
+                      Text(name, style: AppTextStyles.h4.copyWith(color: Colors.white, fontSize: 16)),
                     ],
                   ),
                 ),
@@ -204,9 +203,9 @@ class _DashboardHeader extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSizes.xl),
-            Text('TOTAL REVENUE', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, letterSpacing: 1.0)),
+            Text('TOTAL REVENUE', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, fontSize: 10, letterSpacing: 0.8)),
             const SizedBox(height: 4),
-            Text(Formatters.currency(stats?.totalRevenue ?? 0), style: AppTextStyles.h1.copyWith(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w800)),
+            Text(Formatters.currency(stats?.totalRevenue ?? 0), style: AppTextStyles.h2.copyWith(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSizes.lg),
             Row(
               children: [
@@ -242,7 +241,7 @@ class _HeaderMiniStat extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(value, style: AppTextStyles.label.copyWith(color: Colors.white, fontSize: 15)),
+            Text(value, style: AppTextStyles.label.copyWith(color: Colors.white, fontSize: 13)),
             Text(label, style: AppTextStyles.caption.copyWith(color: Colors.white60, fontSize: 10)),
           ],
         ),
@@ -348,8 +347,8 @@ class _OrdersStatusCard extends StatelessWidget {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('$total', style: AppTextStyles.h2),
-                    Text('Orders', style: AppTextStyles.caption),
+                    Text('$total', style: AppTextStyles.h3.copyWith(fontSize: 18)),
+                    Text('Orders', style: AppTextStyles.caption.copyWith(fontSize: 11)),
                   ],
                 ),
               ],
@@ -577,8 +576,8 @@ class _MonthlySalesChart extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('TOTAL · ${data.length} MO.', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, letterSpacing: 0.5)),
-                  Text(Formatters.currency(total), style: AppTextStyles.h3),
+                  Text('TOTAL · ${data.length} MO.', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontSize: 10, letterSpacing: 0.5)),
+                  Text(Formatters.currency(total), style: AppTextStyles.h4.copyWith(fontSize: 16)),
                 ],
               ),
             ],

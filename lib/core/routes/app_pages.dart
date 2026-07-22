@@ -7,6 +7,7 @@ import '../../modules/admin/views/admin_order_details_view.dart';
 import '../../modules/admin/views/admin_orders_view.dart';
 import '../../modules/admin/views/admin_product_details_view.dart';
 import '../../modules/admin/views/admin_products_view.dart';
+import '../../modules/admin/views/admin_users_view.dart';
 import '../../modules/user/address/bindings/address_binding.dart';
 import '../../modules/user/address/views/add_address_view.dart';
 import '../../modules/user/address/views/address_view.dart';
@@ -62,6 +63,7 @@ class AppPages {
     GetPage(name: AppRoutes.adminCreateProduct, page: () => const AdminCreateProductView(), binding: AdminCreateProductBinding()),
     GetPage(name: AppRoutes.adminOrders, page: () => const AdminOrdersView(), binding: AdminOrdersBinding()),
     GetPage(name: AppRoutes.adminOrderDetails, page: () => const AdminOrderDetailsView(), binding: AdminOrderDetailsBinding()),
+    GetPage(name: AppRoutes.adminUsers, page: () => const AdminUsersView(), binding: AdminUsersBinding()),
     GetPage(name: AppRoutes.categories, page: () => const CategoriesView(), binding: CategoriesBinding()),
     GetPage(name: AppRoutes.productListing, page: () => const ProductListingView(), binding: ProductListingBinding()),
     GetPage(name: AppRoutes.productDetails, page: () => const ProductDetailsView(), binding: ProductDetailsBinding()),

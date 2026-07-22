@@ -4,6 +4,7 @@ class RecentUser {
   final String email;
   final String role;
   final String profileImage;
+  final String status;
 
   const RecentUser({
     required this.id,
@@ -11,7 +12,10 @@ class RecentUser {
     required this.email,
     required this.role,
     required this.profileImage,
+    this.status = 'active',
   });
+
+  bool get isActive => status.toLowerCase() == 'active';
 
   factory RecentUser.fromJson(Map<String, dynamic> json) {
     return RecentUser(
@@ -20,6 +24,7 @@ class RecentUser {
       email: json['email'] as String? ?? '',
       role: json['role'] as String? ?? 'user',
       profileImage: json['profileImage'] as String? ?? '',
+      status: json['status'] as String? ?? 'active',
     );
   }
 }
