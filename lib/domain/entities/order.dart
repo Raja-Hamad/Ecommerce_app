@@ -13,7 +13,7 @@ enum OrderStatus { pending, confirmed, shipped, delivered, cancelled }
 
 enum PaymentStatus { pending, paid, failed }
 
-OrderStatus _parseOrderStatus(String? value) {
+OrderStatus parseOrderStatus(String? value) {
   switch (value) {
     case 'confirmed':
       return OrderStatus.confirmed;
@@ -28,7 +28,7 @@ OrderStatus _parseOrderStatus(String? value) {
   }
 }
 
-PaymentStatus _parsePaymentStatus(String? value) {
+PaymentStatus parsePaymentStatus(String? value) {
   switch (value) {
     case 'paid':
       return PaymentStatus.paid;
@@ -140,8 +140,8 @@ class Order {
       shippingAddress: Address.fromJson(json['shippingAddress'] as Map<String, dynamic>? ?? const {}),
       totalAmount: totalAmount,
       paymentMethod: PaymentMethodApi.fromApi(json['paymentMethod'] as String?),
-      paymentStatus: _parsePaymentStatus(json['paymentStatus'] as String?),
-      status: _parseOrderStatus(json['status'] as String?),
+      paymentStatus: parsePaymentStatus(json['paymentStatus'] as String?),
+      status: parseOrderStatus(json['status'] as String?),
       discount: (json['discount'] as num?)?.toDouble() ?? 0,
       // The "my orders" list doesn't echo finalAmount when no coupon was
       // used, so fall back to totalAmount.

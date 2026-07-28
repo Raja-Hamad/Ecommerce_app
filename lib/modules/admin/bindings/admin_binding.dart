@@ -6,6 +6,7 @@ import '../controllers/admin_order_details_controller.dart';
 import '../controllers/admin_orders_controller.dart';
 import '../controllers/admin_product_details_controller.dart';
 import '../controllers/admin_products_controller.dart';
+import '../controllers/admin_user_details_controller.dart';
 import '../controllers/admin_users_controller.dart';
 
 class AdminBinding extends Bindings {
@@ -61,5 +62,12 @@ class AdminUsersBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => AdminUsersController());
+  }
+}
+
+class AdminUserDetailsBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AdminUserDetailsController());
   }
 }

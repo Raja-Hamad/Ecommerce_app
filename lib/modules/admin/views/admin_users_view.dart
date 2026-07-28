@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -130,9 +131,15 @@ class _AdminUserCard extends StatelessWidget {
     final isActive = user.isActive;
     final initial = user.name.isNotEmpty ? user.name[0].toUpperCase() : '?';
 
-    return Container(
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+      child: InkWell(
+        onTap: () => Get.toNamed(AppRoutes.adminUserDetails, arguments: user.id),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        child: Container(
       padding: const EdgeInsets.all(AppSizes.md),
-      decoration: AppDecorations.card(radius: AppSizes.radiusLg),
+      decoration: AppDecorations.card(radius: AppSizes.radiusLg, color: Colors.transparent),
       child: Row(
         children: [
           Container(
@@ -188,6 +195,8 @@ class _AdminUserCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+        ),
       ),
     );
   }

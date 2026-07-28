@@ -2,6 +2,7 @@ import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../domain/entities/admin_dashboard_stats.dart';
 import '../../../domain/entities/admin_products_page.dart';
+import '../../../domain/entities/admin_user_details.dart';
 import '../../../domain/entities/admin_users_page.dart';
 import '../../../domain/entities/monthly_sales.dart';
 import '../../../domain/entities/product.dart';
@@ -85,5 +86,10 @@ class AdminRemoteDataSource {
     };
     final response = await _client.get(ApiEndpoints.adminAllUsers, query: query);
     return AdminUsersPage.fromJson(response);
+  }
+
+  Future<AdminUserDetails> getUserDetails(String userId) async {
+    final response = await _client.get(ApiEndpoints.adminUserDetails(userId));
+    return AdminUserDetails.fromJson(response);
   }
 }

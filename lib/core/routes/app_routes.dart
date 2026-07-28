@@ -15,6 +15,7 @@ class AppRoutes {
   static const adminOrders = '/admin-orders';
   static const adminOrderDetails = '/admin-order-details';
   static const adminUsers = '/admin-users';
+  static const adminUserDetails = '/admin-user-details';
   static const home = '/home';
   static const categories = '/categories';
   static const productListing = '/product-listing';
