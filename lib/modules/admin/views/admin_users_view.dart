@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_network_image.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../domain/entities/recent_user.dart';
 import '../controllers/admin_users_controller.dart';
@@ -183,16 +184,34 @@ class _AdminUserCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSizes.sm),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 4),
-            decoration: BoxDecoration(
-              color: (isActive ? AppColors.success : AppColors.error).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-            ),
-            child: Text(
-              isActive ? 'Active' : 'Blocked',
-              style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                isActive ? 'Active' : 'Blocked',
+                style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
+              ),
+              Transform.scale(
+                scale: 0.75,
+                child: Switch(
+                  value: isActive,
+                  activeThumbColor: AppColors.success,
+                  onChanged: (value) async {
+                    final newStatus = value ? 'active' : 'blocked';
+                    final confirmed = await ConfirmDialog.show(
+                      title: value ? 'Activate User?' : 'Block User?',
+                      message: value
+                          ? '"${user.name}" will regain access to their account.'
+                          : '"${user.name}" will be blocked from signing in.',
+                      icon: value ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
+                      confirmLabel: value ? 'Activate' : 'Block',
+                      isDestructive: !value,
+                    );
+                    if (confirmed) Get.find<AdminUsersController>().updateStatus(user, newStatus);
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),

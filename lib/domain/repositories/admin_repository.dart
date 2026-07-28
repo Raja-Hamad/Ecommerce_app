@@ -19,4 +19,5 @@ abstract class AdminRepository {
   Future<List<Product>> getOutOfStockProducts();
   Future<AdminUsersPage> getAllUsers({String? search, String? status, String? sort, int page = 1});
   Future<AdminUserDetails> getUserDetails(String userId);
+  Future<void> updateUserStatus(String userId, String status);
 }

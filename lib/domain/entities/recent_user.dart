@@ -17,6 +17,17 @@ class RecentUser {
 
   bool get isActive => status.toLowerCase() == 'active';
 
+  RecentUser copyWith({String? status}) {
+    return RecentUser(
+      id: id,
+      name: name,
+      email: email,
+      role: role,
+      profileImage: profileImage,
+      status: status ?? this.status,
+    );
+  }
+
   factory RecentUser.fromJson(Map<String, dynamic> json) {
     return RecentUser(
       id: json['_id'] as String? ?? '',

@@ -7,7 +7,9 @@ import '../../../core/theme/app_decorations.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/app_network_image.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../domain/entities/admin_user_details.dart';
+import '../../../domain/entities/recent_user.dart';
 import '../controllers/admin_user_details_controller.dart';
 import '../utils/order_status_helpers.dart';
 
@@ -82,6 +84,10 @@ class AdminUserDetailsView extends GetView<AdminUserDetailsController> {
                 ),
               ),
               const SizedBox(height: AppSizes.xl),
+              Text('Account Status', style: AppTextStyles.h4),
+              const SizedBox(height: AppSizes.md),
+              _AccountStatusCard(user: user),
+              const SizedBox(height: AppSizes.xl),
               Text('Order Statistics', style: AppTextStyles.h4),
               const SizedBox(height: AppSizes.md),
               GridView.count(
@@ -133,6 +139,65 @@ class AdminUserDetailsView extends GetView<AdminUserDetailsController> {
           ),
         );
       }),
+    );
+  }
+}
+
+class _AccountStatusCard extends StatelessWidget {
+  const _AccountStatusCard({required this.user});
+
+  final RecentUser user;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<AdminUserDetailsController>();
+    final isActive = user.isActive;
+
+    return Container(
+      padding: const EdgeInsets.all(AppSizes.md),
+      decoration: AppDecorations.card(radius: AppSizes.radiusLg),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(color: (isActive ? AppColors.success : AppColors.error).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+            child: Icon(isActive ? Icons.lock_open_rounded : Icons.lock_outline_rounded, color: isActive ? AppColors.success : AppColors.error, size: 18),
+          ),
+          const SizedBox(width: AppSizes.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(isActive ? 'Account Active' : 'Account Blocked', style: AppTextStyles.bodyLarge),
+                Text(
+                  isActive ? 'This user can sign in and shop normally.' : 'This user cannot sign in.',
+                  style: AppTextStyles.caption,
+                ),
+              ],
+            ),
+          ),
+          Obx(() => controller.isUpdatingStatus.value
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : Switch(
+                  value: isActive,
+                  activeThumbColor: AppColors.success,
+                  onChanged: (value) async {
+                    final newStatus = value ? 'active' : 'blocked';
+                    final confirmed = await ConfirmDialog.show(
+                      title: value ? 'Activate User?' : 'Block User?',
+                      message: value
+                          ? '"${user.name}" will regain access to their account.'
+                          : '"${user.name}" will be blocked from signing in.',
+                      icon: value ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
+                      confirmLabel: value ? 'Activate' : 'Block',
+                      isDestructive: !value,
+                    );
+                    if (confirmed) controller.updateStatus(newStatus);
+                  },
+                )),
+        ],
+      ),
     );
   }
 }

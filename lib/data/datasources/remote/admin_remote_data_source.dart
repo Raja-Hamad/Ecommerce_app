@@ -92,4 +92,8 @@ class AdminRemoteDataSource {
     final response = await _client.get(ApiEndpoints.adminUserDetails(userId));
     return AdminUserDetails.fromJson(response);
   }
+
+  Future<void> updateUserStatus(String userId, String status) async {
+    await _client.put(ApiEndpoints.adminUserStatus(userId), body: {'status': status});
+  }
 }

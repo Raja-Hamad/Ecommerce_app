@@ -86,6 +86,17 @@ class AdminUsersController extends GetxController {
     await fetch();
   }
 
+  Future<void> updateStatus(RecentUser user, String newStatus) async {
+    try {
+      await _repo.updateUserStatus(user.id, newStatus);
+      final index = users.indexWhere((u) => u.id == user.id);
+      if (index != -1) users[index] = user.copyWith(status: newStatus);
+      AppSnackbar.success('User status updated');
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to update status. Please try again.');
+    }
+  }
+
   @override
   void onClose() {
     _debounce?.cancel();

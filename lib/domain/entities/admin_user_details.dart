@@ -76,6 +76,14 @@ class AdminUserDetails {
     required this.recentOrders,
   });
 
+  AdminUserDetails copyWith({RecentUser? user}) {
+    return AdminUserDetails(
+      user: user ?? this.user,
+      statistics: statistics,
+      recentOrders: recentOrders,
+    );
+  }
+
   factory AdminUserDetails.fromJson(Map<String, dynamic> json) {
     final ordersJson = json['recentOrders'] as List<dynamic>? ?? [];
     return AdminUserDetails(

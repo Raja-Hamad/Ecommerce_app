@@ -62,4 +62,9 @@ class AdminRepositoryImpl implements AdminRepository {
   Future<AdminUserDetails> getUserDetails(String userId) {
     return _remote.getUserDetails(userId);
   }
+
+  @override
+  Future<void> updateUserStatus(String userId, String status) {
+    return _remote.updateUserStatus(userId, status);
+  }
 }

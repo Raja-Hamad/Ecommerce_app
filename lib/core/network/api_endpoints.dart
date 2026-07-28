@@ -60,4 +60,5 @@ class ApiEndpoints {
   static const String adminOutOfStockProducts = 'admin/products/out-of-stock';
   static const String adminAllUsers = 'admin/users/total';
   static String adminUserDetails(String userId) => 'admin/users/$userId';
+  static String adminUserStatus(String userId) => 'admin/users/$userId/status';
 }

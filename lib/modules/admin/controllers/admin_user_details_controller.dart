@@ -9,6 +9,7 @@ class AdminUserDetailsController extends GetxController {
 
   final Rxn<AdminUserDetails> details = Rxn<AdminUserDetails>();
   final RxBool isLoading = true.obs;
+  final RxBool isUpdatingStatus = false.obs;
 
   @override
   void onInit() {
@@ -24,6 +25,21 @@ class AdminUserDetailsController extends GetxController {
       AppSnackbar.error(e is AppException ? e.message : 'Failed to load user. Please try again.');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> updateStatus(String newStatus) async {
+    final current = details.value;
+    if (current == null) return;
+    isUpdatingStatus.value = true;
+    try {
+      await _repo.updateUserStatus(current.user.id, newStatus);
+      details.value = current.copyWith(user: current.user.copyWith(status: newStatus));
+      AppSnackbar.success('User status updated');
+    } catch (e) {
+      AppSnackbar.error(e is AppException ? e.message : 'Failed to update status. Please try again.');
+    } finally {
+      isUpdatingStatus.value = false;
     }
   }
 }
