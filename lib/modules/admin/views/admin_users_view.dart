@@ -19,7 +19,8 @@ class AdminUsersView extends GetView<AdminUsersController> {
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
     scrollController.addListener(() {
-      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
         controller.loadMore();
       }
     });
@@ -30,20 +31,36 @@ class AdminUsersView extends GetView<AdminUsersController> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.md, AppSizes.lg, AppSizes.sm),
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.lg,
+              AppSizes.md,
+              AppSizes.lg,
+              AppSizes.sm,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusPill), boxShadow: AppDecorations.softShadow),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+                    boxShadow: AppDecorations.softShadow,
+                  ),
                   child: TextField(
                     controller: controller.searchCtrl,
                     onChanged: controller.onSearchChanged,
                     style: AppTextStyles.body,
                     decoration: InputDecoration(
                       hintText: 'Search by name or email...',
-                      prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textHint),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusPill), borderSide: BorderSide.none),
+                      prefixIcon: const Icon(
+                        Icons.search_rounded,
+                        color: AppColors.textHint,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSizes.radiusPill,
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
                       filled: true,
                       fillColor: AppColors.surface,
                     ),
@@ -53,31 +70,43 @@ class AdminUsersView extends GetView<AdminUsersController> {
                 Row(
                   children: [
                     Expanded(
-                      child: Obx(() => AdminFilterPill(
-                            label: AdminUsersController.statusOptions.firstWhere((e) => e.$1 == controller.selectedStatus.value).$2,
-                            active: controller.selectedStatus.value != null,
-                            onTap: () => AdminOptionsSheet.show<String?>(
-                              context,
-                              title: 'Filter by Status',
-                              options: AdminUsersController.statusOptions,
-                              selected: controller.selectedStatus.value,
-                              onSelect: controller.setStatus,
-                            ),
-                          )),
+                      child: Obx(
+                        () => AdminFilterPill(
+                          label: AdminUsersController.statusOptions
+                              .firstWhere(
+                                (e) => e.$1 == controller.selectedStatus.value,
+                              )
+                              .$2,
+                          active: controller.selectedStatus.value != null,
+                          onTap: () => AdminOptionsSheet.show<String?>(
+                            context,
+                            title: 'Filter by Status',
+                            options: AdminUsersController.statusOptions,
+                            selected: controller.selectedStatus.value,
+                            onSelect: controller.setStatus,
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: AppSizes.sm),
                     Expanded(
-                      child: Obx(() => AdminFilterPill(
-                            label: AdminUsersController.sortOptions.firstWhere((e) => e.$1 == controller.selectedSort.value).$2,
-                            active: controller.selectedSort.value != null,
-                            onTap: () => AdminOptionsSheet.show<String?>(
-                              context,
-                              title: 'Sort By',
-                              options: AdminUsersController.sortOptions,
-                              selected: controller.selectedSort.value,
-                              onSelect: controller.setSort,
-                            ),
-                          )),
+                      child: Obx(
+                        () => AdminFilterPill(
+                          label: AdminUsersController.sortOptions
+                              .firstWhere(
+                                (e) => e.$1 == controller.selectedSort.value,
+                              )
+                              .$2,
+                          active: controller.selectedSort.value != null,
+                          onTap: () => AdminOptionsSheet.show<String?>(
+                            context,
+                            title: 'Sort By',
+                            options: AdminUsersController.sortOptions,
+                            selected: controller.selectedSort.value,
+                            onSelect: controller.setSort,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -90,24 +119,40 @@ class AdminUsersView extends GetView<AdminUsersController> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (controller.users.isEmpty) {
-                return const EmptyState(icon: Icons.people_outline_rounded, title: 'No users found', message: 'Try adjusting your search or filters');
+                return const EmptyState(
+                  icon: Icons.people_outline_rounded,
+                  title: 'No users found',
+                  message: 'Try adjusting your search or filters',
+                );
               }
               return RefreshIndicator(
                 onRefresh: () => controller.fetch(reset: true),
                 color: AppColors.primary,
                 child: ListView.separated(
                   controller: scrollController,
-                  padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.sm, AppSizes.lg, AppSizes.xxl),
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSizes.lg,
+                    AppSizes.sm,
+                    AppSizes.lg,
+                    AppSizes.xxl,
+                  ),
                   itemCount: controller.users.length + 1,
-                  separatorBuilder: (_, _) => const SizedBox(height: AppSizes.md),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: AppSizes.md),
                   itemBuilder: (context, index) {
                     if (index == controller.users.length) {
-                      return Obx(() => controller.isLoadingMore.value
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(vertical: AppSizes.lg),
-                              child: Center(child: CircularProgressIndicator()),
-                            )
-                          : const SizedBox.shrink());
+                      return Obx(
+                        () => controller.isLoadingMore.value
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: AppSizes.lg,
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      );
                     }
                     return _AdminUserCard(user: controller.users[index]);
                   },
@@ -136,85 +181,133 @@ class _AdminUserCard extends StatelessWidget {
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
       child: InkWell(
-        onTap: () => Get.toNamed(AppRoutes.adminUserDetails, arguments: user.id),
+        onTap: () =>
+            Get.toNamed(AppRoutes.adminUserDetails, arguments: user.id),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         child: Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: AppDecorations.card(radius: AppSizes.radiusLg, color: Colors.transparent),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: isAdmin ? AppColors.accent : AppColors.border, width: 2),
-            ),
-            child: ClipOval(
-              child: Container(
-                color: AppColors.primaryLight,
-                child: user.profileImage.isNotEmpty
-                    ? AppNetworkImage(url: user.profileImage)
-                    : Center(child: Text(initial, style: AppTextStyles.label.copyWith(color: AppColors.primary))),
-              ),
-            ),
+          padding: const EdgeInsets.all(AppSizes.md),
+          decoration: AppDecorations.card(
+            radius: AppSizes.radiusLg,
+            color: Colors.transparent,
           ),
-          const SizedBox(width: AppSizes.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isAdmin ? AppColors.accent : AppColors.border,
+                    width: 2,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Container(
+                    color: AppColors.primaryLight,
+                    child: user.profileImage.isNotEmpty
+                        ? AppNetworkImage(url: user.profileImage)
+                        : Center(
+                            child: Text(
+                              initial,
+                              style: AppTextStyles.label.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSizes.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(child: Text(user.name, style: AppTextStyles.bodyLarge, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                    if (isAdmin) ...[
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                        decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-                        child: Text('Admin', style: AppTextStyles.labelSmall.copyWith(color: AppColors.accent, fontSize: 10)),
-                      ),
-                    ],
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            user.name,
+                            style: AppTextStyles.bodyLarge,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (isAdmin) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.accent.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusSm,
+                              ),
+                            ),
+                            child: Text(
+                              'Admin',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: AppColors.accent,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      user.email,
+                      style: AppTextStyles.caption,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 2),
-                Text(user.email, style: AppTextStyles.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
-              ],
-            ),
-          ),
-          const SizedBox(width: AppSizes.sm),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                isActive ? 'Active' : 'Blocked',
-                style: AppTextStyles.labelSmall.copyWith(color: isActive ? AppColors.success : AppColors.error),
               ),
-              Transform.scale(
-                scale: 0.75,
-                child: Switch(
-                  value: isActive,
-                  activeThumbColor: AppColors.success,
-                  onChanged: (value) async {
-                    final newStatus = value ? 'active' : 'blocked';
-                    final confirmed = await ConfirmDialog.show(
-                      title: value ? 'Activate User?' : 'Block User?',
-                      message: value
-                          ? '"${user.name}" will regain access to their account.'
-                          : '"${user.name}" will be blocked from signing in.',
-                      icon: value ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
-                      confirmLabel: value ? 'Activate' : 'Block',
-                      isDestructive: !value,
-                    );
-                    if (confirmed) Get.find<AdminUsersController>().updateStatus(user, newStatus);
-                  },
-                ),
+              const SizedBox(width: AppSizes.sm),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isActive ? 'Active' : 'Blocked',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isActive ? AppColors.success : AppColors.error,
+                    ),
+                  ),
+                  Transform.scale(
+                    scale: 0.75,
+                    child: Switch(
+                      value: isActive,
+                      activeThumbColor: AppColors.success,
+                      onChanged: (value) async {
+                        final newStatus = value ? 'active' : 'blocked';
+                        final confirmed = await ConfirmDialog.show(
+                          title: value ? 'Activate User?' : 'Block User?',
+                          message: value
+                              ? '"${user.name}" will regain access to their account.'
+                              : '"${user.name}" will be blocked from signing in.',
+                          icon: value
+                              ? Icons.lock_open_rounded
+                              : Icons.lock_outline_rounded,
+                          confirmLabel: value ? 'Activate' : 'Block',
+                          isDestructive: !value,
+                        );
+                        if (confirmed)
+                          Get.find<AdminUsersController>().updateStatus(
+                            user,
+                            newStatus,
+                          );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
         ),
       ),
     );

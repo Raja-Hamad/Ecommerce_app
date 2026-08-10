@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -10,8 +11,13 @@ import 'core/constants/app_strings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = StripeConfig.publishableKey;
-  await Stripe.instance.applySettings();
+  // flutter_stripe's web implementation reaches into dart:io Platform
+  // (Platform.isIOS), which throws on web. Payments aren't reachable there
+  // yet, so just skip Stripe setup on web instead of crashing at startup.
+  if (!kIsWeb) {
+    Stripe.publishableKey = StripeConfig.publishableKey;
+    await Stripe.instance.applySettings();
+  }
   runApp(const MyApp());
 }
 

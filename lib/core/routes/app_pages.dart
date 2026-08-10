@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
 import '../../modules/admin/bindings/admin_binding.dart';
+import '../../modules/admin/views/admin_categories_view.dart';
+import '../../modules/admin/views/admin_create_category_view.dart';
 import '../../modules/admin/views/admin_dashboard_view.dart';
 import '../../modules/admin/views/admin_create_product_view.dart';
+import '../../modules/admin/views/admin_edit_category_view.dart';
 import '../../modules/admin/views/admin_edit_product_view.dart';
 import '../../modules/admin/views/admin_order_details_view.dart';
 import '../../modules/admin/views/admin_orders_view.dart';
@@ -66,6 +69,9 @@ class AppPages {
     GetPage(name: AppRoutes.adminOrderDetails, page: () => const AdminOrderDetailsView(), binding: AdminOrderDetailsBinding()),
     GetPage(name: AppRoutes.adminUsers, page: () => const AdminUsersView(), binding: AdminUsersBinding()),
     GetPage(name: AppRoutes.adminUserDetails, page: () => const AdminUserDetailsView(), binding: AdminUserDetailsBinding()),
+    GetPage(name: AppRoutes.adminCategories, page: () => const AdminCategoriesView(), binding: AdminCategoriesBinding()),
+    GetPage(name: AppRoutes.adminCreateCategory, page: () => const AdminCreateCategoryView(), binding: AdminCreateCategoryBinding()),
+    GetPage(name: AppRoutes.adminEditCategory, page: () => const AdminEditCategoryView(), binding: AdminEditCategoryBinding()),
     GetPage(name: AppRoutes.categories, page: () => const CategoriesView(), binding: CategoriesBinding()),
     GetPage(name: AppRoutes.productListing, page: () => const ProductListingView(), binding: ProductListingBinding()),
     GetPage(name: AppRoutes.productDetails, page: () => const ProductDetailsView(), binding: ProductDetailsBinding()),

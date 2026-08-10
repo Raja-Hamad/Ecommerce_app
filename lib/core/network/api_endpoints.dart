@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://192.168.1.2:3000/';
+  static const String baseUrl = 'http://192.168.1.18:3000/';
 
   // Auth
   static const String register = 'users/register';
@@ -15,6 +15,8 @@ class ApiEndpoints {
   static const String products = 'products';
   static const String createProduct = 'products/create';
   static const String categories = 'products/categories';
+  static const String createCategory = 'products/category/create';
+  static String categoryById(String id) => 'products/category/$id';
   static String productById(String id) => 'products/$id';
   static String productStatus(String id) => 'products/$id/status';
   static String addReview(String productId) => 'products/$productId/reviews';
@@ -61,4 +63,5 @@ class ApiEndpoints {
   static const String adminAllUsers = 'admin/users/total';
   static String adminUserDetails(String userId) => 'admin/users/$userId';
   static String adminUserStatus(String userId) => 'admin/users/$userId/status';
+
 }

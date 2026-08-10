@@ -36,13 +36,24 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              _DashboardHeader(name: auth.user.value?.name ?? 'Admin', stats: stats),
+              _DashboardHeader(
+                name: auth.user.value?.name ?? 'Admin',
+                stats: stats,
+              ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.xl, AppSizes.lg, AppSizes.xxl),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSizes.lg,
+                  AppSizes.xl,
+                  AppSizes.lg,
+                  AppSizes.xxl,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _SectionTitle(icon: Icons.dashboard_customize_rounded, title: 'Overview'),
+                    const _SectionTitle(
+                      icon: Icons.dashboard_customize_rounded,
+                      title: 'Overview',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     GridView.count(
                       padding: EdgeInsets.zero,
@@ -82,28 +93,73 @@ class AdminDashboardView extends GetView<AdminDashboardController> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: AppSizes.md),
+                    Material(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                        onTap: () => Get.toNamed(AppRoutes.adminCategories),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.sm),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.category_rounded, size: 16, color: AppColors.primary),
+                              const SizedBox(width: AppSizes.sm),
+                              Expanded(child: Text('Manage Categories', style: AppTextStyles.label)),
+                              const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textHint),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.warning_amber_rounded, title: 'Inventory Alerts'),
+                    const _SectionTitle(
+                      icon: Icons.warning_amber_rounded,
+                      title: 'Inventory Alerts',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     const _InventoryAlertsCard(),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.show_chart_rounded, title: 'Monthly Sales'),
+                    const _SectionTitle(
+                      icon: Icons.show_chart_rounded,
+                      title: 'Monthly Sales',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     _MonthlySalesChart(data: controller.monthlySales),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.pie_chart_rounded, title: 'Orders Status'),
+                    const _SectionTitle(
+                      icon: Icons.pie_chart_rounded,
+                      title: 'Orders Status',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     _OrdersStatusCard(stats: stats),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.history_rounded, title: 'Recent Orders'),
+                    const _SectionTitle(
+                      icon: Icons.history_rounded,
+                      title: 'Recent Orders',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     _RecentOrdersCard(orders: controller.recentOrders),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.local_fire_department_rounded, title: 'Top Selling Products'),
+                    const _SectionTitle(
+                      icon: Icons.local_fire_department_rounded,
+                      title: 'Top Selling Products',
+                    ),
                     const SizedBox(height: AppSizes.md),
-                    _TopSellingProductsList(products: controller.topSellingProducts),
+                    _TopSellingProductsList(
+                      products: controller.topSellingProducts,
+                    ),
                     const SizedBox(height: AppSizes.xl),
-                    const _SectionTitle(icon: Icons.person_add_alt_1_rounded, title: 'Recent Users'),
+                    const _SectionTitle(
+                      icon: Icons.person_add_alt_1_rounded,
+                      title: 'Recent Users',
+                    ),
                     const SizedBox(height: AppSizes.md),
                     _RecentUsersList(users: controller.recentUsers),
                   ],
@@ -131,7 +187,11 @@ class _SectionTitle extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           title.toUpperCase(),
-          style: AppTextStyles.label.copyWith(color: AppColors.textPrimary, fontSize: 12.5, letterSpacing: 0.4),
+          style: AppTextStyles.label.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: 12.5,
+            letterSpacing: 0.4,
+          ),
         ),
       ],
     );
@@ -148,11 +208,28 @@ class _DashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.xl, AppSizes.lg, AppSizes.xl),
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.lg,
+        AppSizes.xl,
+        AppSizes.lg,
+        AppSizes.xl,
+      ),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryDark], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppSizes.radiusXl)),
-        boxShadow: [BoxShadow(color: AppColors.primaryDark.withValues(alpha: 0.35), blurRadius: 24, offset: const Offset(0, 10))],
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(AppSizes.radiusXl),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryDark.withValues(alpha: 0.35),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: SafeArea(
         bottom: false,
@@ -167,27 +244,50 @@ class _DashboardHeader extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.25),
+                    ),
                   ),
-                  child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 24),
+                  child: const Icon(
+                    Icons.admin_panel_settings_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
                 const SizedBox(width: AppSizes.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('WELCOME BACK', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, fontSize: 10, letterSpacing: 0.8)),
-                      Text(name, style: AppTextStyles.h4.copyWith(color: Colors.white, fontSize: 16)),
+                      Text(
+                        'WELCOME BACK',
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: Colors.white60,
+                          fontSize: 10,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      Text(
+                        name,
+                        style: AppTextStyles.h4.copyWith(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusMd)),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                  ),
                   child: IconButton(
                     onPressed: () async {
                       final confirmed = await ConfirmDialog.show(
                         title: 'Logout?',
-                        message: 'Are you sure you want to logout of your admin account?',
+                        message:
+                            'Are you sure you want to logout of your admin account?',
                         icon: Icons.logout_rounded,
                         confirmLabel: 'Logout',
                       );
@@ -197,23 +297,67 @@ class _DashboardHeader extends StatelessWidget {
                         Get.offAllNamed(AppRoutes.login);
                       }
                     },
-                    icon: const Icon(Icons.logout_rounded, color: Colors.white, size: 20),
+                    icon: const Icon(
+                      Icons.logout_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: AppSizes.xl),
-            Text('TOTAL REVENUE', style: AppTextStyles.labelSmall.copyWith(color: Colors.white60, fontSize: 10, letterSpacing: 0.8)),
+            Text(
+              'TOTAL REVENUE',
+              style: AppTextStyles.labelSmall.copyWith(
+                color: Colors.white60,
+                fontSize: 10,
+                letterSpacing: 0.8,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(Formatters.currency(stats?.totalRevenue ?? 0), style: AppTextStyles.h2.copyWith(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700)),
+            Text(
+              Formatters.currency(stats?.totalRevenue ?? 0),
+              style: AppTextStyles.h2.copyWith(
+                color: Colors.white,
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             const SizedBox(height: AppSizes.lg),
             Row(
               children: [
-                Expanded(child: _HeaderMiniStat(icon: Icons.receipt_long_rounded, value: '${stats?.totalOrders ?? 0}', label: 'Orders')),
-                Container(width: 1, height: 34, color: Colors.white.withValues(alpha: 0.18)),
-                Expanded(child: _HeaderMiniStat(icon: Icons.people_alt_rounded, value: '${stats?.totalUsers ?? 0}', label: 'Users')),
-                Container(width: 1, height: 34, color: Colors.white.withValues(alpha: 0.18)),
-                Expanded(child: _HeaderMiniStat(icon: Icons.inventory_2_rounded, value: '${stats?.totalProducts ?? 0}', label: 'Products')),
+                Expanded(
+                  child: _HeaderMiniStat(
+                    icon: Icons.receipt_long_rounded,
+                    value: '${stats?.totalOrders ?? 0}',
+                    label: 'Orders',
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 34,
+                  color: Colors.white.withValues(alpha: 0.18),
+                ),
+                Expanded(
+                  child: _HeaderMiniStat(
+                    icon: Icons.people_alt_rounded,
+                    value: '${stats?.totalUsers ?? 0}',
+                    label: 'Users',
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 34,
+                  color: Colors.white.withValues(alpha: 0.18),
+                ),
+                Expanded(
+                  child: _HeaderMiniStat(
+                    icon: Icons.inventory_2_rounded,
+                    value: '${stats?.totalProducts ?? 0}',
+                    label: 'Products',
+                  ),
+                ),
               ],
             ),
           ],
@@ -224,7 +368,11 @@ class _DashboardHeader extends StatelessWidget {
 }
 
 class _HeaderMiniStat extends StatelessWidget {
-  const _HeaderMiniStat({required this.icon, required this.value, required this.label});
+  const _HeaderMiniStat({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
 
   final IconData icon;
   final String value;
@@ -241,8 +389,20 @@ class _HeaderMiniStat extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(value, style: AppTextStyles.label.copyWith(color: Colors.white, fontSize: 13)),
-            Text(label, style: AppTextStyles.caption.copyWith(color: Colors.white60, fontSize: 10)),
+            Text(
+              value,
+              style: AppTextStyles.label.copyWith(
+                color: Colors.white,
+                fontSize: 13,
+              ),
+            ),
+            Text(
+              label,
+              style: AppTextStyles.caption.copyWith(
+                color: Colors.white60,
+                fontSize: 10,
+              ),
+            ),
           ],
         ),
       ],
@@ -251,7 +411,13 @@ class _HeaderMiniStat extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  const _StatCard({required this.icon, required this.color, required this.value, required this.label, this.onTap});
+  const _StatCard({
+    required this.icon,
+    required this.color,
+    required this.value,
+    required this.label,
+    this.onTap,
+  });
 
   final IconData icon;
   final Color color;
@@ -264,10 +430,20 @@ class _StatCard extends StatelessWidget {
     final card = Container(
       padding: const EdgeInsets.all(AppSizes.md),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [color.withValues(alpha: 0.08), AppColors.surface], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: LinearGradient(
+          colors: [color.withValues(alpha: 0.08), AppColors.surface],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         border: Border.all(color: color.withValues(alpha: 0.18)),
-        boxShadow: [BoxShadow(color: color.withValues(alpha: 0.10), blurRadius: 16, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.10),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,14 +451,30 @@ class _StatCard extends StatelessWidget {
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppSizes.radiusSm), boxShadow: [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 10, offset: const Offset(0, 4))]),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.35),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
             child: Icon(icon, color: Colors.white, size: 18),
           ),
           const Spacer(),
           Text(value, style: AppTextStyles.h1.copyWith(fontSize: 16)),
           const SizedBox(height: 2),
-          Text(label.toUpperCase(), style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, letterSpacing: 0.5,
-          fontSize: 10)),
+          Text(
+            label.toUpperCase(),
+            style: AppTextStyles.labelSmall.copyWith(
+              color: AppColors.textSecondary,
+              letterSpacing: 0.5,
+              fontSize: 10,
+            ),
+          ),
         ],
       ),
     );
@@ -319,7 +511,13 @@ class _OrdersStatusCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -337,18 +535,41 @@ class _OrdersStatusCard extends StatelessWidget {
                     sections: hasData
                         ? [
                             if (pending > 0)
-                              PieChartSectionData(value: pending.toDouble(), color: AppColors.accent, radius: 20, showTitle: false),
+                              PieChartSectionData(
+                                value: pending.toDouble(),
+                                color: AppColors.accent,
+                                radius: 20,
+                                showTitle: false,
+                              ),
                             if (completed > 0)
-                              PieChartSectionData(value: completed.toDouble(), color: AppColors.success, radius: 20, showTitle: false),
+                              PieChartSectionData(
+                                value: completed.toDouble(),
+                                color: AppColors.success,
+                                radius: 20,
+                                showTitle: false,
+                              ),
                           ]
-                        : [PieChartSectionData(value: 1, color: AppColors.border, radius: 20, showTitle: false)],
+                        : [
+                            PieChartSectionData(
+                              value: 1,
+                              color: AppColors.border,
+                              radius: 20,
+                              showTitle: false,
+                            ),
+                          ],
                   ),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('$total', style: AppTextStyles.h3.copyWith(fontSize: 18)),
-                    Text('Orders', style: AppTextStyles.caption.copyWith(fontSize: 11)),
+                    Text(
+                      '$total',
+                      style: AppTextStyles.h3.copyWith(fontSize: 18),
+                    ),
+                    Text(
+                      'Orders',
+                      style: AppTextStyles.caption.copyWith(fontSize: 11),
+                    ),
                   ],
                 ),
               ],
@@ -422,7 +643,13 @@ class _RecentOrdersCard extends StatelessWidget {
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
       border: Border.all(color: AppColors.border),
-      boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.textPrimary.withValues(alpha: 0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 6),
+        ),
+      ],
     );
 
     if (orders.isEmpty) {
@@ -432,9 +659,18 @@ class _RecentOrdersCard extends StatelessWidget {
         decoration: cardDecoration,
         child: Column(
           children: [
-            const Icon(Icons.receipt_long_rounded, color: AppColors.textHint, size: 32),
+            const Icon(
+              Icons.receipt_long_rounded,
+              color: AppColors.textHint,
+              size: 32,
+            ),
             const SizedBox(height: AppSizes.sm),
-            Text('No recent orders', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+            Text(
+              'No recent orders',
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       );
@@ -448,7 +684,13 @@ class _RecentOrdersCard extends StatelessWidget {
         children: [
           for (int i = 0; i < orders.length; i++) ...[
             _RecentOrderTile(order: orders[i]),
-            if (i != orders.length - 1) const Divider(height: 1, indent: AppSizes.lg, endIndent: AppSizes.lg, color: AppColors.border),
+            if (i != orders.length - 1)
+              const Divider(
+                height: 1,
+                indent: AppSizes.lg,
+                endIndent: AppSizes.lg,
+                color: AppColors.border,
+              ),
           ],
         ],
       ),
@@ -463,55 +705,95 @@ class _RecentOrderTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (statusColor, statusLabel) = _RecentOrdersCard._orderStatusConfig(order.orderStatus);
-    final (paymentColor, paymentIcon) = _RecentOrdersCard._paymentStatusConfig(order.paymentStatus);
-    final initial = order.customerName.isNotEmpty ? order.customerName[0].toUpperCase() : '?';
+    final (statusColor, statusLabel) = _RecentOrdersCard._orderStatusConfig(
+      order.orderStatus,
+    );
+    final (paymentColor, paymentIcon) = _RecentOrdersCard._paymentStatusConfig(
+      order.paymentStatus,
+    );
+    final initial = order.customerName.isNotEmpty
+        ? order.customerName[0].toUpperCase()
+        : '?';
 
     return InkWell(
-      onTap: () => Get.toNamed(AppRoutes.adminOrderDetails, arguments: order.orderId),
+      onTap: () =>
+          Get.toNamed(AppRoutes.adminOrderDetails, arguments: order.orderId),
       borderRadius: BorderRadius.circular(AppSizes.radiusSm),
       child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.lg, vertical: AppSizes.sm),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
-            child: Center(child: Text(initial, style: AppTextStyles.label.copyWith(color: AppColors.primary))),
-          ),
-          const SizedBox(width: AppSizes.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.lg,
+          vertical: AppSizes.sm,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.primaryLight,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  initial,
+                  style: AppTextStyles.label.copyWith(color: AppColors.primary),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSizes.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    order.customerName,
+                    style: AppTextStyles.bodyLarge,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Icon(paymentIcon, size: 12, color: paymentColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        Formatters.dateTime(order.createdAt),
+                        style: AppTextStyles.caption,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSizes.sm),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(order.customerName, style: AppTextStyles.bodyLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Icon(paymentIcon, size: 12, color: paymentColor),
-                    const SizedBox(width: 4),
-                    Text(Formatters.dateTime(order.createdAt), style: AppTextStyles.caption),
-                  ],
+                Text(
+                  Formatters.currency(order.totalAmount),
+                  style: AppTextStyles.label,
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.sm,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                  ),
+                  child: Text(
+                    statusLabel,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: statusColor,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: AppSizes.sm),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(Formatters.currency(order.totalAmount), style: AppTextStyles.label),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 3),
-                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-                child: Text(statusLabel, style: AppTextStyles.labelSmall.copyWith(color: statusColor)),
-              ),
-            ],
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -534,7 +816,13 @@ class _MonthlySalesChart extends StatelessWidget {
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
       border: Border.all(color: AppColors.border),
-      boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.textPrimary.withValues(alpha: 0.05),
+          blurRadius: 20,
+          offset: const Offset(0, 6),
+        ),
+      ],
     );
 
     if (data.isEmpty) {
@@ -544,9 +832,18 @@ class _MonthlySalesChart extends StatelessWidget {
         decoration: cardDecoration,
         child: Column(
           children: [
-            const Icon(Icons.bar_chart_rounded, color: AppColors.textHint, size: 32),
+            const Icon(
+              Icons.bar_chart_rounded,
+              color: AppColors.textHint,
+              size: 32,
+            ),
             const SizedBox(height: AppSizes.sm),
-            Text('No sales data yet', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+            Text(
+              'No sales data yet',
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       );
@@ -558,7 +855,12 @@ class _MonthlySalesChart extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(AppSizes.lg, AppSizes.lg, AppSizes.lg, AppSizes.sm),
+      padding: const EdgeInsets.fromLTRB(
+        AppSizes.lg,
+        AppSizes.lg,
+        AppSizes.lg,
+        AppSizes.sm,
+      ),
       decoration: cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,15 +871,32 @@ class _MonthlySalesChart extends StatelessWidget {
               Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-                child: const Icon(Icons.trending_up_rounded, color: Colors.white, size: 18),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                ),
+                child: const Icon(
+                  Icons.trending_up_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: AppSizes.sm),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('TOTAL · ${data.length} MO.', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontSize: 10, letterSpacing: 0.5)),
-                  Text(Formatters.currency(total), style: AppTextStyles.h4.copyWith(fontSize: 16)),
+                  Text(
+                    'TOTAL · ${data.length} MO.',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 10,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  Text(
+                    Formatters.currency(total),
+                    style: AppTextStyles.h4.copyWith(fontSize: 16),
+                  ),
                 ],
               ),
             ],
@@ -595,18 +914,29 @@ class _MonthlySalesChart extends StatelessWidget {
                     show: true,
                     drawVerticalLine: false,
                     horizontalInterval: maxY / 4,
-                    getDrawingHorizontalLine: (value) => FlLine(color: AppColors.border, strokeWidth: 1, dashArray: [4, 4]),
+                    getDrawingHorizontalLine: (value) => FlLine(
+                      color: AppColors.border,
+                      strokeWidth: 1,
+                      dashArray: [4, 4],
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   titlesData: FlTitlesData(
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 44,
                         interval: maxY / 4,
-                        getTitlesWidget: (value, meta) => Text(_compact(value), style: AppTextStyles.caption.copyWith(fontSize: 10)),
+                        getTitlesWidget: (value, meta) => Text(
+                          _compact(value),
+                          style: AppTextStyles.caption.copyWith(fontSize: 10),
+                        ),
                       ),
                     ),
                     bottomTitles: AxisTitles(
@@ -615,10 +945,15 @@ class _MonthlySalesChart extends StatelessWidget {
                         reservedSize: 28,
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index < 0 || index >= data.length) return const SizedBox.shrink();
+                          if (index < 0 || index >= data.length) {
+                            return const SizedBox.shrink();
+                          }
                           return Padding(
                             padding: const EdgeInsets.only(top: AppSizes.sm),
-                            child: Text(data[index].month, style: AppTextStyles.caption),
+                            child: Text(
+                              data[index].month,
+                              style: AppTextStyles.caption,
+                            ),
                           );
                         },
                       ),
@@ -633,7 +968,12 @@ class _MonthlySalesChart extends StatelessWidget {
                           '${entry.month} ${entry.year}\n',
                           AppTextStyles.caption.copyWith(color: Colors.white70),
                           children: [
-                            TextSpan(text: Formatters.currency(entry.sales), style: AppTextStyles.label.copyWith(color: Colors.white)),
+                            TextSpan(
+                              text: Formatters.currency(entry.sales),
+                              style: AppTextStyles.label.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         );
                       },
@@ -647,8 +987,17 @@ class _MonthlySalesChart extends StatelessWidget {
                           BarChartRodData(
                             toY: data[i].sales,
                             width: 22,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSizes.radiusSm)),
-                            gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryDark], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(AppSizes.radiusSm),
+                            ),
+                            gradient: const LinearGradient(
+                              colors: [
+                                AppColors.primary,
+                                AppColors.primaryDark,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
                           ),
                         ],
                       ),
@@ -668,7 +1017,11 @@ class _TopSellingProductsList extends StatelessWidget {
 
   final List<TopSellingProduct> products;
 
-  static const _rankColors = [Color(0xFFE8A33D), Color(0xFF9CA3AF), Color(0xFFB87333)];
+  static const _rankColors = [
+    Color(0xFFE8A33D),
+    Color(0xFF9CA3AF),
+    Color(0xFFB87333),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -683,9 +1036,18 @@ class _TopSellingProductsList extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Icon(Icons.inventory_2_outlined, color: AppColors.textHint, size: 32),
+            const Icon(
+              Icons.inventory_2_outlined,
+              color: AppColors.textHint,
+              size: 32,
+            ),
             const SizedBox(height: AppSizes.sm),
-            Text('No sales data yet', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+            Text(
+              'No sales data yet',
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       );
@@ -699,14 +1061,22 @@ class _TopSellingProductsList extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(width: AppSizes.md),
         itemBuilder: (context, index) {
           final product = products[index];
-          final rankColor = index < _rankColors.length ? _rankColors[index] : AppColors.textHint;
+          final rankColor = index < _rankColors.length
+              ? _rankColors[index]
+              : AppColors.textHint;
           return Container(
             width: 148,
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppSizes.radiusLg),
               border: Border.all(color: AppColors.border),
-              boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 16, offset: const Offset(0, 6))],
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.textPrimary.withValues(alpha: 0.05),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -725,22 +1095,54 @@ class _TopSellingProductsList extends StatelessWidget {
                         width: 24,
                         height: 24,
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(color: rankColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: rankColor.withValues(alpha: 0.5), blurRadius: 6)]),
-                        child: Text('${index + 1}', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+                        decoration: BoxDecoration(
+                          color: rankColor,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: rankColor.withValues(alpha: 0.5),
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          '${index + 1}',
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                     Positioned(
                       top: AppSizes.sm,
                       right: AppSizes.sm,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                        decoration: BoxDecoration(color: AppColors.primaryDark.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark.withValues(alpha: 0.85),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSm,
+                          ),
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.local_fire_department_rounded, color: Colors.white, size: 11),
+                            const Icon(
+                              Icons.local_fire_department_rounded,
+                              color: Colors.white,
+                              size: 11,
+                            ),
                             const SizedBox(width: 2),
-                            Text('${product.totalSold}', style: AppTextStyles.labelSmall.copyWith(color: Colors.white, fontSize: 10)),
+                            Text(
+                              '${product.totalSold}',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -759,7 +1161,13 @@ class _TopSellingProductsList extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Text(Formatters.currency(product.price), style: AppTextStyles.body.copyWith(color: AppColors.primary, fontWeight: FontWeight.w700)),
+                      Text(
+                        Formatters.currency(product.price),
+                        style: AppTextStyles.body.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -773,7 +1181,13 @@ class _TopSellingProductsList extends StatelessWidget {
 }
 
 class _OrderStatusLegend extends StatelessWidget {
-  const _OrderStatusLegend({required this.color, required this.icon, required this.label, required this.count, required this.percent});
+  const _OrderStatusLegend({
+    required this.color,
+    required this.icon,
+    required this.label,
+    required this.count,
+    required this.percent,
+  });
 
   final Color color;
   final IconData icon;
@@ -788,7 +1202,10 @@ class _OrderStatusLegend extends StatelessWidget {
         Container(
           width: 32,
           height: 32,
-          decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+          ),
           child: Icon(icon, color: color, size: 16),
         ),
         const SizedBox(width: AppSizes.sm),
@@ -839,9 +1256,18 @@ class _RecentUsersList extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Icon(Icons.people_outline_rounded, color: AppColors.textHint, size: 32),
+            const Icon(
+              Icons.people_outline_rounded,
+              color: AppColors.textHint,
+              size: 32,
+            ),
             const SizedBox(height: AppSizes.sm),
-            Text('No recent users', style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+            Text(
+              'No recent users',
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       );
@@ -856,54 +1282,87 @@ class _RecentUsersList extends StatelessWidget {
         itemBuilder: (context, index) {
           final user = users[index];
           final isAdmin = user.role.toLowerCase() == 'admin';
-          final initial = user.name.isNotEmpty ? user.name[0].toUpperCase() : '?';
-          return SizedBox(
-            width: 72,
-            child: Column(
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: isAdmin ? AppColors.accent : AppColors.border, width: 2),
-                      ),
-                      child: ClipOval(
-                        child: Container(
-                          color: AppColors.primaryLight,
-                          child: user.profileImage.isNotEmpty
-                              ? AppNetworkImage(url: user.profileImage)
-                              : Center(child: Text(initial, style: AppTextStyles.label.copyWith(color: AppColors.primary))),
+          final initial = user.name.isNotEmpty
+              ? user.name[0].toUpperCase()
+              : '?';
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed(AppRoutes.adminUserDetails, arguments: user.id);
+            },
+            child: SizedBox(
+              width: 72,
+              child: Column(
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isAdmin
+                                ? AppColors.accent
+                                : AppColors.border,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Container(
+                            color: AppColors.primaryLight,
+                            child: user.profileImage.isNotEmpty
+                                ? AppNetworkImage(url: user.profileImage)
+                                : Center(
+                                    child: Text(
+                                      initial,
+                                      style: AppTextStyles.label.copyWith(
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                          ),
                         ),
                       ),
+                      if (isAdmin)
+                        Positioned(
+                          bottom: -2,
+                          right: -2,
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.accent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.surface,
+                                width: 2,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.verified_rounded,
+                              color: Colors.white,
+                              size: 11,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSizes.xs),
+                  Text(
+                    user.name,
+                    style: AppTextStyles.caption.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
                     ),
-                    if (isAdmin)
-                      Positioned(
-                        bottom: -2,
-                        right: -2,
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(color: AppColors.accent, shape: BoxShape.circle, border: Border.all(color: AppColors.surface, width: 2)),
-                          child: const Icon(Icons.verified_rounded, color: Colors.white, size: 11),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: AppSizes.xs),
-                Text(
-                  user.name,
-                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -925,47 +1384,65 @@ class _InventoryAlertsCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: AppColors.textPrimary.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(() => Row(
-                children: [
-                  Expanded(
-                    child: _InventoryTab(
-                      label: 'Low Stock',
-                      count: controller.lowStockProducts.length,
-                      color: AppColors.warning,
-                      selected: controller.inventoryTab.value == 0,
-                      onTap: () => controller.setInventoryTab(0),
-                    ),
+          Obx(
+            () => Row(
+              children: [
+                Expanded(
+                  child: _InventoryTab(
+                    label: 'Low Stock',
+                    count: controller.lowStockProducts.length,
+                    color: AppColors.warning,
+                    selected: controller.inventoryTab.value == 0,
+                    onTap: () => controller.setInventoryTab(0),
                   ),
-                  const SizedBox(width: AppSizes.sm),
-                  Expanded(
-                    child: _InventoryTab(
-                      label: 'Out of Stock',
-                      count: controller.outOfStockProducts.length,
-                      color: AppColors.error,
-                      selected: controller.inventoryTab.value == 1,
-                      onTap: () => controller.setInventoryTab(1),
-                    ),
+                ),
+                const SizedBox(width: AppSizes.sm),
+                Expanded(
+                  child: _InventoryTab(
+                    label: 'Out of Stock',
+                    count: controller.outOfStockProducts.length,
+                    color: AppColors.error,
+                    selected: controller.inventoryTab.value == 1,
+                    onTap: () => controller.setInventoryTab(1),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: AppSizes.md),
           Obx(() {
-            final products = controller.inventoryTab.value == 0 ? controller.lowStockProducts : controller.outOfStockProducts;
+            final products = controller.inventoryTab.value == 0
+                ? controller.lowStockProducts
+                : controller.outOfStockProducts;
             if (products.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: AppSizes.lg),
                 child: Column(
                   children: [
-                    const Icon(Icons.check_circle_outline_rounded, color: AppColors.success, size: 28),
+                    const Icon(
+                      Icons.check_circle_outline_rounded,
+                      color: AppColors.success,
+                      size: 28,
+                    ),
                     const SizedBox(height: AppSizes.sm),
                     Text(
-                      controller.inventoryTab.value == 0 ? 'No low stock products' : 'No out of stock products',
-                      style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                      controller.inventoryTab.value == 0
+                          ? 'No low stock products'
+                          : 'No out of stock products',
+                      style: AppTextStyles.body.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -975,7 +1452,8 @@ class _InventoryAlertsCard extends StatelessWidget {
               children: [
                 for (int i = 0; i < products.length; i++) ...[
                   _InventoryProductTile(product: products[i]),
-                  if (i != products.length - 1) const Divider(height: AppSizes.lg, color: AppColors.border),
+                  if (i != products.length - 1)
+                    const Divider(height: AppSizes.lg, color: AppColors.border),
                 ],
               ],
             );
@@ -987,7 +1465,13 @@ class _InventoryAlertsCard extends StatelessWidget {
 }
 
 class _InventoryTab extends StatelessWidget {
-  const _InventoryTab({required this.label, required this.count, required this.color, required this.selected, required this.onTap});
+  const _InventoryTab({
+    required this.label,
+    required this.count,
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String label;
   final int count;
@@ -1013,12 +1497,23 @@ class _InventoryTab extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(label, style: AppTextStyles.label.copyWith(color: selected ? color : AppColors.textSecondary)),
+              Text(
+                label,
+                style: AppTextStyles.label.copyWith(
+                  color: selected ? color : AppColors.textSecondary,
+                ),
+              ),
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppSizes.radiusPill)),
-                child: Text('$count', style: AppTextStyles.labelSmall.copyWith(color: Colors.white)),
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+                ),
+                child: Text(
+                  '$count',
+                  style: AppTextStyles.labelSmall.copyWith(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -1037,27 +1532,43 @@ class _InventoryProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final outOfStock = product.stock == 0;
     return InkWell(
-      onTap: () => Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id),
+      onTap: () =>
+          Get.toNamed(AppRoutes.adminProductDetails, arguments: product.id),
       borderRadius: BorderRadius.circular(AppSizes.radiusSm),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-            child: SizedBox(width: 40, height: 40, child: AppNetworkImage(url: product.firstImageUrl)),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: AppNetworkImage(url: product.firstImageUrl),
+            ),
           ),
           const SizedBox(width: AppSizes.sm),
           Expanded(
-            child: Text(product.name, style: AppTextStyles.bodyLarge, maxLines: 1, overflow: TextOverflow.ellipsis),
+            child: Text(
+              product.name,
+              style: AppTextStyles.bodyLarge,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm, vertical: 3),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.sm,
+              vertical: 3,
+            ),
             decoration: BoxDecoration(
-              color: (outOfStock ? AppColors.error : AppColors.warning).withValues(alpha: 0.12),
+              color: (outOfStock ? AppColors.error : AppColors.warning)
+                  .withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
             child: Text(
               '${product.stock} left',
-              style: AppTextStyles.labelSmall.copyWith(color: outOfStock ? AppColors.error : AppColors.warning),
+              style: AppTextStyles.labelSmall.copyWith(
+                color: outOfStock ? AppColors.error : AppColors.warning,
+              ),
             ),
           ),
         ],

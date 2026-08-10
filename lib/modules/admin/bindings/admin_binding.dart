@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import '../controllers/admin_categories_controller.dart';
+import '../controllers/admin_create_category_controller.dart';
 import '../controllers/admin_create_product_controller.dart';
 import '../controllers/admin_dashboard_controller.dart';
+import '../controllers/admin_edit_category_controller.dart';
 import '../controllers/admin_edit_product_controller.dart';
 import '../controllers/admin_order_details_controller.dart';
 import '../controllers/admin_orders_controller.dart';
@@ -69,5 +72,26 @@ class AdminUserDetailsBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => AdminUserDetailsController());
+  }
+}
+
+class AdminCategoriesBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AdminCategoriesController());
+  }
+}
+
+class AdminCreateCategoryBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AdminCreateCategoryController());
+  }
+}
+
+class AdminEditCategoryBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AdminEditCategoryController());
   }
 }
